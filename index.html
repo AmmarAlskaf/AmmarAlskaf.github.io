@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ammar Alskaf | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #3b82f6;
+            --text-color: #333;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; }
+        a { text-decoration: none; color: var(--secondary-color); }
+        .container { width: 90%; max-width: 1200px; margin: auto; padding: 40px 0; }
+        
+        /* Typography */
+        h1, h2, h3 { color: var(--primary-color); margin-bottom: 15px; }
+        h2 { font-size: 2.5rem; text-align: center; margin-bottom: 40px; position: relative; }
+        h2::after { content: ''; display: block; width: 60px; height: 4px; background: var(--secondary-color); margin: 10px auto 0; border-radius: 2px; }
+
+        /* Header / Hero Section */
+        header { background: linear-gradient(135deg, var(--primary-color), #1e293b); color: white; padding: 100px 0; text-align: center; }
+        header h1 { color: white; font-size: 3.5rem; margin-bottom: 10px; }
+        header p.title { font-size: 1.5rem; color: #94a3b8; margin-bottom: 20px; }
+        .contact-info { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 20px; font-size: 0.9rem; }
+        .contact-info a { color: white; border: 1px solid #3b82f6; padding: 8px 15px; border-radius: 20px; transition: 0.3s; }
+        .contact-info a:hover { background: var(--secondary-color); }
+
+        /* About Section */
+        .about-text { text-align: center; max-width: 800px; margin: auto; font-size: 1.1rem; color: #475569; }
+
+        /* Skills Section */
+        .skills-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+        .skill-tag { background: var(--primary-color); color: white; padding: 10px 20px; border-radius: 30px; font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+
+        /* Experience & Education */
+        .timeline-item { background: var(--card-bg); padding: 25px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid var(--secondary-color); transition: transform 0.3s ease; }
+        .timeline-item:hover { transform: translateY(-5px); }
+        .timeline-date { color: var(--secondary-color); font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
+
+        /* Grid for Projects & Certificates */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s ease; }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 200px; object-fit: cover; background: #e2e8f0; }
+        .card-content { padding: 20px; }
+        .card-content h3 { font-size: 1.2rem; }
+        .card-content p { font-size: 0.9rem; color: #64748b; }
+
+        /* Footer */
+        footer { background: var(--primary-color); color: white; text-align: center; padding: 20px 0; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <h1>Ammar Alskaf</h1>
+            <p class="title">Telecommunications Engineer & Technical Procurement Specialist</p>
+            <div class="contact-info">
+                <a href="mailto:ammaralskaf56@gmail.com">ammaralskaf56@gmail.com</a>
+                <a href="tel:+963937807398">(+963) 937807398</a>
+                <a href="https://www.linkedin.com/in/ammar-alskaf-188a5b251" target="_blank">LinkedIn Profile</a>
+                <span>Rif Dimashq, Al Bardeh</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section class="container" id="about">
+        <h2>About Me</h2>
+        <p class="about-text">
+            I am a dedicated Telecommunications Engineer with expertise in microwave communications and technical procurement. Thanks to my extensive experience and the professional courses I’ve completed, I excel in strategic leadership, project management, and problem-solving. My strong interpersonal skills enable me to collaborate effectively with teams and stakeholders, ensuring successful project delivery and operational excellence.
+        </p>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="container" id="skills">
+        <h2>Core Skills</h2>
+        <div class="skills-grid">
+            <span class="skill-tag">Microwave Communications</span>
+            <span class="skill-tag">Technical Procurement</span>
+            <span class="skill-tag">Problem-Solving</span>
+            <span class="skill-tag">Strategic Leadership</span>
+            <span class="skill-tag">Time Management</span>
+            <span class="skill-tag">Data Analysis</span>
+            <span class="skill-tag">Team Collaboration</span>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="container" id="experience">
+        <h2>Work Experience</h2>
+        
+        <div class="timeline-item">
+            <div class="timeline-date">06-2024 - 09-2024</div>
+            <h3>Receptionist</h3>
+            <p>Basma Cancer Association</p>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-date">05-2022 - 05-2023</div>
+            <h3>Technical Purchasing Buyer</h3>
+            <p>Syriatel Mobile Telecom</p>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-date">01-2020 - 05-2022</div>
+            <h3>Contact Centre</h3>
+            <p>Syriatel Mobile Telecom</p>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-date">10-2021 - 08-2023</div>
+            <h3>Private Tutor</h3>
+            <p>Provided private tutoring at home for school and university students.</p>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-date">06-2018 - 11-2019</div>
+            <h3>Data Entry</h3>
+            <p>AL Baath Newspaper</p>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section class="container" id="education">
+        <h2>Education</h2>
+        <div class="timeline-item">
+            <div class="timeline-date">January 2017 - December 2022</div>
+            <h3>Bachelor's Degree in Electronics and Communications Engineering</h3>
+            <p>Damascus University, Syria</p>
+        </div>
+    </section>
+
+    <!-- Projects Section (Ready for your website images) -->
+    <section class="container" id="projects">
+        <h2>My Projects</h2>
+        <div class="grid-container">
+            <!-- Project 1 -->
+            <div class="card">
+                <!-- Replace 'project1.jpg' with your actual image name when uploaded to GitHub -->
+                <img src="project1.jpg" alt="Project Preview" onerror="this.src='https://via.placeholder.com/400x200.png?text=Project+Image+Here'">
+                <div class="card-content">
+                    <h3>Project Name 1</h3>
+                    <p>Brief description of the website or data dashboard you created. Mention the tools used like Python, AI, etc.</p>
+                </div>
+            </div>
+            <!-- Project 2 -->
+            <div class="card">
+                <!-- Replace 'project2.jpg' with your actual image name when uploaded to GitHub -->
+                <img src="project2.jpg" alt="Project Preview" onerror="this.src='https://via.placeholder.com/400x200.png?text=Project+Image+Here'">
+                <div class="card-content">
+                    <h3>Project Name 2</h3>
+                    <p>Brief description of another project, technical procurement analysis, or engineering solution.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section (Ready for your certificate images) -->
+    <section class="container" id="certifications">
+        <h2>Certifications</h2>
+        <div class="grid-container">
+            
+            <!-- Cert 1 -->
+            <div class="card">
+                <!-- Replace 'cert1.jpg' with your actual image name -->
+                <img src="cert1.jpg" alt="Certificate Image" onerror="this.src='https://via.placeholder.com/400x200.png?text=Certificate+Image+Here'">
+                <div class="card-content">
+                    <h3>GenAI for Executives & Business Leaders</h3>
+                    <p>2025</p>
+                </div>
+            </div>
+
+            <!-- Cert 2 -->
+            <div class="card">
+                <img src="cert2.jpg" alt="Certificate Image" onerror="this.src='https://via.placeholder.com/400x200.png?text=Certificate+Image+Here'">
+                <div class="card-content">
+                    <h3>Global Procurement and Sourcing Specialization</h3>
+                    <p>2025 (Courses 1 to 6)</p>
+                </div>
+            </div>
+
+            <!-- Cert 3 -->
+            <div class="card">
+                <img src="cert3.jpg" alt="Certificate Image" onerror="this.src='https://via.placeholder.com/400x200.png?text=Certificate+Image+Here'">
+                <div class="card-content">
+                    <h3>Leading Teams & Managing Project Risks</h3>
+                    <p>University of Illinois / UC - Coursera | 2025</p>
+                </div>
+            </div>
+
+            <!-- Cert 4 -->
+            <div class="card">
+                <img src="cert4.jpg" alt="Certificate Image" onerror="this.src='https://via.placeholder.com/400x200.png?text=Certificate+Image+Here'">
+                <div class="card-content">
+                    <h3>Solving Business Problems</h3>
+                    <p>Syriatel Mobile Telecom | 2023</p>
+                </div>
+            </div>
+            
+            <!-- Cert 5 -->
+            <div class="card">
+                <img src="cert5.jpg" alt="Certificate Image" onerror="this.src='https://via.placeholder.com/400x200.png?text=Certificate+Image+Here'">
+                <div class="card-content">
+                    <h3>Civil Defense & First Aid</h3>
+                    <p>Civil Defense | 2022</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Ammar Alskaf. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
