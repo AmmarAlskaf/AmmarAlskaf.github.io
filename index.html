@@ -3,404 +3,748 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ammar Alskaf | Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Ammar Alskaf | Tech Portfolio</title>
+    <!-- English and Arabic Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;500&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* General Styles */
+        /* ==================================================
+           1. VARIABLES & BASE SETUP
+           ================================================== */
         :root {
-            --primary-color: #0f172a;
-            --secondary-color: #3b82f6;
-            --text-color: #333;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
+            --bg-dark: #050505;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent: #ffffff;
+            --glow: #3b82f6;
+            --text-main: #e2e8f0;
+            --text-muted: #8492a6;
+            --font-en: 'Inter', sans-serif;
+            --font-ar: 'Tajawal', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        
+        body { 
+            background-color: var(--bg-dark); color: var(--text-main); 
+            font-family: var(--font-en); 
+            overflow-x: hidden; line-height: 1.6; scroll-behavior: smooth;
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden;}
-        a { text-decoration: none; color: var(--secondary-color); }
-        .container { width: 90%; max-width: 1200px; margin: auto; padding: 40px 0; }
+        /* Arabic RTL Styles */
+        body[dir="rtl"] { font-family: var(--font-ar); }
+        body[dir="rtl"] .timeline { border-left: none; border-right: 2px solid rgba(255,255,255,0.1); margin-left: 0; margin-right: 20px; padding-left: 0; padding-right: 30px; }
+        body[dir="rtl"] .timeline-item::before { left: auto; right: -36px; }
+        body[dir="rtl"] #intro-terminal { align-items: flex-end; text-align: right; }
+        body[dir="rtl"] .cmd-response { border-left: none; border-right: 2px solid #10b981; padding-left: 0; padding-right: 20px; }
+        body[dir="rtl"] .custom-bullets li::before { margin-right: 0; margin-left: 10px; }
+
+        body.locked { overflow: hidden; }
+
+        /* Custom Glowing Cursor */
+        #custom-cursor {
+            position: fixed; top: 0; left: 0; width: 20px; height: 20px;
+            background: var(--accent); border-radius: 50%; pointer-events: none; 
+            mix-blend-mode: difference; z-index: 9999999;
+            transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s;
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+        .hovering { width: 60px !important; height: 60px !important; background: transparent !important; border: 1px solid white; }
+
+        /* Language Toggle Button */
+        .lang-toggle {
+            position: fixed; top: 30px; right: 30px; z-index: 999999;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            color: #fff; padding: 10px 20px; border-radius: 30px; font-weight: 600;
+            backdrop-filter: blur(10px); transition: 0.3s; font-family: var(--font-en);
+        }
+        body[dir="rtl"] .lang-toggle { right: auto; left: 30px; }
+        .lang-toggle:hover { background: var(--glow); border-color: var(--glow); transform: scale(1.05); }
+
+        /* Dynamic Backgrounds */
+        .bg-glow { position: fixed; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, rgba(0,0,0,0) 70%); top: -20%; left: -10%; border-radius: 50%; z-index: -1; animation: float 20s infinite alternate; filter: blur(60px); }
+        .bg-glow-2 { position: fixed; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, rgba(0,0,0,0) 70%); bottom: -20%; right: -10%; border-radius: 50%; z-index: -1; animation: float 25s infinite alternate-reverse; filter: blur(60px); }
+        @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(10%, 10%); } }
+        .noise { position: fixed; top:0; left:0; width: 100vw; height: 100vh; background: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.04"/%3E%3C/svg%3E'); z-index: -1; pointer-events: none; }
+
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 80px 0; }
+
+        /* ==================================================
+           2. INTRO TERMINAL
+           ================================================== */
+        #intro-terminal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 10vw; font-family: var(--font-mono); color: #3b82f6; font-size: 1.2rem; transition: opacity 1s, visibility 1s; }
+        .terminal-line { display: none; margin-bottom: 10px; opacity: 0; transform: translateY(10px); }
+        .terminal-line.active { display: block; animation: fadeInUp 0.4s forwards; }
+        .blinking-cursor { display: inline-block; width: 10px; height: 20px; background: #3b82f6; animation: blink 1s infinite; }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* ==================================================
+           3. HERO
+           ================================================== */
+        header { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; background-color: var(--bg-dark); background-position: center top; background-size: cover; background-repeat: no-repeat; transition: background-image 0.5s ease-in-out; }
+        .header-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(5,5,5,0.7) 0%, rgba(5,5,5,1) 100%); z-index: 1; }
+        header .content-wrapper { position: relative; z-index: 2; width: 100%;}
         
-        /* Typography */
-        h1, h2, h3 { color: var(--primary-color); margin-bottom: 15px; }
-        h2 { font-size: 2.5rem; text-align: center; margin-bottom: 40px; position: relative; text-transform: uppercase; letter-spacing: 1px;}
-        h2::after { content: ''; display: block; width: 60px; height: 4px; background: var(--secondary-color); margin: 10px auto 0; border-radius: 2px; }
-
-        /* Hero Section */
-        header { 
-            position: relative;
-            background-color: var(--primary-color);
-            background-position: center;
-            background-size: contain; 
-            background-repeat: no-repeat;
-            color: white; 
-            padding: 150px 0; 
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: background-image 0.5s ease-in-out;
-        }
-        .header-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(15, 23, 42, 0.85); 
-            z-index: 1;
-        }
-        header .container { position: relative; z-index: 2; }
-        header h1 { color: white; font-size: 4rem; margin-bottom: 10px; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+        .hero h1 { font-size: clamp(3rem, 7vw, 6rem); font-weight: 800; letter-spacing: -2px; margin-bottom: 0; line-height: 1; background: linear-gradient(180deg, #fff, #71717a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        /* Typewriter Effect Styles */
-        .typewriter-container {
-            font-size: 1.5rem; color: #60a5fa; margin-bottom: 25px; font-weight: 600; min-height: 35px;
-        }
-        .cursor {
-            display: inline-block; width: 3px; background-color: #60a5fa; margin-left: 2px;
-            animation: blink 0.75s step-end infinite;
-        }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        .contact-info { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 30px; font-size: 1rem; }
-        .contact-info a, .contact-info span { color: white; border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 30px; transition: 0.3s; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);}
-        .contact-info a:hover { background: var(--secondary-color); border-color: var(--secondary-color); transform: translateY(-3px);}
-
-        /* About Section */
-        .about-text { text-align: center; max-width: 850px; margin: auto; font-size: 1.15rem; color: #475569; }
-
-        /* Scroll Reveal Animation Classes */
-        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* Experience Timeline */
-        .timeline-item { background: var(--card-bg); padding: 25px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid var(--secondary-color); transition: transform 0.3s ease, box-shadow 0.3s; }
-        .timeline-item:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .timeline-date { color: var(--secondary-color); font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
-        .exp-img { width: 100%; max-width: 500px; height: auto; border-radius: 8px; margin-top: 15px; border: 1px solid #e2e8f0; display: block; cursor: zoom-in; }
+        .role-container { height: 40px; overflow: hidden; margin-top: 20px; }
+        .role-text { font-size: 1.8rem; color: var(--text-muted); font-weight: 300; display: block; animation: slideRoles 9s infinite; }
+        @keyframes slideRoles { 0%, 25% { transform: translateY(0); } 33%, 58% { transform: translateY(-100%); } 66%, 91% { transform: translateY(-200%); } 100% { transform: translateY(0); } }
         
-        /* Grid for Certificates */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s ease, box-shadow 0.3s; display: flex; flex-direction: column;}
-        .card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
-        .card img { width: 100%; height: 220px; object-fit: cover; background: #e2e8f0; border-bottom: 3px solid var(--secondary-color); cursor: zoom-in;}
-        .card-content { padding: 20px; flex-grow: 1;}
-        .card-content h3 { font-size: 1.1rem; line-height: 1.4; margin-bottom: 10px;}
-        .card-content p { font-size: 0.9rem; color: #64748b; font-weight: 600;}
+        .tech-stack { display: flex; gap: 15px; margin-top: 40px; flex-wrap: wrap; justify-content: center; }
+        .tech-pill { padding: 8px 20px; border-radius: 30px; font-size: 0.9rem; font-family: var(--font-mono); background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); transition: 0.3s; opacity: 0; transform: translateY(20px); }
+        .tech-pill:hover { background: rgba(255,255,255,0.1); transform: scale(1.05) !important; box-shadow: 0 0 20px rgba(59,130,246,0.3); color: #3b82f6;}
 
-        /* Footer */
-        footer { background: var(--primary-color); color: white; text-align: center; padding: 30px 0; margin-top: 50px; }
+        /* ==================================================
+           4. SECTIONS & ACCORDIONS (EXPANDABLE DETAILS)
+           ================================================== */
+        .section-title { font-size: 2.5rem; margin-bottom: 50px; text-transform: uppercase; letter-spacing: 2px; color: #fff; font-weight: 600;}
+        .about-text { text-align: center; max-width: 900px; margin: auto; font-size: 1.15rem; color: #a1a1aa; line-height: 1.8;}
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        
+        .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; padding: 25px; backdrop-filter: blur(12px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; display: flex; flex-direction: column; }
+        .glass-card:hover { border-color: rgba(59,130,246,0.4); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .glass-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .glass-card h3 { font-size: 1.1rem; color: #fff; margin-bottom: 10px; line-height: 1.4;}
+        .glass-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;}
 
-        /* Image Modal */
-        .modal { display: none; position: fixed; z-index: 999999; padding-top: 50px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(15, 23, 42, 0.95); backdrop-filter: blur(5px);}
-        .modal-content { margin: auto; display: block; width: 90%; max-width: 900px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); animation: zoom 0.3s ease-in-out; }
+        /* Expand Button */
+        .details-btn {
+            background: transparent; border: 1px solid var(--glass-border); color: var(--glow);
+            padding: 8px 15px; border-radius: 8px; font-size: 0.85rem; font-family: inherit; font-weight: 600;
+            display: inline-flex; align-items: center; justify-content: space-between; width: fit-content;
+            transition: 0.3s; margin-top: auto;
+        }
+        .details-btn:hover { background: rgba(59,130,246,0.1); border-color: var(--glow); }
+        .details-btn .arrow { transition: transform 0.3s; margin-left: 10px; font-size: 0.7rem;}
+        body[dir="rtl"] .details-btn .arrow { margin-left: 0; margin-right: 10px; }
+        .details-btn.active .arrow { transform: rotate(180deg); }
+
+        /* Hidden Content */
+        .details-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; opacity: 0; margin-top: 0;}
+        .details-content.open { max-height: 600px; opacity: 1; margin-top: 15px;}
+        
+        .custom-bullets { list-style: none; margin: 0; padding: 0;}
+        .custom-bullets li { position: relative; margin-bottom: 8px; font-size: 0.9rem; color: #d1d5db; display: flex; align-items: flex-start;}
+        .custom-bullets li::before { content: '▹'; color: var(--glow); font-weight: bold; margin-right: 10px; font-size: 1.2rem; line-height: 1;}
+
+        /* Scroll Animations */
+        .reveal-fade { opacity: 0; transition: opacity 1s ease-out; }
+        .reveal-fade.active { opacity: 1; }
+        .reveal-slide-up { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal-slide-up.active { opacity: 1; transform: translateY(0); }
+        .reveal-scale { opacity: 0; transform: scale(0.9); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal-scale.active { opacity: 1; transform: scale(1); }
+
+        /* Timeline Elements */
+        .timeline { position: relative; border-left: 2px solid rgba(255,255,255,0.1); margin-left: 20px; padding-left: 30px; }
+        .timeline-item { margin-bottom: 40px; position: relative; }
+        .timeline-item::before { content: ''; position: absolute; left: -36px; top: 0; width: 10px; height: 10px; background: var(--bg-dark); border: 2px solid var(--glow); border-radius: 50%; box-shadow: 0 0 10px var(--glow); transition: 0.3s; }
+        .timeline-item:hover::before { background: var(--glow); transform: scale(1.5); }
+        .timeline-date { font-family: var(--font-mono); color: var(--glow); font-size: 0.85rem; margin-bottom: 5px; direction: ltr; display: inline-block;}
+        .exp-img { width: 100%; max-width: 400px; height: auto; border-radius: 8px; margin-top: 15px; border: 1px solid var(--glass-border); display: block; opacity: 0.8; transition: 0.3s;}
+        .exp-img:hover { opacity: 1; border-color: var(--glow);}
+        .click-to-zoom { cursor: zoom-in !important; }
+
+        /* Hacker Terminal */
+        .contact-terminal { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 30px; font-family: var(--font-mono); position: relative; max-width: 800px; margin: auto; direction: ltr; text-align: left;}
+        .contact-terminal .header { border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 20px; color: #666; font-size: 0.8rem;}
+        .cmd-line { color: #fff; margin-bottom: 10px;}
+        .cmd-prompt { color: #3b82f6; margin-right: 10px;}
+        .cmd-input { background: transparent; border: none; color: #10b981; font-family: var(--font-mono); font-size: 1rem; outline: none; width: 250px; cursor: text;}
+        .cmd-response { display: none; color: #a1a1aa; margin-top: 20px; padding-left: 20px; border-left: 2px solid #10b981;}
+        .cmd-response a { color: #fff; text-decoration: none; border-bottom: 1px dashed #3b82f6; transition: 0.3s; cursor: pointer;}
+        .cmd-response a:hover { color: #3b82f6; }
+
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 9999999; padding-top: 50px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px);}
+        .modal-content { margin: auto; display: block; width: 90%; max-width: 900px; border-radius: 10px; border: 1px solid var(--glass-border); box-shadow: 0 0 30px rgba(59,130,246,0.2); animation: zoom 0.3s ease-in-out; }
         @keyframes zoom { from {transform:scale(0.8); opacity:0} to {transform:scale(1); opacity:1} }
         .close-modal { position: absolute; top: 20px; right: 40px; color: #f1f1f1; font-size: 45px; font-weight: bold; transition: 0.3s; cursor: pointer; }
-        .close-modal:hover { color: var(--secondary-color); }
+        .close-modal:hover { color: var(--glow); }
+        #easter-egg { position: fixed; top:0; left:0; width: 100vw; height: 100vh; background: rgba(16, 185, 129, 0.2); z-index: 9999999; display: none; pointer-events: none; mix-blend-mode: overlay;}
+        footer { text-align: center; padding: 40px 0; border-top: 1px solid var(--glass-border); margin-top: 50px; color: var(--text-muted); font-size: 0.9rem;}
     </style>
 </head>
-<body>
+<body class="locked" dir="ltr">
 
-    <!-- Hero Section with Typewriter -->
+    <!-- Language Toggle -->
+    <button class="lang-toggle hover-target" id="lang-btn" onclick="toggleLanguage()">AR / العربية</button>
+
+    <!-- Custom Cursor -->
+    <div id="custom-cursor"></div>
+
+    <!-- Background Elements -->
+    <div class="noise"></div>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+
+    <!-- Easter Egg Flash -->
+    <div id="easter-egg"></div>
+
+    <!-- 1. STARTUP TERMINAL -->
+    <div id="intro-terminal">
+        <div class="terminal-line tr" data-en="[1/4] Locating profile: Ammar Alskaf..." data-ar="[1/4] استخراج الملف الشخصي: عمار السكاف...">[1/4] Locating profile: Ammar Alskaf...</div>
+        <div class="terminal-line tr" data-en="[2/4] Decrypting Telecommunications Engineering background..." data-ar="[2/4] فك تشفير البيانات: هندسة الاتصالات والمشتريات التقنية...">[2/4] Decrypting Telecommunications Engineering background...</div>
+        <div class="terminal-line tr" data-en="[3/4] Compiling Data Analytics & Automation modules..." data-ar="[3/4] تجميع وحدات المعالجة: تحليل البيانات والأتمتة (Python, VBA)...">[3/4] Compiling Data Analytics & Automation modules...</div>
+        <div class="terminal-line tr" data-en="[4/4] Establishing secure connection to the portfolio..." data-ar="[4/4] إنشاء اتصال آمن وموثوق بمعرض الأعمال...">[4/4] Establishing secure connection to the portfolio...</div>
+        <div class="terminal-line tr" data-en="Profile constructed. Welcome to the workspace.<span class='blinking-cursor'></span>" data-ar="تم بناء الملف بنجاح. أهلاً بك في مساحة العمل.<span class='blinking-cursor'></span>" style="color: #fff; font-size: 1.5rem; margin-top: 20px;">Profile constructed. Welcome to the workspace.<span class="blinking-cursor"></span></div>
+    </div>
+
+    <!-- 2. HERO SECTION -->
     <header id="main-header">
         <div class="header-overlay"></div>
-        <div class="container">
-            <h1>Ammar Alskaf</h1>
-            <div class="typewriter-container">
-                <span id="typewriter-text"></span><span class="cursor">&nbsp;</span>
+        <div class="content-wrapper">
+            <h1 class="hover-target tr" data-en="AMMAR ALSKAF" data-ar="عـمّـار السـكّـاف">AMMAR ALSKAF</h1>
+            <div class="role-container">
+                <div class="role-text tr" data-en="Data Analyst" data-ar="محلل بيانات">Data Analyst</div>
+                <div class="role-text tr" data-en="Telecommunications Engineer" data-ar="مهندس اتصالات">Telecommunications Engineer</div>
+                <div class="role-text tr" data-en="Technical Procurement" data-ar="مشتريات تقنية">Technical Procurement</div>
             </div>
-            <div class="contact-info">
-                <a href="mailto:ammaralskaf56@gmail.com">ammaralskaf56@gmail.com</a>
-                <a href="tel:+963937807398">(+963) 937807398</a>
-                <a href="https://www.linkedin.com/in/ammar-alskaf-188a5b251" target="_blank">LinkedIn</a>
-                <span> Syria-Rif Dimashq </span>
+            <div class="tech-stack" id="hero-stack">
+                <span class="tech-pill hover-target">Python</span>
+                <span class="tech-pill hover-target">Advanced Excel & VBA</span>
+                <span class="tech-pill hover-target tr" data-en="Data Analysis" data-ar="تحليل البيانات">Data Analysis</span>
+                <span class="tech-pill hover-target tr" data-en="Automation" data-ar="أتمتة الأعمال">Automation</span>
+                <span class="tech-pill hover-target tr" data-en="Strategic Leadership" data-ar="قيادة استراتيجية">Strategic Leadership</span>
             </div>
         </div>
     </header>
 
-    <!-- About Section -->
-    <section class="container reveal" id="about">
-        <h2>About Me</h2>
-        <p class="about-text">
+    <!-- 3. ABOUT ME -->
+    <section class="container reveal-slide-up">
+        <h2 class="section-title tr" data-en="System.About()" data-ar="النظام.عن_نفسي()" style="text-align: center;">System.About()</h2>
+        <p class="about-text tr" data-en="I am a dedicated Telecommunications Engineer with expertise in microwave communications, technical procurement, and data analysis. I leverage Python, VBA, and advanced Excel to automate workflows, analyze large datasets, and build insightful reports and dashboards that support strategic decision-making. Thanks to my extensive professional experience and specialized training, I excel in strategic leadership, project management, process optimization, and problem-solving. My strong interpersonal skills enable me to collaborate effectively with cross-functional teams and stakeholders, ensuring successful project delivery, operational excellence, and data-driven business growth." 
+           data-ar="أنا مهندس اتصالات متخصص، أمتلك خبرة متعمقة في اتصالات المايكرويف، المشتريات التقنية، وتحليل البيانات. أعتمد على Python و VBA و Excel المتقدم لأتمتة سير العمل، تحليل البيانات الضخمة، وبناء لوحات تحكم تدعم اتخاذ القرارات الاستراتيجية. بفضل خبرتي المهنية وتدريبي المتخصص، أتميز في القيادة الاستراتيجية، إدارة المشاريع، تحسين العمليات، وحل المشكلات. مهاراتي العالية في التواصل تتيح لي التعاون الفعال مع فرق العمل لضمان نجاح المشاريع والنمو المبني على البيانات.">
             I am a dedicated Telecommunications Engineer with expertise in microwave communications, technical procurement, and data analysis. I leverage Python, VBA, and advanced Excel to automate workflows, analyze large datasets, and build insightful reports and dashboards that support strategic decision-making. Thanks to my extensive professional experience and specialized training, I excel in strategic leadership, project management, process optimization, and problem-solving. My strong interpersonal skills enable me to collaborate effectively with cross-functional teams and stakeholders, ensuring successful project delivery, operational excellence, and data-driven business growth.
         </p>
     </section>
 
-    <!-- Experience Section -->
-    <section class="container" id="experience">
-        <h2>Professional Experience</h2>
-        
-        <div class="timeline-item reveal">
-            <div class="timeline-date">06-2024 - 09-2024</div>
-            <h3>Receptionist</h3>
-            <p>Basma Cancer Association</p>
-        </div>
-
-        <div class="timeline-item reveal">
-            <div class="timeline-date">05-2022 - 05-2023</div>
-            <h3>Technical Purchasing Buyer</h3>
-            <p>Syriatel Mobile Telecom</p>
-            <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Technical purchasing buyer -Syriatel" class="exp-img click-to-zoom" alt="Technical Purchasing Buyer">
-        </div>
-
-        <div class="timeline-item reveal">
-            <div class="timeline-date">01-2020 - 05-2022</div>
-            <h3>Contact Centre</h3>
-            <p>Syriatel Mobile Telecom</p>
-            <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Contact Centre - Syriatel" class="exp-img click-to-zoom" alt="Contact Centre">
-        </div>
-
-        <div class="timeline-item reveal">
-            <div class="timeline-date">10-2021 - 08-2023</div>
-            <h3>Private Tutor</h3>
-            <p>Provided private tutoring at home for school and university students.</p>
-        </div>
-
-        <div class="timeline-item reveal">
-            <div class="timeline-date">06-2018 - 11-2019</div>
-            <h3>Data Entry</h3>
-            <p>AL Baath Newspaper</p>
-        </div>
-    </section>
-
-    <!-- Certifications Section -->
-    <section class="container" id="certifications">
-        <h2>Certifications & Courses</h2>
-        <div class="grid-container">
+    <!-- 4. EDUCATION & EXPERIENCE -->
+    <section class="container reveal-fade">
+        <h2 class="section-title tr" data-en="Experience.Log()" data-ar="سجل_الخبرات.عرض()">Experience.Log()</h2>
+        <div class="timeline">
             
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="GenAI for Executives & Business Leaders" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>GenAI for Executives & Business Leaders</h3>
+            <div class="timeline-item reveal-slide-up">
+                <div class="timeline-date">Jan 2017 - Dec 2022</div>
+                <div class="glass-card hover-target">
+                    <h3 class="tr" data-en="Bachelor's Degree in Electronics & Comm. Engineering" data-ar="بكالوريوس في هندسة الإلكترونيات والاتصالات">Bachelor's Degree in Electronics & Comm. Engineering</h3>
+                    <p class="tr" data-en="Damascus University, Syria" data-ar="جامعة دمشق، سوريا">Damascus University, Syria</p>
                 </div>
             </div>
 
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Initiating and Planning Projects" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Initiating and Planning Projects</h3>
+            <div class="timeline-item reveal-slide-up">
+                <div class="timeline-date">May 2022 - May 2023</div>
+                <div class="glass-card hover-target">
+                    <h3 class="tr" data-en="Technical Purchasing Buyer" data-ar="مسؤول مشتريات تقنية">Technical Purchasing Buyer</h3>
+                    <p class="tr" data-en="Syriatel Mobile Telecom" data-ar="سيريتل للاتصالات">Syriatel Mobile Telecom</p>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content">
+                        <ul class="custom-bullets">
+                            <li class="tr" data-en="Managed procurement of technical equipment and network components." data-ar="إدارة مشتريات المعدات التقنية ومكونات الشبكة.">Managed procurement of technical equipment and network components.</li>
+                            <li class="tr" data-en="Negotiated with suppliers to achieve cost-effective purchasing." data-ar="التفاوض مع الموردين لتحقيق عمليات شراء فعالة من حيث التكلفة.">Negotiated with suppliers to achieve cost-effective purchasing.</li>
+                            <li class="tr" data-en="Evaluated quotations based on quality, cost, and delivery." data-ar="تقييم عروض الأسعار بناءً على الجودة والتكلفة والتسليم.">Evaluated quotations based on quality, cost, and delivery.</li>
+                            <li class="tr" data-en="Coordinated purchasing activities across multiple departments." data-ar="تنسيق أنشطة الشراء عبر أقسام متعددة.">Coordinated purchasing activities across multiple departments.</li>
+                            <li class="tr" data-en="Optimized inventory availability while reducing procurement delays." data-ar="تحسين توفر المخزون مع تقليل تأخيرات التوريد.">Optimized inventory availability while reducing procurement delays.</li>
+                        </ul>
+                    </div>
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Technical purchasing buyer -Syriatel" class="exp-img click-to-zoom" alt="Technical Purchasing Buyer">
                 </div>
             </div>
 
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Leading Teams Developing as a Leader" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Leading Teams: Developing as a Leader</h3>
+            <div class="timeline-item reveal-slide-up">
+                <div class="timeline-date">Jan 2020 - May 2022</div>
+                <div class="glass-card hover-target">
+                    <h3 class="tr" data-en="Contact Centre Agent" data-ar="موظف مركز اتصالات">Contact Centre Agent</h3>
+                    <p class="tr" data-en="Syriatel Mobile Telecom" data-ar="سيريتل للاتصالات">Syriatel Mobile Telecom</p>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content">
+                        <ul class="custom-bullets">
+                            <li class="tr" data-en="Delivered exceptional customer support with high satisfaction standards." data-ar="تقديم دعم استثنائي للعملاء بأعلى معايير الرضا.">Delivered exceptional customer support with high satisfaction standards.</li>
+                            <li class="tr" data-en="Resolved technical and service-related issues efficiently." data-ar="حل المشكلات التقنية وتلك المتعلقة بالخدمة بكفاءة عالية.">Resolved technical and service-related issues efficiently.</li>
+                            <li class="tr" data-en="Handled high-volume customer interactions with professionalism." data-ar="التعامل مع حجم كبير من تفاعلات العملاء باحترافية.">Handled high-volume customer interactions with professionalism.</li>
+                            <li class="tr" data-en="Improved communication through active listening and problem-solving." data-ar="تحسين التواصل من خلال الاستماع الفعال وحل المشكلات.">Improved communication through active listening and problem-solving.</li>
+                            <li class="tr" data-en="Maintained accurate records while meeting strict performance KPIs." data-ar="الحفاظ على سجلات دقيقة مع تلبية مؤشرات الأداء الرئيسية الصارمة.">Maintained accurate records while meeting strict performance KPIs.</li>
+                        </ul>
+                    </div>
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Contact Centre - Syriatel" class="exp-img click-to-zoom" alt="Contact Centre">
                 </div>
             </div>
 
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Managing Project Risks and Changes" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Managing Project Risks and Changes</h3>
+            <div class="timeline-item reveal-slide-up">
+                <div class="timeline-date">Oct 2021 - Aug 2023</div>
+                <div class="glass-card hover-target">
+                    <h3 class="tr" data-en="Private Tutor" data-ar="مدرس خصوصي">Private Tutor</h3>
+                    <p class="tr" data-en="Freelance Education" data-ar="تعليم حر">Freelance Education</p>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content">
+                        <ul class="custom-bullets">
+                            <li class="tr" data-en="Translated complex scientific concepts into simple modules." data-ar="تبسيط المفاهيم العلمية المعقدة لتناسب مستويات الطلاب المختلفة.">Translated complex scientific concepts into simple modules.</li>
+                            <li class="tr" data-en="Enhanced time management and adaptability skills." data-ar="تعزيز مهارات إدارة الوقت والتكيف السريع.">Enhanced time management and adaptability skills.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="performance Management Awareness" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Performance Management Awareness</h3>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="solving business problems" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Solving Business Problems</h3>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Everyday Excel" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Everyday Excel</h3>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Ambulance - Evacuation Course" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Ambulance & Evacuation Course</h3>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Firefighting Course" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Firefighting Course</h3>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement & Sourcing Introduction - 1" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Procurement & Sourcing Introduction</h3>
-                    <p>Course 1</p>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement Basics - 2" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Procurement Basics</h3>
-                    <p>Course 2</p>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Strategic Sourcing - 3" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Strategic Sourcing</h3>
-                    <p>Course 3</p>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Supplier Management - 4" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Supplier Management</h3>
-                    <p>Course 4</p>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Supply Market Analysis - 5" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Supply Market Analysis</h3>
-                    <p>Course 5</p>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement Negotiation  - 6" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Procurement Negotiation</h3>
-                    <p>Course 6</p>
+            <div class="timeline-item reveal-slide-up">
+                <div class="timeline-date">Jun 2018 - Nov 2019</div>
+                <div class="glass-card hover-target">
+                    <h3 class="tr" data-en="Data Entry" data-ar="مدخل بيانات">Data Entry</h3>
+                    <p class="tr" data-en="AL Baath Newspaper" data-ar="جريدة البعث">AL Baath Newspaper</p>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content">
+                        <ul class="custom-bullets">
+                            <li class="tr" data-en="Processed large datasets with high accuracy and speed." data-ar="معالجة البيانات الضخمة بدقة وسرعة عالية.">Processed large datasets with high accuracy and speed.</li>
+                            <li class="tr" data-en="Maintained data integrity and database organization." data-ar="الحفاظ على سلامة البيانات وتنظيم قواعد الأرشفة.">Maintained data integrity and database organization.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- 5. CERTIFICATIONS DASHBOARD -->
+    <section class="container reveal-scale">
+        <h2 class="section-title tr" data-en="Modules.Certifications()" data-ar="الوحدات.الشهادات()" style="text-align: center;">Modules.Certifications()</h2>
+        <div class="grid">
+            
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Everyday Excel" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="Everyday Excel" data-ar="احتراف الإكسل اليومي">Everyday Excel</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="Advanced formulas and functions." data-ar="دوال ومعادلات متقدمة.">Advanced formulas and functions.</li>
+                    <li class="tr" data-en="Dynamic dashboards and reporting." data-ar="لوحات تحكم وتقارير ديناميكية.">Dynamic dashboards and reporting.</li>
+                    <li class="tr" data-en="Pivot Tables and Pivot Charts." data-ar="الجداول والمخططات المحورية.">Pivot Tables and Pivot Charts.</li>
+                    <li class="tr" data-en="Data cleaning and transformation." data-ar="تنظيف البيانات وتحويلها.">Data cleaning and transformation.</li>
+                    <li class="tr" data-en="Professional spreadsheet automation." data-ar="أتمتة الجداول بشكل احترافي.">Professional spreadsheet automation.</li>
+                </ul></div>
+            </div>
+
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="GenAI for Executives & Business Leaders" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="GenAI for Executives" data-ar="الذكاء الاصطناعي التوليدي للمدراء">GenAI for Executives</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="AI-driven business strategy." data-ar="استراتيجية الأعمال المدعومة بالذكاء الاصطناعي.">AI-driven business strategy.</li>
+                    <li class="tr" data-en="Generative AI applications." data-ar="تطبيقات الذكاء الاصطناعي التوليدي.">Generative AI applications.</li>
+                    <li class="tr" data-en="Workflow automation with AI." data-ar="أتمتة سير العمل باستخدام الذكاء الاصطناعي.">Workflow automation with AI.</li>
+                    <li class="tr" data-en="AI-powered decision making." data-ar="اتخاذ القرارات المدعومة بالذكاء الاصطناعي.">AI-powered decision making.</li>
+                    <li class="tr" data-en="Responsible AI implementation." data-ar="التنفيذ المسؤول للذكاء الاصطناعي.">Responsible AI implementation.</li>
+                </ul></div>
+            </div>
+
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Initiating and Planning Projects" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="Planning Projects" data-ar="تخطيط وتأسيس المشاريع">Planning Projects</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="Project scope definition." data-ar="تحديد نطاق المشروع.">Project scope definition.</li>
+                    <li class="tr" data-en="Stakeholder identification." data-ar="تحديد أصحاب المصلحة.">Stakeholder identification.</li>
+                    <li class="tr" data-en="Project scheduling." data-ar="جدولة المشروع.">Project scheduling.</li>
+                    <li class="tr" data-en="Resource planning." data-ar="تخطيط الموارد.">Resource planning.</li>
+                    <li class="tr" data-en="Risk-aware project initiation." data-ar="بدء المشاريع بوعي بالمخاطر.">Risk-aware project initiation.</li>
+                </ul></div>
+            </div>
+
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Leading Teams Developing as a Leader" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="Leading Teams" data-ar="قيادة وتطوير فرق العمل">Leading Teams</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="Leadership and decision-making." data-ar="القيادة واتخاذ القرارات.">Leadership and decision-making.</li>
+                    <li class="tr" data-en="Team motivation techniques." data-ar="تقنيات تحفيز الفريق.">Team motivation techniques.</li>
+                    <li class="tr" data-en="Performance coaching." data-ar="التدريب على الأداء.">Performance coaching.</li>
+                    <li class="tr" data-en="Conflict resolution." data-ar="حل النزاعات.">Conflict resolution.</li>
+                    <li class="tr" data-en="Building high-performing teams." data-ar="بناء فرق عالية الأداء.">Building high-performing teams.</li>
+                </ul></div>
+            </div>
+
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Managing Project Risks and Changes" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="Managing Risks" data-ar="إدارة المخاطر والتغيير">Managing Risks</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="Risk identification." data-ar="تحديد المخاطر.">Risk identification.</li>
+                    <li class="tr" data-en="Change management processes." data-ar="عمليات إدارة التغيير.">Change management processes.</li>
+                    <li class="tr" data-en="Mitigation planning." data-ar="التخطيط للتخفيف من المخاطر.">Mitigation planning.</li>
+                    <li class="tr" data-en="Impact assessment." data-ar="تقييم الأثر.">Impact assessment.</li>
+                    <li class="tr" data-en="Business continuity strategies." data-ar="استراتيجيات استمرارية الأعمال.">Business continuity strategies.</li>
+                </ul></div>
+            </div>
+            
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="performance Management Awareness" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="Performance Management" data-ar="الوعي بإدارة الأداء">Performance Management</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="Performance measurement." data-ar="قياس الأداء.">Performance measurement.</li>
+                    <li class="tr" data-en="KPI development." data-ar="تطوير مؤشرات الأداء الرئيسية (KPIs).">KPI development.</li>
+                    <li class="tr" data-en="Employee performance evaluation." data-ar="تقييم أداء الموظفين.">Employee performance evaluation.</li>
+                    <li class="tr" data-en="Continuous improvement." data-ar="التحسين المستمر.">Continuous improvement.</li>
+                    <li class="tr" data-en="Goal alignment and tracking." data-ar="مواءمة الأهداف وتتبعها.">Goal alignment and tracking.</li>
+                </ul></div>
+            </div>
+
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="solving business problems" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="Solving Business Problems" data-ar="حل المشكلات التجارية">Solving Business Problems</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="Root cause analysis." data-ar="تحليل الأسباب الجذرية.">Root cause analysis.</li>
+                    <li class="tr" data-en="Critical thinking." data-ar="التفكير النقدي.">Critical thinking.</li>
+                    <li class="tr" data-en="Data-driven decision making." data-ar="اتخاذ القرارات بناءً على البيانات.">Data-driven decision making.</li>
+                    <li class="tr" data-en="Process optimization." data-ar="تحسين العمليات.">Process optimization.</li>
+                    <li class="tr" data-en="Innovative problem-solving techniques." data-ar="تقنيات مبتكرة لحل المشكلات.">Innovative problem-solving techniques.</li>
+                </ul></div>
+            </div>
+
+            <!-- Civil Defense -->
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Ambulance - Evacuation Course" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="Ambulance & Evacuation" data-ar="الإسعاف والإخلاء">Ambulance & Evacuation</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="Emergency response procedures." data-ar="إجراءات الاستجابة للطوارئ.">Emergency response procedures.</li>
+                    <li class="tr" data-en="Safe evacuation planning and execution." data-ar="تخطيط وتنفيذ الإخلاء الآمن.">Safe evacuation planning and execution.</li>
+                    <li class="tr" data-en="Basic life support awareness." data-ar="الوعي بدعم الحياة الأساسي.">Basic life support awareness.</li>
+                    <li class="tr" data-en="Risk assessment during emergencies." data-ar="تقييم المخاطر أثناء الطوارئ.">Risk assessment during emergencies.</li>
+                    <li class="tr" data-en="Crisis communication and coordination." data-ar="التواصل والتنسيق أثناء الأزمات.">Crisis communication and coordination.</li>
+                </ul></div>
+            </div>
+
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Firefighting Course" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="Firefighting Course" data-ar="دورة الإطفاء">Firefighting Course</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="Fire prevention and hazard identification." data-ar="الوقاية من الحرائق وتحديد المخاطر.">Fire prevention and hazard identification.</li>
+                    <li class="tr" data-en="Safe operation of firefighting equipment." data-ar="التشغيل الآمن لمعدات مكافحة الحرائق.">Safe operation of firefighting equipment.</li>
+                    <li class="tr" data-en="Emergency response techniques." data-ar="تقنيات الاستجابة للطوارئ.">Emergency response techniques.</li>
+                    <li class="tr" data-en="Workplace fire safety procedures." data-ar="إجراءات السلامة من الحرائق في مكان العمل.">Workplace fire safety procedures.</li>
+                    <li class="tr" data-en="Evacuation leadership during incidents." data-ar="قيادة الإخلاء أثناء الحوادث.">Evacuation leadership during incidents.</li>
+                </ul></div>
+            </div>
+
+            <!-- Procurement Series -->
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement & Sourcing Introduction - 1" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="Procurement Introduction" data-ar="مقدمة في المشتريات والتوريد">Procurement Introduction</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="Procurement fundamentals." data-ar="أساسيات المشتريات.">Procurement fundamentals.</li>
+                    <li class="tr" data-en="Purchasing lifecycle." data-ar="دورة حياة الشراء.">Purchasing lifecycle.</li>
+                    <li class="tr" data-en="Supplier sourcing principles." data-ar="مبادئ توريد الموردين.">Supplier sourcing principles.</li>
+                    <li class="tr" data-en="Procurement compliance." data-ar="الامتثال في المشتريات.">Procurement compliance.</li>
+                    <li class="tr" data-en="Supply chain overview." data-ar="لمحة عامة عن سلسلة التوريد.">Supply chain overview.</li>
+                </ul></div>
+            </div>
+            
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement Basics - 2" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="Procurement Basics" data-ar="أساسيات المشتريات">Procurement Basics</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="Purchase requisition process." data-ar="عملية طلب الشراء.">Purchase requisition process.</li>
+                    <li class="tr" data-en="Vendor selection." data-ar="اختيار الموردين.">Vendor selection.</li>
+                    <li class="tr" data-en="Cost analysis." data-ar="تحليل التكاليف.">Cost analysis.</li>
+                    <li class="tr" data-en="Procurement documentation." data-ar="وثائق المشتريات.">Procurement documentation.</li>
+                    <li class="tr" data-en="Purchasing best practices." data-ar="أفضل ممارسات الشراء.">Purchasing best practices.</li>
+                </ul></div>
+            </div>
+
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Strategic Sourcing - 3" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="Strategic Sourcing" data-ar="التوريد الاستراتيجي">Strategic Sourcing</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="Category management." data-ar="إدارة الفئات.">Category management.</li>
+                    <li class="tr" data-en="Long-term sourcing strategies." data-ar="استراتيجيات التوريد طويلة الأجل.">Long-term sourcing strategies.</li>
+                    <li class="tr" data-en="Cost optimization." data-ar="تحسين التكلفة.">Cost optimization.</li>
+                    <li class="tr" data-en="Supplier evaluation." data-ar="تقييم الموردين.">Supplier evaluation.</li>
+                    <li class="tr" data-en="Value-driven procurement." data-ar="المشتريات القائمة على القيمة.">Value-driven procurement.</li>
+                </ul></div>
+            </div>
+
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Supplier Management - 4" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="Supplier Management" data-ar="إدارة الموردين">Supplier Management</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="Supplier relationship management." data-ar="إدارة علاقات الموردين.">Supplier relationship management.</li>
+                    <li class="tr" data-en="Performance evaluation." data-ar="تقييم الأداء.">Performance evaluation.</li>
+                    <li class="tr" data-en="Contract compliance." data-ar="الامتثال للعقود.">Contract compliance.</li>
+                    <li class="tr" data-en="Vendor development." data-ar="تطوير الموردين.">Vendor development.</li>
+                    <li class="tr" data-en="Partnership optimization." data-ar="تحسين الشراكات.">Partnership optimization.</li>
+                </ul></div>
+            </div>
+
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Supply Market Analysis - 5" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="Supply Market Analysis" data-ar="تحليل سوق التوريد">Supply Market Analysis</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="Market trend analysis." data-ar="تحليل اتجاهات السوق.">Market trend analysis.</li>
+                    <li class="tr" data-en="Supplier benchmarking." data-ar="مقارنة أداء الموردين.">Supplier benchmarking.</li>
+                    <li class="tr" data-en="Cost forecasting." data-ar="التنبؤ بالتكاليف.">Cost forecasting.</li>
+                    <li class="tr" data-en="Competitive analysis." data-ar="التحليل التنافسي.">Competitive analysis.</li>
+                    <li class="tr" data-en="Risk assessment in supply markets." data-ar="تقييم المخاطر في أسواق التوريد.">Risk assessment in supply markets.</li>
+                </ul></div>
+            </div>
+
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement Negotiation  - 6" data-fallback="https://via.placeholder.com/400x220/111/3b82f6?text=Certificate" class="click-to-zoom" alt="Certificate">
+                <h3 class="tr" data-en="Procurement Negotiation" data-ar="مفاوضات المشتريات">Procurement Negotiation</h3>
+                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                </button>
+                <div class="details-content"><ul class="custom-bullets">
+                    <li class="tr" data-en="Negotiation planning." data-ar="التخطيط للتفاوض.">Negotiation planning.</li>
+                    <li class="tr" data-en="Cost reduction strategies." data-ar="استراتيجيات خفض التكاليف.">Cost reduction strategies.</li>
+                    <li class="tr" data-en="Win-win negotiation techniques." data-ar="تقنيات التفاوض المربح للجانبين (Win-Win).">Win-win negotiation techniques.</li>
+                    <li class="tr" data-en="Contract negotiation." data-ar="التفاوض على العقود.">Contract negotiation.</li>
+                    <li class="tr" data-en="Supplier relationship enhancement." data-ar="تعزيز علاقات الموردين.">Supplier relationship enhancement.</li>
+                </ul></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 6. HACKER CONTACT TERMINAL -->
+    <section class="container reveal-slide-up">
+        <h2 class="section-title tr" data-en="Network.Connect()" data-ar="الشبكة.اتصال()" style="text-align: center;">Network.Connect()</h2>
+        <div class="contact-terminal hover-target" id="terminal-box">
+            <div class="header">bash - root@ammar-server:~</div>
+            <div class="cmd-line" style="direction: ltr !important;">
+                <span class="cmd-prompt">ammar@server:~$</span>
+                <span class="tr" data-en='Type <strong style="color:#fff">contact</strong> and press Enter:' data-ar='اكتب <strong style="color:#fff">تواصل</strong> واضغط Enter:'>Type <strong style="color:#fff">contact</strong> and press Enter:</span>
+            </div>
+            <div class="cmd-line" style="direction: ltr !important;">
+                <span class="cmd-prompt">></span>
+                <input type="text" class="cmd-input" id="terminal-input" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="cmd-response" id="terminal-response">
+                <p class="tr" data-en="[+] Connection established securely." data-ar="[+] تم إنشاء اتصال آمن.">[+] Connection established securely.</p>
+                <p><span class="tr" data-en="[>] Email:" data-ar="[>] البريد الإلكتروني:">[>] Email:</span> <a href="mailto:ammaralskaf56@gmail.com" class="hover-target">ammaralskaf56@gmail.com</a></p>
+                <p><span class="tr" data-en="[>] Phone:" data-ar="[>] رقم الهاتف:">[>] Phone:</span> <a href="tel:+963937807398" class="hover-target">(+963) 937807398</a></p>
+                <p><span class="tr" data-en="[>] LinkedIn:" data-ar="[>] حساب لينكد إن:">[>] LinkedIn:</span> <a href="https://www.linkedin.com/in/ammar-alskaf-188a5b251" target="_blank" class="hover-target tr" data-en="View Profile Dashboard" data-ar="عرض لوحة تحكم الحساب">View Profile Dashboard</a></p>
+            </div>
+        </div>
+    </section>
+
     <footer>
-        <p>&copy; 2026 Ammar Alskaf. All Rights Reserved.</p>
+        <p class="tr" data-en="Built by Ammar Alskaf &copy; 2026. All Systems Operational." data-ar="تم التطوير بواسطة عمّار السكّاف &copy; 2026. جميع الأنظمة تعمل بشكل ممتاز.">Built by Ammar Alskaf &copy; 2026. All Systems Operational.</p>
     </footer>
 
-    <!-- The Image Modal -->
+    <!-- 7. THE MODAL (LIGHTBOX) -->
     <div id="imageModal" class="modal">
-        <span class="close-modal">&times;</span>
+        <span class="close-modal hover-target">&times;</span>
         <img class="modal-content" id="zoomedImg">
     </div>
 
-    <!-- Scripts -->
+    <!-- SCRIPTS -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        // --- TRANSLATION LOGIC ---
+        let currentLang = 'en';
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            document.body.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
             
-            /* =========================================
-               1. TYPEWRITER EFFECT
-               ========================================= */
-            const textArray = [
-                "Telecommunications Engineer",
-                "Data Analyst (Python & VBA)",
-                "Technical Procurement Specialist",
-                "AI & Advanced Excel Expert"
-            ];
-            let textIndex = 0;
-            let charIndex = 0;
-            const typingSpeed = 100;
-            const erasingSpeed = 50;
-            const newTextDelay = 2000;
-            const textElement = document.getElementById("typewriter-text");
+            const btn = document.getElementById('lang-btn');
+            btn.innerText = currentLang === 'en' ? 'AR / العربية' : 'EN / English';
 
-            function type() {
-                if (charIndex < textArray[textIndex].length) {
-                    textElement.textContent += textArray[textIndex].charAt(charIndex);
-                    charIndex++;
-                    setTimeout(type, typingSpeed);
-                } else {
-                    setTimeout(erase, newTextDelay);
+            const elements = document.querySelectorAll('.tr');
+            elements.forEach(el => {
+                if(el.hasAttribute(`data-${currentLang}`)) {
+                    el.innerHTML = el.getAttribute(`data-${currentLang}`);
                 }
+            });
+
+            // Update terminal placeholder based on language
+            const termInput = document.getElementById('terminal-input');
+            termInput.value = '';
+            termInput.placeholder = currentLang === 'en' ? '' : '';
+            document.getElementById('terminal-response').style.display = 'none';
+            termInput.disabled = false;
+        }
+
+        // --- EXPANDABLE DETAILS (Accordion) LOGIC ---
+        function toggleDetails(btn) {
+            btn.classList.toggle('active');
+            const content = btn.nextElementSibling;
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+            } else {
+                content.classList.add('open');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // CUSTOM CURSOR LOGIC
+            const cursor = document.getElementById('custom-cursor');
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            const hoverTargets = document.querySelectorAll('.hover-target, a, input, button, .click-to-zoom');
+            hoverTargets.forEach(target => {
+                target.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+                target.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+            });
+
+            // STARTUP TERMINAL SEQUENCE
+            const lines = document.querySelectorAll('.terminal-line');
+            const intro = document.getElementById('intro-terminal');
+            let delay = 500;
+
+            lines.forEach((line, index) => {
+                setTimeout(() => { line.classList.add('active'); }, delay);
+                delay += (index === lines.length - 2) ? 1500 : 800;
+            });
+
+            setTimeout(() => {
+                intro.style.opacity = '0';
+                setTimeout(() => {
+                    intro.style.visibility = 'hidden';
+                    document.body.classList.remove('locked'); 
+                    triggerHeroAnimations();
+                }, 1000);
+            }, delay + 1500);
+
+            // HERO STAGGER ANIMATIONS
+            function triggerHeroAnimations() {
+                const pills = document.querySelectorAll('.tech-pill');
+                pills.forEach((pill, i) => {
+                    setTimeout(() => {
+                        pill.style.opacity = '1';
+                        pill.style.transform = 'translateY(0)';
+                    }, i * 150);
+                });
             }
 
-            function erase() {
-                if (charIndex > 0) {
-                    textElement.textContent = textArray[textIndex].substring(0, charIndex - 1);
-                    charIndex--;
-                    setTimeout(erase, erasingSpeed);
-                } else {
-                    textIndex++;
-                    if (textIndex >= textArray.length) textIndex = 0;
-                    setTimeout(type, typingSpeed + 1100);
-                }
-            }
-            
-            // Start typewriter after a tiny delay
-            setTimeout(type, 500);
+            // SCROLL REVEAL 
+            const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('active'); }
+                });
+            }, observerOptions);
+            document.querySelectorAll('.reveal-fade, .reveal-slide-up, .reveal-scale').forEach(el => observer.observe(el));
 
-            /* =========================================
-               2. SCROLL REVEAL ANIMATION
-               ========================================= */
-            function reveal() {
-                var reveals = document.querySelectorAll(".reveal");
-                for (var i = 0; i < reveals.length; i++) {
-                    var windowHeight = window.innerHeight;
-                    var elementTop = reveals[i].getBoundingClientRect().top;
-                    var elementVisible = 100; // when to start animation
-                    
-                    if (elementTop < windowHeight - elementVisible) {
-                        reveals[i].classList.add("active");
+            // TERMINAL CONTACT LOGIC 
+            const termInput = document.getElementById('terminal-input');
+            const termResponse = document.getElementById('terminal-response');
+            
+            document.getElementById('terminal-box').addEventListener('click', () => termInput.focus());
+            
+            termInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const requiredCommand = currentLang === 'en' ? 'contact' : 'تواصل';
+                    if (termInput.value.toLowerCase().trim() === requiredCommand) {
+                        termResponse.style.display = 'block';
+                        termInput.disabled = true;
+                    } else {
+                        termInput.value = '';
+                        termInput.placeholder = currentLang === 'en' ? 'Command not found. Try "contact"' : 'أمر غير معروف. جرب "تواصل"';
                     }
                 }
-            }
-            window.addEventListener("scroll", reveal);
-            reveal(); // Trigger once on load
+            });
 
-            /* =========================================
-               3. SMART IMAGE LOADER & BACKGROUND
-               ========================================= */
+            // EASTER EGG
+            let secretCode = ['p', 'y', 't', 'h', 'o', 'n'];
+            let currentKey = 0;
+            document.addEventListener('keydown', (e) => {
+                if (e.key.toLowerCase() === secretCode[currentKey]) {
+                    currentKey++;
+                    if (currentKey === secretCode.length) {
+                        triggerEasterEgg();
+                        currentKey = 0;
+                    }
+                } else { currentKey = 0; }
+            });
+
+            function triggerEasterEgg() {
+                const flash = document.getElementById('easter-egg');
+                flash.style.display = 'block';
+                document.documentElement.style.setProperty('--glow', '#10b981');
+                document.documentElement.style.setProperty('--accent', '#10b981');
+                setTimeout(() => { flash.style.display = 'none'; }, 500);
+                alert(currentLang === 'en' ? "🟢 Developer Mode Unlocked: AI Core Access Granted." : "🟢 تم تفعيل وضع المطور: تم منح صلاحية الوصول لنواة الذكاء الاصطناعي.");
+            }
+
+            // SMART IMAGE LOADER 
             const exts = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG'];
 
-            // Header Background
             const header = document.getElementById('main-header');
             const bgBase = 'Ammar Alskaf';
             let bgIndex = 0;
-
             function loadBackground() {
                 if (bgIndex < exts.length) {
                     let img = new Image();
-                    img.onload = function() {
-                        header.style.backgroundImage = `url('${img.src}')`;
-                    };
-                    img.onerror = function() {
-                        bgIndex++;
-                        loadBackground();
-                    };
+                    img.onload = function() { header.style.backgroundImage = `url('${img.src}')`; };
+                    img.onerror = function() { bgIndex++; loadBackground(); };
                     img.src = bgBase + exts[bgIndex];
                 }
             }
             loadBackground();
 
-            // Handle All Other Images
             const images = document.querySelectorAll('img[data-img]');
             images.forEach(function(img) {
                 const baseName = img.getAttribute('data-img');
                 const fallback = img.getAttribute('data-fallback');
                 let imgIndex = 0;
-
                 function loadImage() {
-                    if (imgIndex < exts.length) {
-                        img.src = baseName + exts[imgIndex];
-                    } else {
-                        if (fallback) {
-                            img.src = fallback;
-                        } else {
-                            img.style.display = 'none'; 
-                        }
-                    }
+                    if (imgIndex < exts.length) { img.src = baseName + exts[imgIndex]; } 
+                    else { img.src = fallback; }
                 }
                 img.onerror = function() { imgIndex++; loadImage(); };
                 loadImage();
             });
 
-            /* =========================================
-               4. IMAGE MODAL (LIGHTBOX)
-               ========================================= */
+            // IMAGE MODAL (LIGHTBOX)
             const modal = document.getElementById("imageModal");
             const modalImg = document.getElementById("zoomedImg");
             const closeBtn = document.getElementsByClassName("close-modal")[0];
@@ -413,9 +757,9 @@
                     }
                 }
             });
-
             closeBtn.onclick = function() { modal.style.display = "none"; }
             modal.onclick = function(e) { if (e.target !== modalImg) { modal.style.display = "none"; } }
+
         });
     </script>
 </body>
