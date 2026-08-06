@@ -3,380 +3,466 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ammar Alskaf | Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Ammar | Tech Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        /* General Styles */
+        /* ==================================================
+           1. VARIABLES & BASE SETUP (Premium SaaS Look)
+           ================================================== */
         :root {
-            --primary-color: #0f172a;
-            --secondary-color: #3b82f6;
-            --text-color: #333;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
+            --bg-dark: #050505;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent: #ffffff;
+            --glow: #3b82f6;
+            --text-main: #e2e8f0;
+            --text-muted: #8492a6;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'Fira Code', monospace;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden;}
-        a { text-decoration: none; color: var(--secondary-color); }
-        .container { width: 90%; max-width: 1200px; margin: auto; padding: 40px 0; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; /* Hide default cursor */ }
         
-        /* Typography */
-        h1, h2, h3 { color: var(--primary-color); margin-bottom: 15px; }
-        h2 { font-size: 2.5rem; text-align: center; margin-bottom: 40px; position: relative; text-transform: uppercase; letter-spacing: 1px;}
-        h2::after { content: ''; display: block; width: 60px; height: 4px; background: var(--secondary-color); margin: 10px auto 0; border-radius: 2px; }
+        body { 
+            background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-main);
+            overflow-x: hidden; line-height: 1.6;
+            /* Smooth scrolling */
+            scroll-behavior: smooth;
+        }
 
-        /* Hero Section */
-        header { 
-            position: relative;
-            background-color: var(--primary-color);
-            background-position: center;
-            background-size: contain; 
-            background-repeat: no-repeat;
-            color: white; 
-            padding: 150px 0; 
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: background-image 0.5s ease-in-out;
+        body.locked { overflow: hidden; }
+
+        /* Custom Glowing Cursor */
+        #custom-cursor {
+            position: fixed; top: 0; left: 0; width: 20px; height: 20px;
+            background: var(--accent); border-radius: 50%;
+            pointer-events: none; mix-blend-mode: difference; z-index: 999999;
+            transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s;
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
         }
-        .header-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(15, 23, 42, 0.85); 
-            z-index: 1;
+        .hovering { width: 50px !important; height: 50px !important; background: transparent !important; border: 1px solid white; }
+
+        /* Dynamic Background (Moving Orbs) */
+        .bg-glow {
+            position: fixed; width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%);
+            top: -20%; left: -10%; border-radius: 50%; z-index: -1;
+            animation: float 20s infinite alternate; filter: blur(60px);
         }
-        header .container { position: relative; z-index: 2; }
-        header h1 { color: white; font-size: 4rem; margin-bottom: 10px; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+        .bg-glow-2 {
+            position: fixed; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, rgba(0,0,0,0) 70%);
+            bottom: -20%; right: -10%; border-radius: 50%; z-index: -1;
+            animation: float 25s infinite alternate-reverse; filter: blur(60px);
+        }
+        @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(10%, 10%); } }
+
+        /* Noise Texture overlay */
+        .noise {
+            position: fixed; top:0; left:0; width: 100vw; height: 100vh;
+            background: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.04"/%3E%3C/svg%3E');
+            z-index: -1; pointer-events: none;
+        }
+
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 100px 0; }
+
+        /* ==================================================
+           2. STARTUP TERMINAL (INTRO)
+           ================================================== */
+        #intro-terminal {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; z-index: 100000; display: flex; flex-direction: column;
+            justify-content: center; align-items: flex-start; padding: 10vw;
+            font-family: var(--font-mono); color: #10b981; font-size: 1.2rem;
+            transition: opacity 1s, visibility 1s;
+        }
+        .terminal-line { display: none; margin-bottom: 10px; opacity: 0; transform: translateY(10px); }
+        .terminal-line.active { display: block; animation: fadeInUp 0.4s forwards; }
+        .blinking-cursor { display: inline-block; width: 10px; height: 20px; background: #10b981; animation: blink 1s infinite; }
         
-        /* Typewriter Effect Styles */
-        .typewriter-container {
-            font-size: 1.5rem; color: #60a5fa; margin-bottom: 25px; font-weight: 600; min-height: 35px;
-        }
-        .cursor {
-            display: inline-block; width: 3px; background-color: #60a5fa; margin-left: 2px;
-            animation: blink 0.75s step-end infinite;
-        }
-        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        .contact-info { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 30px; font-size: 1rem; }
-        .contact-info a, .contact-info span { color: white; border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 30px; transition: 0.3s; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);}
-        .contact-info a:hover { background: var(--secondary-color); border-color: var(--secondary-color); transform: translateY(-3px);}
-
-        /* About Section */
-        .about-text { text-align: center; max-width: 850px; margin: auto; font-size: 1.15rem; color: #475569; }
-
-        /* Scroll Reveal Animation Classes */
-        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* Experience Timeline */
-        .timeline-item { background: var(--card-bg); padding: 25px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid var(--secondary-color); transition: transform 0.3s ease, box-shadow 0.3s; }
-        .timeline-item:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .timeline-date { color: var(--secondary-color); font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
-        .exp-img { width: 100%; max-width: 500px; height: auto; border-radius: 8px; margin-top: 15px; border: 1px solid #e2e8f0; display: block; cursor: zoom-in; }
+        /* ==================================================
+           3. HERO SECTION (Immersive)
+           ================================================== */
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
+        .hero h1 { font-size: 6rem; font-weight: 800; letter-spacing: -2px; margin-bottom: 0; line-height: 1; background: linear-gradient(180deg, #fff, #71717a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        /* Grid for Certificates */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s ease, box-shadow 0.3s; display: flex; flex-direction: column;}
-        .card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
-        .card img { width: 100%; height: 220px; object-fit: cover; background: #e2e8f0; border-bottom: 3px solid var(--secondary-color); cursor: zoom-in;}
-        .card-content { padding: 20px; flex-grow: 1;}
-        .card-content h3 { font-size: 1.1rem; line-height: 1.4; margin-bottom: 10px;}
-        .card-content p { font-size: 0.9rem; color: #64748b; font-weight: 600;}
+        .role-container { height: 40px; overflow: hidden; margin-top: 20px; }
+        .role-text { font-size: 1.8rem; color: var(--text-muted); font-weight: 300; display: block; animation: slideRoles 9s infinite; }
+        @keyframes slideRoles {
+            0%, 25% { transform: translateY(0); }
+            33%, 58% { transform: translateY(-100%); }
+            66%, 91% { transform: translateY(-200%); }
+            100% { transform: translateY(0); }
+        }
 
-        /* Footer */
-        footer { background: var(--primary-color); color: white; text-align: center; padding: 30px 0; margin-top: 50px; }
+        .tech-stack { display: flex; gap: 15px; margin-top: 40px; flex-wrap: wrap; justify-content: center; }
+        .tech-pill {
+            padding: 8px 20px; border-radius: 30px; font-size: 0.9rem; font-family: var(--font-mono);
+            background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px);
+            transition: 0.3s; opacity: 0; transform: translateY(20px);
+        }
+        .tech-pill:hover { background: rgba(255,255,255,0.1); transform: scale(1.05) !important; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
 
-        /* Image Modal */
-        .modal { display: none; position: fixed; z-index: 999999; padding-top: 50px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(15, 23, 42, 0.95); backdrop-filter: blur(5px);}
-        .modal-content { margin: auto; display: block; width: 90%; max-width: 900px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); animation: zoom 0.3s ease-in-out; }
-        @keyframes zoom { from {transform:scale(0.8); opacity:0} to {transform:scale(1); opacity:1} }
-        .close-modal { position: absolute; top: 20px; right: 40px; color: #f1f1f1; font-size: 45px; font-weight: bold; transition: 0.3s; cursor: pointer; }
-        .close-modal:hover { color: var(--secondary-color); }
+        /* ==================================================
+           4. GLASSMORPHISM CARDS & SCROLL REVEALS
+           ================================================== */
+        .section-title { font-size: 2.5rem; margin-bottom: 50px; text-transform: uppercase; letter-spacing: 2px; color: #fff; font-weight: 600;}
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        
+        .glass-card {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 25px; backdrop-filter: blur(12px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden; display: flex; flex-direction: column;
+        }
+        .glass-card::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
+        }
+        .glass-card:hover { transform: translateY(-10px); border-color: rgba(255,255,255,0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .glass-card:hover::before { left: 100%; }
+
+        .glass-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .glass-card h3 { font-size: 1.2rem; color: #fff; margin-bottom: 10px; }
+        .glass-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Scroll Animations (Different types) */
+        .reveal-fade { opacity: 0; transition: opacity 1s ease-out; }
+        .reveal-fade.active { opacity: 1; }
+        
+        .reveal-slide-up { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal-slide-up.active { opacity: 1; transform: translateY(0); }
+
+        .reveal-scale { opacity: 0; transform: scale(0.9); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal-scale.active { opacity: 1; transform: scale(1); }
+
+        /* ==================================================
+           5. TIMELINE (Experience)
+           ================================================== */
+        .timeline { position: relative; border-left: 2px solid rgba(255,255,255,0.1); margin-left: 20px; padding-left: 30px; }
+        .timeline-item { margin-bottom: 40px; position: relative; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -36px; top: 0; width: 10px; height: 10px;
+            background: var(--bg-dark); border: 2px solid var(--glow); border-radius: 50%;
+            box-shadow: 0 0 10px var(--glow); transition: 0.3s;
+        }
+        .timeline-item:hover::before { background: var(--glow); transform: scale(1.5); }
+        .timeline-date { font-family: var(--font-mono); color: var(--glow); font-size: 0.85rem; margin-bottom: 5px; }
+
+        /* ==================================================
+           6. LIVE STATS
+           ================================================== */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center; }
+        .stat-box { padding: 40px 20px; background: var(--glass-bg); border-radius: 16px; border: 1px solid var(--glass-border); }
+        .stat-number { font-size: 3.5rem; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 10px; }
+        .stat-label { color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;}
+
+        /* ==================================================
+           7. HACKER CONTACT TERMINAL
+           ================================================== */
+        .contact-terminal { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 20px; font-family: var(--font-mono); position: relative;}
+        .contact-terminal .header { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 20px; color: #666; font-size: 0.8rem;}
+        .cmd-line { color: #fff; margin-bottom: 10px;}
+        .cmd-prompt { color: #3b82f6; margin-right: 10px;}
+        .cmd-input { background: transparent; border: none; color: #10b981; font-family: var(--font-mono); font-size: 1rem; outline: none; width: 200px;}
+        .cmd-response { display: none; color: #a1a1aa; margin-top: 10px; padding-left: 20px;}
+        .cmd-response a { color: #fff; text-decoration: none; border-bottom: 1px dashed #3b82f6; transition: 0.3s;}
+        .cmd-response a:hover { color: #3b82f6; }
+
+        /* Full Screen Easter Egg Flash */
+        #easter-egg { position: fixed; top:0; left:0; width: 100vw; height: 100vh; background: rgba(16, 185, 129, 0.2); z-index: 9999999; display: none; pointer-events: none; mix-blend-mode: overlay;}
     </style>
 </head>
-<body>
+<body class="locked">
 
-    <!-- Hero Section with Typewriter -->
-    <header id="main-header">
-        <div class="header-overlay"></div>
-        <div class="container">
-            <h1>Ammar Alskaf</h1>
-            <div class="typewriter-container">
-                <span id="typewriter-text"></span><span class="cursor">&nbsp;</span>
-            </div>
-            <div class="contact-info">
-                <a href="mailto:ammaralskaf56@gmail.com">ammaralskaf56@gmail.com</a>
-                <a href="tel:+963937807398">(+963) 937807398</a>
-                <a href="https://www.linkedin.com/in/ammar-alskaf-188a5b251" target="_blank">LinkedIn</a>
-                <span>Rif Dimashq, Al Bardeh</span>
-            </div>
+    <!-- Custom Cursor -->
+    <div id="custom-cursor"></div>
+
+    <!-- Background Elements -->
+    <div class="noise"></div>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+
+    <!-- Easter Egg Flash -->
+    <div id="easter-egg"></div>
+
+    <!-- 1. STARTUP TERMINAL -->
+    <div id="intro-terminal">
+        <div class="terminal-line">Initializing AI Core...</div>
+        <div class="terminal-line">Loading Python Modules...</div>
+        <div class="terminal-line">Connecting SQL Database...</div>
+        <div class="terminal-line">Optimizing Data Pipelines...</div>
+        <div class="terminal-line" style="color: #fff; font-size: 2rem; margin-top: 20px;">Welcome Ammoura.<span class="blinking-cursor"></span></div>
+    </div>
+
+    <!-- 2. IMMERSIVE HERO -->
+    <header class="hero">
+        <h1 class="hover-target">AMMAR</h1>
+        <div class="role-container">
+            <div class="role-text">Data Analyst</div>
+            <div class="role-text">Python Developer</div>
+            <div class="role-text">Automation Engineer</div>
+        </div>
+        <div class="tech-stack" id="hero-stack">
+            <span class="tech-pill hover-target">Python</span>
+            <span class="tech-pill hover-target">SQL</span>
+            <span class="tech-pill hover-target">Excel & VBA</span>
+            <span class="tech-pill hover-target">Power BI</span>
+            <span class="tech-pill hover-target">Machine Learning</span>
         </div>
     </header>
 
-    <!-- About Section -->
-    <section class="container reveal" id="about">
-        <h2>About Me</h2>
-        <p class="about-text">
-            I am a dedicated Telecommunications Engineer with expertise in microwave communications, technical procurement, and data analysis. I leverage Python, VBA, and advanced Excel to automate workflows, analyze large datasets, and build insightful reports and dashboards that support strategic decision-making. Thanks to my extensive professional experience and specialized training, I excel in strategic leadership, project management, process optimization, and problem-solving. My strong interpersonal skills enable me to collaborate effectively with cross-functional teams and stakeholders, ensuring successful project delivery, operational excellence, and data-driven business growth.
-        </p>
-    </section>
-
-    <!-- Experience Section -->
-    <section class="container" id="experience">
-        <h2>Professional Experience</h2>
-        
-        <div class="timeline-item reveal">
-            <div class="timeline-date">06-2024 - 09-2024</div>
-            <h3>Receptionist</h3>
-            <p>Basma Cancer Association</p>
-        </div>
-
-        <div class="timeline-item reveal">
-            <div class="timeline-date">05-2022 - 05-2023</div>
-            <h3>Technical Purchasing Buyer</h3>
-            <p>Syriatel Mobile Telecom</p>
-            <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Technical purchasing buyer -Syriatel" class="exp-img click-to-zoom" alt="Technical Purchasing Buyer">
-        </div>
-
-        <div class="timeline-item reveal">
-            <div class="timeline-date">01-2020 - 05-2022</div>
-            <h3>Contact Centre</h3>
-            <p>Syriatel Mobile Telecom</p>
-            <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Contact Centre - Syriatel" class="exp-img click-to-zoom" alt="Contact Centre">
-        </div>
-
-        <div class="timeline-item reveal">
-            <div class="timeline-date">10-2021 - 08-2023</div>
-            <h3>Private Tutor</h3>
-            <p>Provided private tutoring at home for school and university students.</p>
-        </div>
-
-        <div class="timeline-item reveal">
-            <div class="timeline-date">06-2018 - 11-2019</div>
-            <h3>Data Entry</h3>
-            <p>AL Baath Newspaper</p>
+    <!-- 3. LIVE STATS -->
+    <section class="container reveal-slide-up">
+        <div class="stats-grid">
+            <div class="stat-box hover-target">
+                <div class="stat-number" data-target="45">0</div>
+                <div class="stat-label">Projects Completed</div>
+            </div>
+            <div class="stat-box hover-target">
+                <div class="stat-number" data-target="120">0</div>
+                <div class="stat-label">Automations Built</div>
+            </div>
+            <div class="stat-box hover-target">
+                <div class="stat-number" data-target="500">0</div>
+                <div class="stat-label">Hours Saved</div>
+            </div>
         </div>
     </section>
 
-    <!-- Certifications Section -->
-    <section class="container" id="certifications">
-        <h2>Certifications & Courses</h2>
-        <div class="grid-container">
+    <!-- 4. TIMELINE (EXPERIENCE) -->
+    <section class="container reveal-fade">
+        <h2 class="section-title">System Log / Experience</h2>
+        <div class="timeline">
             
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="GenAI for Executives & Business Leaders" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>GenAI for Executives & Business Leaders</h3>
+            <div class="timeline-item reveal-slide-up">
+                <div class="timeline-date">2024 (Jun - Sep)</div>
+                <div class="glass-card hover-target">
+                    <h3>Receptionist</h3>
+                    <p>Basma Cancer Association. Managed front-desk operations and stakeholder communications.</p>
                 </div>
             </div>
 
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Initiating and Planning Projects" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Initiating and Planning Projects</h3>
+            <div class="timeline-item reveal-slide-up">
+                <div class="timeline-date">2022 - 2023</div>
+                <div class="glass-card hover-target">
+                    <h3>Technical Purchasing Buyer</h3>
+                    <p>Syriatel Mobile Telecom. Executed tech procurement strategies, optimized vendor relations, and analyzed supply market data.</p>
                 </div>
             </div>
 
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Leading Teams Developing as a Leader" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Leading Teams: Developing as a Leader</h3>
+            <div class="timeline-item reveal-slide-up">
+                <div class="timeline-date">2020 - 2022</div>
+                <div class="glass-card hover-target">
+                    <h3>Contact Centre Agent</h3>
+                    <p>Syriatel Mobile Telecom. Solved complex client issues and maintained high customer satisfaction metrics.</p>
                 </div>
             </div>
 
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Managing Project Risks and Changes" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Managing Project Risks and Changes</h3>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="performance Management Awareness" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Performance Management Awareness</h3>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="solving business problems" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Solving Business Problems</h3>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Everyday Excel" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Everyday Excel</h3>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Ambulance - Evacuation Course" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Ambulance & Evacuation Course</h3>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Firefighting Course" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Firefighting Course</h3>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement & Sourcing Introduction - 1" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Procurement & Sourcing Introduction</h3>
-                    <p>Course 1</p>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement Basics - 2" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Procurement Basics</h3>
-                    <p>Course 2</p>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Strategic Sourcing - 3" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Strategic Sourcing</h3>
-                    <p>Course 3</p>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Supplier Management - 4" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Supplier Management</h3>
-                    <p>Course 4</p>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Supply Market Analysis - 5" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Supply Market Analysis</h3>
-                    <p>Course 5</p>
-                </div>
-            </div>
-
-            <div class="card reveal">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement Negotiation  - 6" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
-                <div class="card-content">
-                    <h3>Procurement Negotiation</h3>
-                    <p>Course 6</p>
+            <div class="timeline-item reveal-slide-up">
+                <div class="timeline-date">2018 - 2019</div>
+                <div class="glass-card hover-target">
+                    <h3>Data Entry</h3>
+                    <p>AL Baath Newspaper. Handled large datasets with precision and speed.</p>
                 </div>
             </div>
 
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 Ammar Alskaf. All Rights Reserved.</p>
-    </footer>
+    <!-- 5. PROJECTS / CERTIFICATIONS DASHBOARDS -->
+    <section class="container reveal-scale">
+        <h2 class="section-title">Data / Certifications</h2>
+        <div class="grid">
+            
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="GenAI for Executives & Business Leaders" data-fallback="https://via.placeholder.com/400x200/111/333?text=AI+Module+Loaded" alt="Certificate">
+                <h3>GenAI for Executives</h3>
+                <p>Advanced integration of AI in business workflows.</p>
+            </div>
 
-    <!-- The Image Modal -->
-    <div id="imageModal" class="modal">
-        <span class="close-modal">&times;</span>
-        <img class="modal-content" id="zoomedImg">
-    </div>
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Everyday Excel" data-fallback="https://via.placeholder.com/400x200/111/333?text=Data+Processing" alt="Certificate">
+                <h3>Advanced Data (Excel/VBA)</h3>
+                <p>Complex dashboard creation and macro automation.</p>
+            </div>
 
-    <!-- Scripts -->
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Strategic Sourcing - 3" data-fallback="https://via.placeholder.com/400x200/111/333?text=Procurement+Node" alt="Certificate">
+                <h3>Strategic Sourcing</h3>
+                <p>Global procurement, supplier management, and market analysis.</p>
+            </div>
+            
+            <div class="glass-card hover-target">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Managing Project Risks and Changes" data-fallback="https://via.placeholder.com/400x200/111/333?text=Risk+Management" alt="Certificate">
+                <h3>Project Risk Management</h3>
+                <p>Initiating, planning, and leading technical teams securely.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 6. HACKER CONTACT TERMINAL -->
+    <section class="container reveal-slide-up">
+        <h2 class="section-title">Establish Connection</h2>
+        <div class="contact-terminal hover-target" id="terminal-box">
+            <div class="header">bash - root@ammar-server:~</div>
+            <div class="cmd-line">
+                <span class="cmd-prompt">ammar@server:~$</span>
+                <span>Type <strong style="color:#fff">contact</strong> and press Enter:</span>
+            </div>
+            <div class="cmd-line">
+                <span class="cmd-prompt">></span>
+                <input type="text" class="cmd-input" id="terminal-input" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="cmd-response" id="terminal-response">
+                <p>[+] Connection established.</p>
+                <p>[>] Email: <a href="mailto:ammaralskaf56@gmail.com">ammaralskaf56@gmail.com</a></p>
+                <p>[>] Phone: <a href="tel:+963937807398">(+963) 937807398</a></p>
+                <p>[>] LinkedIn: <a href="https://www.linkedin.com/in/ammar-alskaf-188a5b251" target="_blank">View Profile</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCRIPTS -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             
-            /* =========================================
-               1. TYPEWRITER EFFECT
-               ========================================= */
-            const textArray = [
-                "Telecommunications Engineer",
-                "Data Analyst (Python & VBA)",
-                "Technical Procurement Specialist",
-                "AI & Advanced Excel Expert"
-            ];
-            let textIndex = 0;
-            let charIndex = 0;
-            const typingSpeed = 100;
-            const erasingSpeed = 50;
-            const newTextDelay = 2000;
-            const textElement = document.getElementById("typewriter-text");
+            // 1. CUSTOM CURSOR LOGIC
+            const cursor = document.getElementById('custom-cursor');
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            const hoverTargets = document.querySelectorAll('.hover-target, a, input, button');
+            hoverTargets.forEach(target => {
+                target.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+                target.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+            });
 
-            function type() {
-                if (charIndex < textArray[textIndex].length) {
-                    textElement.textContent += textArray[textIndex].charAt(charIndex);
-                    charIndex++;
-                    setTimeout(type, typingSpeed);
-                } else {
-                    setTimeout(erase, newTextDelay);
-                }
+            // 2. STARTUP TERMINAL SEQUENCE
+            const lines = document.querySelectorAll('.terminal-line');
+            const intro = document.getElementById('intro-terminal');
+            let delay = 500;
+
+            lines.forEach((line, index) => {
+                setTimeout(() => {
+                    line.classList.add('active');
+                }, delay);
+                delay += (index === lines.length - 2) ? 1500 : 700; // Pause longer before welcome
+            });
+
+            setTimeout(() => {
+                intro.style.opacity = '0';
+                setTimeout(() => {
+                    intro.style.visibility = 'hidden';
+                    document.body.classList.remove('locked'); // Allow scroll
+                    triggerHeroAnimations();
+                }, 1000);
+            }, delay + 1500);
+
+            // 3. HERO STAGGER ANIMATIONS
+            function triggerHeroAnimations() {
+                const pills = document.querySelectorAll('.tech-pill');
+                pills.forEach((pill, i) => {
+                    setTimeout(() => {
+                        pill.style.opacity = '1';
+                        pill.style.transform = 'translateY(0)';
+                    }, i * 200);
+                });
             }
 
-            function erase() {
-                if (charIndex > 0) {
-                    textElement.textContent = textArray[textIndex].substring(0, charIndex - 1);
-                    charIndex--;
-                    setTimeout(erase, erasingSpeed);
-                } else {
-                    textIndex++;
-                    if (textIndex >= textArray.length) textIndex = 0;
-                    setTimeout(type, typingSpeed + 1100);
-                }
-            }
+            // 4. SCROLL REVEAL & NUMBER COUNTERS (Intersection Observer)
+            const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
             
-            // Start typewriter after a tiny delay
-            setTimeout(type, 500);
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        
+                        // If it's the stats section, run counters
+                        if (entry.target.querySelector('.stat-number') && !entry.target.classList.contains('counted')) {
+                            entry.target.classList.add('counted');
+                            const counters = entry.target.querySelectorAll('.stat-number');
+                            counters.forEach(counter => {
+                                const target = +counter.getAttribute('data-target');
+                                const duration = 2000; 
+                                const increment = target / (duration / 16); 
+                                let current = 0;
+                                const updateCounter = () => {
+                                    current += increment;
+                                    if (current < target) {
+                                        counter.innerText = Math.ceil(current);
+                                        requestAnimationFrame(updateCounter);
+                                    } else {
+                                        counter.innerText = target + "+";
+                                    }
+                                };
+                                updateCounter();
+                            });
+                        }
+                    }
+                });
+            }, observerOptions);
 
-            /* =========================================
-               2. SCROLL REVEAL ANIMATION
-               ========================================= */
-            function reveal() {
-                var reveals = document.querySelectorAll(".reveal");
-                for (var i = 0; i < reveals.length; i++) {
-                    var windowHeight = window.innerHeight;
-                    var elementTop = reveals[i].getBoundingClientRect().top;
-                    var elementVisible = 100; // when to start animation
-                    
-                    if (elementTop < windowHeight - elementVisible) {
-                        reveals[i].classList.add("active");
+            document.querySelectorAll('.reveal-fade, .reveal-slide-up, .reveal-scale').forEach(el => observer.observe(el));
+
+            // 5. TERMINAL CONTACT LOGIC
+            const termInput = document.getElementById('terminal-input');
+            const termResponse = document.getElementById('terminal-response');
+            
+            document.getElementById('terminal-box').addEventListener('click', () => termInput.focus());
+            
+            termInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    if (termInput.value.toLowerCase().trim() === 'contact') {
+                        termResponse.style.display = 'block';
+                        termInput.disabled = true;
+                    } else {
+                        termInput.value = '';
+                        termInput.placeholder = 'Command not found. Try "contact"';
                     }
                 }
-            }
-            window.addEventListener("scroll", reveal);
-            reveal(); // Trigger once on load
+            });
 
-            /* =========================================
-               3. SMART IMAGE LOADER & BACKGROUND
-               ========================================= */
-            const exts = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG'];
-
-            // Header Background
-            const header = document.getElementById('main-header');
-            const bgBase = 'Ammar Alskaf';
-            let bgIndex = 0;
-
-            function loadBackground() {
-                if (bgIndex < exts.length) {
-                    let img = new Image();
-                    img.onload = function() {
-                        header.style.backgroundImage = `url('${img.src}')`;
-                    };
-                    img.onerror = function() {
-                        bgIndex++;
-                        loadBackground();
-                    };
-                    img.src = bgBase + exts[bgIndex];
+            // 6. EASTER EGG (Typing "python")
+            let secretCode = ['p', 'y', 't', 'h', 'o', 'n'];
+            let currentKey = 0;
+            document.addEventListener('keydown', (e) => {
+                if (e.key.toLowerCase() === secretCode[currentKey]) {
+                    currentKey++;
+                    if (currentKey === secretCode.length) {
+                        triggerEasterEgg();
+                        currentKey = 0;
+                    }
+                } else {
+                    currentKey = 0;
                 }
-            }
-            loadBackground();
+            });
 
-            // Handle All Other Images
+            function triggerEasterEgg() {
+                const flash = document.getElementById('easter-egg');
+                flash.style.display = 'block';
+                // Change background colors to green matrix style temporarily
+                document.documentElement.style.setProperty('--glow', '#10b981');
+                document.documentElement.style.setProperty('--accent', '#10b981');
+                
+                setTimeout(() => {
+                    flash.style.display = 'none';
+                }, 500);
+                
+                alert("🟢 Developer Mode Unlocked: AI Core Access Granted.");
+            }
+
+            // 7. SMART IMAGE LOADER (From previous logic)
+            const exts = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG'];
             const images = document.querySelectorAll('img[data-img]');
+            
             images.forEach(function(img) {
                 const baseName = img.getAttribute('data-img');
                 const fallback = img.getAttribute('data-fallback');
@@ -386,35 +472,13 @@
                     if (imgIndex < exts.length) {
                         img.src = baseName + exts[imgIndex];
                     } else {
-                        if (fallback) {
-                            img.src = fallback;
-                        } else {
-                            img.style.display = 'none'; 
-                        }
+                        img.src = fallback;
                     }
                 }
                 img.onerror = function() { imgIndex++; loadImage(); };
                 loadImage();
             });
 
-            /* =========================================
-               4. IMAGE MODAL (LIGHTBOX)
-               ========================================= */
-            const modal = document.getElementById("imageModal");
-            const modalImg = document.getElementById("zoomedImg");
-            const closeBtn = document.getElementsByClassName("close-modal")[0];
-
-            document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('click-to-zoom')) {
-                    if (e.target.src && !e.target.src.includes('R0lGODlhAQABAAD')) {
-                        modal.style.display = "block";
-                        modalImg.src = e.target.src;
-                    }
-                }
-            });
-
-            closeBtn.onclick = function() { modal.style.display = "none"; }
-            modal.onclick = function(e) { if (e.target !== modalImg) { modal.style.display = "none"; } }
         });
     </script>
 </body>
