@@ -15,7 +15,9 @@
             --card-bg: #ffffff;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden;}
+        /* Body class to stop scrolling during intro animation */
+        body.no-scroll { overflow: hidden; }
         a { text-decoration: none; color: var(--secondary-color); }
         .container { width: 90%; max-width: 1200px; margin: auto; padding: 40px 0; }
         
@@ -24,12 +26,61 @@
         h2 { font-size: 2.5rem; text-align: center; margin-bottom: 40px; position: relative; text-transform: uppercase; letter-spacing: 1px;}
         h2::after { content: ''; display: block; width: 60px; height: 4px; background: var(--secondary-color); margin: 10px auto 0; border-radius: 2px; }
 
-        /* Hero Section (Background zoomed out to show full image) */
+        /* ==================================================
+           SPLASH SCREEN INTRO ANIMATION (THE DOOR EFFECT)
+           ================================================== */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #050b14; 
+            z-index: 99999;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+            transition: opacity 1s ease-in-out, visibility 1s;
+        }
+        .digital-door {
+            position: relative;
+            width: 90px; height: 160px;
+            border: 2px solid var(--secondary-color);
+            box-shadow: 0 0 20px var(--secondary-color), inset 0 0 15px var(--secondary-color);
+            border-radius: 5px;
+            z-index: 2;
+            background: rgba(59, 130, 246, 0.1);
+            transition: transform 1s ease-in, box-shadow 1s ease-in, background 1s ease-in, opacity 1s ease-in;
+        }
+        /* When door opens */
+        .digital-door.open {
+            transform: scale(30); /* Zooms into the door */
+            box-shadow: 0 0 100px #ffffff, inset 0 0 100px #ffffff;
+            background: #ffffff;
+            opacity: 0;
+        }
+        /* The flying words */
+        .splash-word {
+            position: absolute;
+            color: #60a5fa;
+            font-weight: 700;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0;
+            z-index: 1;
+            text-shadow: 0 0 15px var(--secondary-color);
+            pointer-events: none;
+        }
+        @keyframes flyIntoDoor {
+            0% { transform: translate(var(--startX), var(--startY)) scale(3); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translate(0, 0) scale(0.1); opacity: 0; }
+        }
+        /* ================================================== */
+
+        /* Hero Section */
         header { 
             position: relative;
             background-color: var(--primary-color);
             background-position: center;
-            background-size: contain; /* Shows the complete image without cropping */
+            background-size: contain; 
             background-repeat: no-repeat;
             color: white; 
             padding: 140px 0; 
@@ -37,22 +88,16 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             transition: background-image 0.5s ease-in-out;
         }
-        /* Dark overlay layer to make text readable */
         .header-overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             background-color: rgba(15, 23, 42, 0.85); 
             z-index: 1;
         }
-        header .container {
-            position: relative;
-            z-index: 2; /* Keeps the text above the dark overlay */
-        }
-
+        header .container { position: relative; z-index: 2; }
         header h1 { color: white; font-size: 4rem; margin-bottom: 10px; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
         header p.title { font-size: 1.4rem; color: #cbd5e1; margin-bottom: 20px; font-weight: 300; line-height: 1.8;}
         
-        /* Highlight for Data Skills */
         .highlight-skill { color: #60a5fa; font-weight: 600; }
 
         .contact-info { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 25px; font-size: 1rem; }
@@ -66,22 +111,35 @@
         .timeline-item { background: var(--card-bg); padding: 25px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid var(--secondary-color); transition: transform 0.3s ease; }
         .timeline-item:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .timeline-date { color: var(--secondary-color); font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
-        .exp-img { width: 100%; max-width: 500px; height: auto; border-radius: 8px; margin-top: 15px; border: 1px solid #e2e8f0; display: block; }
-
-        /* Grid for Projects & Certificates */
+        .exp-img { width: 100%; max-width: 500px; height: auto; border-radius: 8px; margin-top: 15px; border: 1px solid #e2e8f0; display: block; cursor: zoom-in; }
+        
+        /* Grid for Certificates */
         .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s ease; display: flex; flex-direction: column;}
         .card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
-        .card img { width: 100%; height: 220px; object-fit: cover; background: #e2e8f0; border-bottom: 3px solid var(--secondary-color);}
+        .card img { width: 100%; height: 220px; object-fit: cover; background: #e2e8f0; border-bottom: 3px solid var(--secondary-color); cursor: zoom-in;}
         .card-content { padding: 20px; flex-grow: 1;}
         .card-content h3 { font-size: 1.1rem; line-height: 1.4; margin-bottom: 10px;}
         .card-content p { font-size: 0.9rem; color: #64748b; font-weight: 600;}
 
         /* Footer */
         footer { background: var(--primary-color); color: white; text-align: center; padding: 30px 0; margin-top: 50px; }
+
+        /* Image Modal */
+        .modal { display: none; position: fixed; z-index: 999999; padding-top: 50px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(15, 23, 42, 0.95); backdrop-filter: blur(5px);}
+        .modal-content { margin: auto; display: block; width: 90%; max-width: 900px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); animation: zoom 0.3s ease-in-out; }
+        @keyframes zoom { from {transform:scale(0.8); opacity:0} to {transform:scale(1); opacity:1} }
+        .close-modal { position: absolute; top: 20px; right: 40px; color: #f1f1f1; font-size: 45px; font-weight: bold; transition: 0.3s; cursor: pointer; }
+        .close-modal:hover { color: var(--secondary-color); }
     </style>
 </head>
-<body>
+<body class="no-scroll">
+
+    <!-- SPLASH SCREEN INTRO -->
+    <div id="splash-screen">
+        <div class="digital-door" id="splash-door"></div>
+    </div>
+    <!-- ===================== -->
 
     <!-- Hero Section -->
     <header id="main-header">
@@ -101,7 +159,7 @@
         </div>
     </header>
 
-    <!-- About Section (Updated) -->
+    <!-- About Section -->
     <section class="container" id="about">
         <h2>About Me</h2>
         <p class="about-text">
@@ -123,14 +181,14 @@
             <div class="timeline-date">05-2022 - 05-2023</div>
             <h3>Technical Purchasing Buyer</h3>
             <p>Syriatel Mobile Telecom</p>
-            <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Technical purchasing buyer -Syriatel" class="exp-img" alt="Technical Purchasing Buyer">
+            <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Technical purchasing buyer -Syriatel" class="exp-img click-to-zoom" alt="Technical Purchasing Buyer">
         </div>
 
         <div class="timeline-item">
             <div class="timeline-date">01-2020 - 05-2022</div>
             <h3>Contact Centre</h3>
             <p>Syriatel Mobile Telecom</p>
-            <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Contact Centre - Syriatel" class="exp-img" alt="Contact Centre">
+            <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Contact Centre - Syriatel" class="exp-img click-to-zoom" alt="Contact Centre">
         </div>
 
         <div class="timeline-item">
@@ -152,71 +210,70 @@
         <div class="grid-container">
             
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="GenAI for Executives & Business Leaders" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="GenAI for Executives & Business Leaders" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>GenAI for Executives & Business Leaders</h3>
                 </div>
             </div>
 
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Initiating and Planning Projects" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Initiating and Planning Projects" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>Initiating and Planning Projects</h3>
                 </div>
             </div>
 
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Leading Teams Developing as a Leader" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Leading Teams Developing as a Leader" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>Leading Teams: Developing as a Leader</h3>
                 </div>
             </div>
 
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Managing Project Risks and Changes" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Managing Project Risks and Changes" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>Managing Project Risks and Changes</h3>
                 </div>
             </div>
 
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="performance Management Awareness" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="performance Management Awareness" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>Performance Management Awareness</h3>
                 </div>
             </div>
 
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="solving business problems" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="solving business problems" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>Solving Business Problems</h3>
                 </div>
             </div>
 
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Everyday Excel" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Everyday Excel" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>Everyday Excel</h3>
                 </div>
             </div>
 
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Ambulance - Evacuation Course" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Ambulance - Evacuation Course" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>Ambulance & Evacuation Course</h3>
                 </div>
             </div>
 
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Firefighting Course" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Firefighting Course" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>Firefighting Course</h3>
                 </div>
             </div>
 
-            <!-- Procurement Specialization -->
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement & Sourcing Introduction - 1" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement & Sourcing Introduction - 1" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>Procurement & Sourcing Introduction</h3>
                     <p>Course 1</p>
@@ -224,7 +281,7 @@
             </div>
 
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement Basics - 2" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement Basics - 2" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>Procurement Basics</h3>
                     <p>Course 2</p>
@@ -232,7 +289,7 @@
             </div>
 
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Strategic Sourcing - 3" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Strategic Sourcing - 3" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>Strategic Sourcing</h3>
                     <p>Course 3</p>
@@ -240,7 +297,7 @@
             </div>
 
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Supplier Management - 4" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Supplier Management - 4" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>Supplier Management</h3>
                     <p>Course 4</p>
@@ -248,7 +305,7 @@
             </div>
 
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Supply Market Analysis - 5" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Supply Market Analysis - 5" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>Supply Market Analysis</h3>
                     <p>Course 5</p>
@@ -256,7 +313,7 @@
             </div>
 
             <div class="card">
-                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement Negotiation  - 6" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement Negotiation  - 6" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate" class="click-to-zoom">
                 <div class="card-content">
                     <h3>Procurement Negotiation</h3>
                     <p>Course 6</p>
@@ -271,12 +328,67 @@
         <p>&copy; 2026 Ammar Alskaf. All Rights Reserved.</p>
     </footer>
 
-    <!-- Smart Image Extension Loader -->
+    <!-- The Image Modal -->
+    <div id="imageModal" class="modal">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="zoomedImg">
+    </div>
+
+    <!-- Scripts -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            
+            /* =========================================
+               1. SPLASH SCREEN LOGIC
+               ========================================= */
+            const wordsToFly = ['Data', 'Analysis', 'Management', 'VBA', 'Python', 'Procurement', 'AI', 'Engineering'];
+            const splashScreen = document.getElementById('splash-screen');
+            const door = document.getElementById('splash-door');
+            
+            // Create and animate words
+            wordsToFly.forEach((word, index) => {
+                let span = document.createElement('span');
+                span.className = 'splash-word';
+                span.innerText = word;
+                
+                // Start from random angles far outside the door
+                let angle = Math.random() * Math.PI * 2;
+                let distance = window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight;
+                let startX = Math.cos(angle) * (distance / 1.5);
+                let startY = Math.sin(angle) * (distance / 1.5);
+                
+                span.style.setProperty('--startX', `${startX}px`);
+                span.style.setProperty('--startY', `${startY}px`);
+                
+                // Delay each word slightly for a cool sequence effect
+                span.style.animation = `flyIntoDoor 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) ${index * 0.15}s forwards`;
+                
+                splashScreen.appendChild(span);
+            });
+
+            // Trigger the door zoom and remove splash screen
+            let totalAnimationTime = (wordsToFly.length * 150) + 1200; // Time when last word enters the door
+            
+            setTimeout(() => {
+                door.classList.add('open');
+                
+                setTimeout(() => {
+                    splashScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        splashScreen.style.visibility = 'hidden';
+                        document.body.classList.remove('no-scroll'); // Allow scrolling again
+                    }, 1000);
+                }, 800); // Wait for door to zoom in
+                
+            }, totalAnimationTime);
+
+
+            /* =========================================
+               2. SMART IMAGE LOADER & BACKGROUND
+               ========================================= */
             const exts = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG'];
 
-            // 1. Handle Header Background
+            // Header Background
             const header = document.getElementById('main-header');
             const bgBase = 'Ammar Alskaf';
             let bgIndex = 0;
@@ -296,7 +408,7 @@
             }
             loadBackground();
 
-            // 2. Handle All Other Images
+            // Handle All Other Images
             const images = document.querySelectorAll('img[data-img]');
             
             images.forEach(function(img) {
@@ -315,14 +427,28 @@
                         }
                     }
                 }
-
-                img.onerror = function() {
-                    imgIndex++;
-                    loadImage();
-                };
-
+                img.onerror = function() { imgIndex++; loadImage(); };
                 loadImage();
             });
+
+            /* =========================================
+               3. IMAGE MODAL (LIGHTBOX)
+               ========================================= */
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("zoomedImg");
+            const closeBtn = document.getElementsByClassName("close-modal")[0];
+
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('click-to-zoom')) {
+                    if (e.target.src && !e.target.src.includes('R0lGODlhAQABAAD')) {
+                        modal.style.display = "block";
+                        modalImg.src = e.target.src;
+                    }
+                }
+            });
+
+            closeBtn.onclick = function() { modal.style.display = "none"; }
+            modal.onclick = function(e) { if (e.target !== modalImg) { modal.style.display = "none"; } }
         });
     </script>
 </body>
