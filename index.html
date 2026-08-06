@@ -24,11 +24,12 @@
         h2 { font-size: 2.5rem; text-align: center; margin-bottom: 40px; position: relative; text-transform: uppercase; letter-spacing: 1px;}
         h2::after { content: ''; display: block; width: 60px; height: 4px; background: var(--secondary-color); margin: 10px auto 0; border-radius: 2px; }
 
-        /* Hero Section (Background Image controlled by JS) */
+        /* Hero Section (Background zoomed out to show full image) */
         header { 
-            background-color: var(--primary-color); /* Fallback color */
-            background-position: center top;
-            background-size: cover;
+            position: relative;
+            background-color: var(--primary-color);
+            background-position: center;
+            background-size: contain; /* Shows the complete image without cropping */
             background-repeat: no-repeat;
             color: white; 
             padding: 140px 0; 
@@ -36,6 +37,18 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             transition: background-image 0.5s ease-in-out;
         }
+        /* Dark overlay layer to make text readable */
+        .header-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(15, 23, 42, 0.85); 
+            z-index: 1;
+        }
+        header .container {
+            position: relative;
+            z-index: 2; /* Keeps the text above the dark overlay */
+        }
+
         header h1 { color: white; font-size: 4rem; margin-bottom: 10px; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
         header p.title { font-size: 1.4rem; color: #cbd5e1; margin-bottom: 20px; font-weight: 300; line-height: 1.8;}
         
@@ -72,6 +85,7 @@
 
     <!-- Hero Section -->
     <header id="main-header">
+        <div class="header-overlay"></div>
         <div class="container">
             <h1>Ammar Alskaf</h1>
             <p class="title">
@@ -87,11 +101,11 @@
         </div>
     </header>
 
-    <!-- About Section -->
+    <!-- About Section (Updated) -->
     <section class="container" id="about">
         <h2>About Me</h2>
         <p class="about-text">
-            I am a dedicated Telecommunications Engineer with expertise in microwave communications and technical procurement. Thanks to my extensive experience and the professional courses I’ve completed, I excel in strategic leadership, project management, and problem-solving. My strong interpersonal skills enable me to collaborate effectively with teams and stakeholders, ensuring successful project delivery and operational excellence.
+            I am a dedicated Telecommunications Engineer with expertise in microwave communications, technical procurement, and data analysis. I leverage Python, VBA, and advanced Excel to automate workflows, analyze large datasets, and build insightful reports and dashboards that support strategic decision-making. Thanks to my extensive professional experience and specialized training, I excel in strategic leadership, project management, process optimization, and problem-solving. My strong interpersonal skills enable me to collaborate effectively with cross-functional teams and stakeholders, ensuring successful project delivery, operational excellence, and data-driven business growth.
         </p>
     </section>
 
@@ -271,7 +285,7 @@
                 if (bgIndex < exts.length) {
                     let img = new Image();
                     img.onload = function() {
-                        header.style.backgroundImage = `linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url('${img.src}')`;
+                        header.style.backgroundImage = `url('${img.src}')`;
                     };
                     img.onerror = function() {
                         bgIndex++;
@@ -294,11 +308,10 @@
                     if (imgIndex < exts.length) {
                         img.src = baseName + exts[imgIndex];
                     } else {
-                        // If all extensions fail
                         if (fallback) {
                             img.src = fallback;
                         } else {
-                            img.style.display = 'none'; // Hide experience images if not found
+                            img.style.display = 'none'; 
                         }
                     }
                 }
@@ -308,7 +321,6 @@
                     loadImage();
                 };
 
-                // Start the first attempt
                 loadImage();
             });
         });
