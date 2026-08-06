@@ -21,53 +21,67 @@
         
         /* Typography */
         h1, h2, h3 { color: var(--primary-color); margin-bottom: 15px; }
-        h2 { font-size: 2.5rem; text-align: center; margin-bottom: 40px; position: relative; }
+        h2 { font-size: 2.5rem; text-align: center; margin-bottom: 40px; position: relative; text-transform: uppercase; letter-spacing: 1px;}
         h2::after { content: ''; display: block; width: 60px; height: 4px; background: var(--secondary-color); margin: 10px auto 0; border-radius: 2px; }
 
-        /* Header / Hero Section */
-        header { background: linear-gradient(135deg, var(--primary-color), #1e293b); color: white; padding: 100px 0; text-align: center; }
-        header h1 { color: white; font-size: 3.5rem; margin-bottom: 10px; }
-        header p.title { font-size: 1.5rem; color: #94a3b8; margin-bottom: 20px; }
-        .contact-info { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 20px; font-size: 0.9rem; }
-        .contact-info a { color: white; border: 1px solid #3b82f6; padding: 8px 15px; border-radius: 20px; transition: 0.3s; }
-        .contact-info a:hover { background: var(--secondary-color); }
+        /* Hero Section (Background Image controlled by JS) */
+        header { 
+            background-color: var(--primary-color); /* Fallback color */
+            background-position: center top;
+            background-size: cover;
+            background-repeat: no-repeat;
+            color: white; 
+            padding: 140px 0; 
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: background-image 0.5s ease-in-out;
+        }
+        header h1 { color: white; font-size: 4rem; margin-bottom: 10px; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+        header p.title { font-size: 1.4rem; color: #cbd5e1; margin-bottom: 20px; font-weight: 300; line-height: 1.8;}
+        
+        /* Highlight for Data Skills */
+        .highlight-skill { color: #60a5fa; font-weight: 600; }
+
+        .contact-info { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 25px; font-size: 1rem; }
+        .contact-info a, .contact-info span { color: white; border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 30px; transition: 0.3s; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);}
+        .contact-info a:hover { background: var(--secondary-color); border-color: var(--secondary-color); transform: translateY(-3px);}
 
         /* About Section */
-        .about-text { text-align: center; max-width: 800px; margin: auto; font-size: 1.1rem; color: #475569; }
+        .about-text { text-align: center; max-width: 850px; margin: auto; font-size: 1.15rem; color: #475569; }
 
-        /* Skills Section */
-        .skills-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
-        .skill-tag { background: var(--primary-color); color: white; padding: 10px 20px; border-radius: 30px; font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-
-        /* Experience & Education */
+        /* Experience Timeline */
         .timeline-item { background: var(--card-bg); padding: 25px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid var(--secondary-color); transition: transform 0.3s ease; }
-        .timeline-item:hover { transform: translateY(-5px); }
+        .timeline-item:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .timeline-date { color: var(--secondary-color); font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
+        .exp-img { width: 100%; max-width: 500px; height: auto; border-radius: 8px; margin-top: 15px; border: 1px solid #e2e8f0; display: block; }
 
         /* Grid for Projects & Certificates */
         .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s ease; }
-        .card:hover { transform: translateY(-10px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .card img { width: 100%; height: 200px; object-fit: cover; background: #e2e8f0; }
-        .card-content { padding: 20px; }
-        .card-content h3 { font-size: 1.2rem; }
-        .card-content p { font-size: 0.9rem; color: #64748b; }
+        .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s ease; display: flex; flex-direction: column;}
+        .card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
+        .card img { width: 100%; height: 220px; object-fit: cover; background: #e2e8f0; border-bottom: 3px solid var(--secondary-color);}
+        .card-content { padding: 20px; flex-grow: 1;}
+        .card-content h3 { font-size: 1.1rem; line-height: 1.4; margin-bottom: 10px;}
+        .card-content p { font-size: 0.9rem; color: #64748b; font-weight: 600;}
 
         /* Footer */
-        footer { background: var(--primary-color); color: white; text-align: center; padding: 20px 0; margin-top: 50px; }
+        footer { background: var(--primary-color); color: white; text-align: center; padding: 30px 0; margin-top: 50px; }
     </style>
 </head>
 <body>
 
-    <!-- Header Section -->
-    <header>
+    <!-- Hero Section -->
+    <header id="main-header">
         <div class="container">
             <h1>Ammar Alskaf</h1>
-            <p class="title">Telecommunications Engineer & Technical Procurement Specialist</p>
+            <p class="title">
+                Telecommunications Engineer & Technical Procurement Specialist <br>
+                <span class="highlight-skill">Data Analyst (Python, VBA & Advanced Excel)</span>
+            </p>
             <div class="contact-info">
                 <a href="mailto:ammaralskaf56@gmail.com">ammaralskaf56@gmail.com</a>
                 <a href="tel:+963937807398">(+963) 937807398</a>
-                <a href="https://www.linkedin.com/in/ammar-alskaf-188a5b251" target="_blank">LinkedIn Profile</a>
+                <a href="https://www.linkedin.com/in/ammar-alskaf-188a5b251" target="_blank">LinkedIn</a>
                 <span>Rif Dimashq, Al Bardeh</span>
             </div>
         </div>
@@ -81,23 +95,9 @@
         </p>
     </section>
 
-    <!-- Skills Section -->
-    <section class="container" id="skills">
-        <h2>Core Skills</h2>
-        <div class="skills-grid">
-            <span class="skill-tag">Microwave Communications</span>
-            <span class="skill-tag">Technical Procurement</span>
-            <span class="skill-tag">Problem-Solving</span>
-            <span class="skill-tag">Strategic Leadership</span>
-            <span class="skill-tag">Time Management</span>
-            <span class="skill-tag">Data Analysis</span>
-            <span class="skill-tag">Team Collaboration</span>
-        </div>
-    </section>
-
     <!-- Experience Section -->
     <section class="container" id="experience">
-        <h2>Work Experience</h2>
+        <h2>Professional Experience</h2>
         
         <div class="timeline-item">
             <div class="timeline-date">06-2024 - 09-2024</div>
@@ -109,12 +109,14 @@
             <div class="timeline-date">05-2022 - 05-2023</div>
             <h3>Technical Purchasing Buyer</h3>
             <p>Syriatel Mobile Telecom</p>
+            <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Technical purchasing buyer -Syriatel" class="exp-img" alt="Technical Purchasing Buyer">
         </div>
 
         <div class="timeline-item">
             <div class="timeline-date">01-2020 - 05-2022</div>
             <h3>Contact Centre</h3>
             <p>Syriatel Mobile Telecom</p>
+            <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Contact Centre - Syriatel" class="exp-img" alt="Contact Centre">
         </div>
 
         <div class="timeline-item">
@@ -130,89 +132,120 @@
         </div>
     </section>
 
-    <!-- Education Section -->
-    <section class="container" id="education">
-        <h2>Education</h2>
-        <div class="timeline-item">
-            <div class="timeline-date">January 2017 - December 2022</div>
-            <h3>Bachelor's Degree in Electronics and Communications Engineering</h3>
-            <p>Damascus University, Syria</p>
-        </div>
-    </section>
-
-    <!-- Projects Section (Ready for your website images) -->
-    <section class="container" id="projects">
-        <h2>My Projects</h2>
-        <div class="grid-container">
-            <!-- Project 1 -->
-            <div class="card">
-                <!-- Replace 'project1.jpg' with your actual image name when uploaded to GitHub -->
-                <img src="project1.jpg" alt="Project Preview" onerror="this.src='https://via.placeholder.com/400x200.png?text=Project+Image+Here'">
-                <div class="card-content">
-                    <h3>Project Name 1</h3>
-                    <p>Brief description of the website or data dashboard you created. Mention the tools used like Python, AI, etc.</p>
-                </div>
-            </div>
-            <!-- Project 2 -->
-            <div class="card">
-                <!-- Replace 'project2.jpg' with your actual image name when uploaded to GitHub -->
-                <img src="project2.jpg" alt="Project Preview" onerror="this.src='https://via.placeholder.com/400x200.png?text=Project+Image+Here'">
-                <div class="card-content">
-                    <h3>Project Name 2</h3>
-                    <p>Brief description of another project, technical procurement analysis, or engineering solution.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Certifications Section (Ready for your certificate images) -->
+    <!-- Certifications Section -->
     <section class="container" id="certifications">
-        <h2>Certifications</h2>
+        <h2>Certifications & Courses</h2>
         <div class="grid-container">
             
-            <!-- Cert 1 -->
             <div class="card">
-                <!-- Replace 'cert1.jpg' with your actual image name -->
-                <img src="cert1.jpg" alt="Certificate Image" onerror="this.src='https://via.placeholder.com/400x200.png?text=Certificate+Image+Here'">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="GenAI for Executives & Business Leaders" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
                 <div class="card-content">
                     <h3>GenAI for Executives & Business Leaders</h3>
-                    <p>2025</p>
                 </div>
             </div>
 
-            <!-- Cert 2 -->
             <div class="card">
-                <img src="cert2.jpg" alt="Certificate Image" onerror="this.src='https://via.placeholder.com/400x200.png?text=Certificate+Image+Here'">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Initiating and Planning Projects" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
                 <div class="card-content">
-                    <h3>Global Procurement and Sourcing Specialization</h3>
-                    <p>2025 (Courses 1 to 6)</p>
+                    <h3>Initiating and Planning Projects</h3>
                 </div>
             </div>
 
-            <!-- Cert 3 -->
             <div class="card">
-                <img src="cert3.jpg" alt="Certificate Image" onerror="this.src='https://via.placeholder.com/400x200.png?text=Certificate+Image+Here'">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Leading Teams Developing as a Leader" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
                 <div class="card-content">
-                    <h3>Leading Teams & Managing Project Risks</h3>
-                    <p>University of Illinois / UC - Coursera | 2025</p>
+                    <h3>Leading Teams: Developing as a Leader</h3>
                 </div>
             </div>
 
-            <!-- Cert 4 -->
             <div class="card">
-                <img src="cert4.jpg" alt="Certificate Image" onerror="this.src='https://via.placeholder.com/400x200.png?text=Certificate+Image+Here'">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Managing Project Risks and Changes" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <div class="card-content">
+                    <h3>Managing Project Risks and Changes</h3>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="performance Management Awareness" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <div class="card-content">
+                    <h3>Performance Management Awareness</h3>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="solving business problems" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
                 <div class="card-content">
                     <h3>Solving Business Problems</h3>
-                    <p>Syriatel Mobile Telecom | 2023</p>
                 </div>
             </div>
-            
-            <!-- Cert 5 -->
+
             <div class="card">
-                <img src="cert5.jpg" alt="Certificate Image" onerror="this.src='https://via.placeholder.com/400x200.png?text=Certificate+Image+Here'">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Everyday Excel" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
                 <div class="card-content">
-                    <h3>Civil Defense & First Aid</h3>
-                    <p>Civil Defense | 2022</p>
+                    <h3>Everyday Excel</h3>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Ambulance - Evacuation Course" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <div class="card-content">
+                    <h3>Ambulance & Evacuation Course</h3>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Firefighting Course" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <div class="card-content">
+                    <h3>Firefighting Course</h3>
+                </div>
+            </div>
+
+            <!-- Procurement Specialization -->
+            <div class="card">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement & Sourcing Introduction - 1" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <div class="card-content">
+                    <h3>Procurement & Sourcing Introduction</h3>
+                    <p>Course 1</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement Basics - 2" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <div class="card-content">
+                    <h3>Procurement Basics</h3>
+                    <p>Course 2</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Strategic Sourcing - 3" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <div class="card-content">
+                    <h3>Strategic Sourcing</h3>
+                    <p>Course 3</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Supplier Management - 4" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <div class="card-content">
+                    <h3>Supplier Management</h3>
+                    <p>Course 4</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Supply Market Analysis - 5" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <div class="card-content">
+                    <h3>Supply Market Analysis</h3>
+                    <p>Course 5</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-img="Procurement Negotiation  - 6" data-fallback="https://via.placeholder.com/400x220.png?text=Certificate" alt="Certificate">
+                <div class="card-content">
+                    <h3>Procurement Negotiation</h3>
+                    <p>Course 6</p>
                 </div>
             </div>
 
@@ -224,5 +257,61 @@
         <p>&copy; 2026 Ammar Alskaf. All Rights Reserved.</p>
     </footer>
 
+    <!-- Smart Image Extension Loader -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const exts = ['.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG'];
+
+            // 1. Handle Header Background
+            const header = document.getElementById('main-header');
+            const bgBase = 'Ammar Alskaf';
+            let bgIndex = 0;
+
+            function loadBackground() {
+                if (bgIndex < exts.length) {
+                    let img = new Image();
+                    img.onload = function() {
+                        header.style.backgroundImage = `linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url('${img.src}')`;
+                    };
+                    img.onerror = function() {
+                        bgIndex++;
+                        loadBackground();
+                    };
+                    img.src = bgBase + exts[bgIndex];
+                }
+            }
+            loadBackground();
+
+            // 2. Handle All Other Images
+            const images = document.querySelectorAll('img[data-img]');
+            
+            images.forEach(function(img) {
+                const baseName = img.getAttribute('data-img');
+                const fallback = img.getAttribute('data-fallback');
+                let imgIndex = 0;
+
+                function loadImage() {
+                    if (imgIndex < exts.length) {
+                        img.src = baseName + exts[imgIndex];
+                    } else {
+                        // If all extensions fail
+                        if (fallback) {
+                            img.src = fallback;
+                        } else {
+                            img.style.display = 'none'; // Hide experience images if not found
+                        }
+                    }
+                }
+
+                img.onerror = function() {
+                    imgIndex++;
+                    loadImage();
+                };
+
+                // Start the first attempt
+                loadImage();
+            });
+        });
+    </script>
 </body>
 </html>
