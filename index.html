@@ -111,9 +111,6 @@
         
         .hero h1 { font-size: clamp(2.2rem, 8vw, 6rem); font-weight: 800; letter-spacing: -2px; margin-bottom: 10px; line-height: 1.1; background: linear-gradient(180deg, #fff, #71717a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        /* 
-           FIX FOR OVERLAPPING ROLES ON DESKTOP 
-        */
         .role-container { overflow: hidden; margin-top: 15px; position: relative; }
         
         @media (min-width: 769px) {
@@ -127,7 +124,6 @@
             .role-text:nth-child(2) { animation-delay: 3s; }
             .role-text:nth-child(3) { animation-delay: 6s; }
             
-            /* Clean timing: Shows for 33% of the time, hidden for 66% */
             @keyframes fadeRoles { 
                 0% { opacity: 0; transform: translateY(15px); } 
                 5% { opacity: 1; transform: translateY(0); } 
@@ -137,7 +133,6 @@
             }
         }
 
-        /* Mobile styles: Stacked, full text, no animation */
         @media (max-width: 768px) {
             .role-container { height: auto; overflow: visible; display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
             .role-text { font-size: 1.05rem; color: var(--text-muted); font-weight: 400; display: block; animation: none; position: static; opacity: 1; transform: none; line-height: 1.4; padding: 0 10px; }
@@ -284,6 +279,28 @@
             <h2 class="section-title tr" data-en="Experience.Log()" data-ar="سجل_الخبرات.عرض()">Experience.Log()</h2>
             <div class="timeline">
                 
+                <!-- NEW EXPERIENCE: Sabbagh & Co -->
+                <div class="timeline-item reveal-slide-up">
+                    <div class="timeline-date">Jul 2026 - Present</div>
+                    <div class="glass-card hover-target">
+                        <h3 class="tr" data-en="Data Analyst" data-ar="محلل بيانات">Data Analyst</h3>
+                        <p class="tr" data-en="Sabbagh & Co, Syria" data-ar="شركة الصباغ، سوريا">Sabbagh & Co, Syria</p>
+                        <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                            <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
+                            <span class="arrow">▼</span>
+                        </button>
+                        <div class="details-content">
+                            <ul class="custom-bullets">
+                                <li class="tr" data-en="Analyzed extensive sales and marketing datasets to drive strategic business decisions and track market performance." data-ar="تحليل بيانات المبيعات والتسويق الضخمة لتوجيه القرارات الاستراتيجية ومتابعة أداء السوق بدقة.">Analyzed extensive sales and marketing datasets to drive strategic business decisions and track market performance.</li>
+                                <li class="tr" data-en="Engineered real-time interactive dashboards using Advanced Excel, VBA, and Python to streamline internal workflows." data-ar="هندسة لوحات تحكم تفاعلية لحظية باستخدام Excel المتقدم، VBA، و Python لتسهيل سير العمل الداخلي.">Engineered real-time interactive dashboards using Advanced Excel, VBA, and Python to streamline internal workflows.</li>
+                                <li class="tr" data-en="Developed custom, data-driven web applications specifically tailored to enhance business operations and data visualization." data-ar="تطوير ونشر تطبيقات ويب مخصصة للبيانات لتعزيز العمليات التجارية وتصور البيانات باحترافية.">Developed custom, data-driven web applications specifically tailored to enhance business operations and data visualization.</li>
+                                <li class="tr" data-en="Continuously expanding analytical skillsets and integrating cutting-edge tools to address evolving business challenges." data-ar="توسيع المهارات التحليلية باستمرار ودمج أحدث الأدوات التقنية لمواكبة تحديات الأعمال المتطورة.">Continuously expanding analytical skillsets and integrating cutting-edge tools to address evolving business challenges.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PREVIOUS EXPERIENCES -->
                 <div class="timeline-item reveal-slide-up">
                     <div class="timeline-date">Jan 2017 - Dec 2022</div>
                     <div class="glass-card hover-target">
@@ -296,7 +313,7 @@
                     <div class="timeline-date">May 2022 - May 2023</div>
                     <div class="glass-card hover-target">
                         <h3 class="tr" data-en="Technical Purchasing Buyer" data-ar="مسؤول مشتريات تقنية">Technical Purchasing Buyer</h3>
-                        <p class="tr" data-en="Syriatel Mobile Telecom" data-ar="سيريتل للاتصالات">Syriatel Mobile Telecom</p>
+                        <p class="tr" data-en="Syriatel Mobile Telecom, Syria" data-ar="سيريتل للاتصالات، سوريا">Syriatel Mobile Telecom, Syria</p>
                         <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
                             <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
                             <span class="arrow">▼</span>
@@ -318,7 +335,7 @@
                     <div class="timeline-date">Jan 2020 - May 2022</div>
                     <div class="glass-card hover-target">
                         <h3 class="tr" data-en="Contact Centre Agent" data-ar="موظف مركز اتصالات">Contact Centre Agent</h3>
-                        <p class="tr" data-en="Syriatel Mobile Telecom" data-ar="سيريتل للاتصالات">Syriatel Mobile Telecom</p>
+                        <p class="tr" data-en="Syriatel Mobile Telecom, Syria" data-ar="سيريتل للاتصالات، سوريا">Syriatel Mobile Telecom, Syria</p>
                         <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
                             <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
                             <span class="arrow">▼</span>
@@ -340,7 +357,7 @@
                     <div class="timeline-date">Oct 2021 - Aug 2023</div>
                     <div class="glass-card hover-target">
                         <h3 class="tr" data-en="Private Tutor" data-ar="مدرس خصوصي">Private Tutor</h3>
-                        <p class="tr" data-en="Freelance Education" data-ar="تعليم حر">Freelance Education</p>
+                        <p class="tr" data-en="Freelance Education, Syria" data-ar="تعليم حر، سوريا">Freelance Education, Syria</p>
                         <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
                             <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
                             <span class="arrow">▼</span>
@@ -358,7 +375,7 @@
                     <div class="timeline-date">Jun 2018 - Nov 2019</div>
                     <div class="glass-card hover-target">
                         <h3 class="tr" data-en="Data Entry Agent" data-ar="مدخل بيانات">Data Entry Agent</h3>
-                        <p class="tr" data-en="AL Baath Newspaper" data-ar="جريدة البعث">AL Baath Newspaper</p>
+                        <p class="tr" data-en="AL Baath Newspaper, Syria" data-ar="جريدة البعث، سوريا">AL Baath Newspaper, Syria</p>
                     </div>
                 </div>
 
@@ -789,6 +806,28 @@
                         }
                     }
                 });
+            }
+
+            // EASTER EGG
+            let secretCode = ['p', 'y', 't', 'h', 'o', 'n'];
+            let currentKey = 0;
+            document.addEventListener('keydown', (e) => {
+                if (e.key.toLowerCase() === secretCode[currentKey]) {
+                    currentKey++;
+                    if (currentKey === secretCode.length) {
+                        triggerEasterEgg();
+                        currentKey = 0;
+                    }
+                } else { currentKey = 0; }
+            });
+
+            function triggerEasterEgg() {
+                const flash = document.getElementById('easter-egg');
+                flash.style.display = 'block';
+                document.documentElement.style.setProperty('--glow', '#10b981');
+                document.documentElement.style.setProperty('--accent', '#10b981');
+                setTimeout(() => { flash.style.display = 'none'; }, 500);
+                alert(currentLang === 'en' ? "🟢 Developer Mode Unlocked: AI Core Access Granted." : "🟢 تم تفعيل وضع المطور: تم منح صلاحية الوصول لنواة الذكاء الاصطناعي.");
             }
 
             // IMAGE MODAL
