@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Ammar Alskaf | Tech Portfolio</title>
     <!-- English and Arabic Premium Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;500&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
@@ -23,12 +23,21 @@
             --font-mono: 'Fira Code', monospace;
         }
 
+        /* Critical fix for the "black column" issue: strict viewport control */
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+            width: 100vw;
+            background-color: var(--bg-dark);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
         
         body { 
             background-color: var(--bg-dark); color: var(--text-main); 
             font-family: var(--font-en); 
-            overflow-x: hidden; line-height: 1.6; scroll-behavior: smooth;
+            line-height: 1.6; scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
         }
         
         /* Arabic RTL Styles */
@@ -39,9 +48,12 @@
         body[dir="rtl"] .cmd-response { border-left: none; border-right: 2px solid #10b981; padding-left: 0; padding-right: 20px; }
         body[dir="rtl"] .custom-bullets li::before { margin-right: 0; margin-left: 10px; }
 
-        body.locked { overflow: hidden; }
+        body.locked { overflow: hidden; height: 100vh; }
 
-        /* Custom Glowing Cursor */
+        /* Hide main content initially to solve Problem 1 */
+        header, section, footer { display: none; }
+
+        /* Custom Glowing Cursor - Hidden on mobile to prevent layout shifts */
         #custom-cursor {
             position: fixed; top: 0; left: 0; width: 20px; height: 20px;
             background: var(--accent); border-radius: 50%; pointer-events: none; 
@@ -50,15 +62,21 @@
             box-shadow: 0 0 20px rgba(255,255,255,0.5);
         }
         .hovering { width: 60px !important; height: 60px !important; background: transparent !important; border: 1px solid white; }
-
-        /* Language Toggle Button */
-        .lang-toggle {
-            position: fixed; top: 30px; right: 30px; z-index: 999999;
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-            color: #fff; padding: 10px 20px; border-radius: 30px; font-weight: 600;
-            backdrop-filter: blur(10px); transition: 0.3s; font-family: var(--font-en);
+        
+        @media (max-width: 768px) {
+            #custom-cursor { display: none !important; }
+            * { cursor: auto !important; }
         }
-        body[dir="rtl"] .lang-toggle { right: auto; left: 30px; }
+
+        /* Language Toggle Button - Redesigned to fix Problem 3 */
+        .lang-toggle {
+            position: fixed; top: 20px; right: 20px; z-index: 999999;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: #fff; padding: 10px 18px; border-radius: 30px; font-weight: 600;
+            backdrop-filter: blur(10px); transition: 0.3s; font-family: var(--font-en);
+            font-size: 0.85rem;
+        }
+        body[dir="rtl"] .lang-toggle { right: auto; left: 20px; }
         .lang-toggle:hover { background: var(--glow); border-color: var(--glow); transform: scale(1.05); }
 
         /* Dynamic Backgrounds */
@@ -67,130 +85,130 @@
         @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(10%, 10%); } }
         .noise { position: fixed; top:0; left:0; width: 100vw; height: 100vh; background: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.04"/%3E%3C/svg%3E'); z-index: -1; pointer-events: none; }
 
-        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 80px 0; }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 60px 0; }
 
         /* ==================================================
            2. INTRO TERMINAL
            ================================================== */
-        #intro-terminal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 10vw; font-family: var(--font-mono); color: #3b82f6; font-size: 1.2rem; transition: opacity 1s, visibility 1s; }
-        .terminal-line { display: none; margin-bottom: 10px; opacity: 0; transform: translateY(10px); }
-        .terminal-line.active { display: block; animation: fadeInUp 0.4s forwards; }
-        .blinking-cursor { display: inline-block; width: 10px; height: 20px; background: #3b82f6; animation: blink 1s infinite; }
+        #intro-terminal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 10vw; font-family: var(--font-mono); color: #3b82f6; font-size: 1.1rem; transition: opacity 0.8s, visibility 0.8s; }
+        .terminal-line { display: none; margin-bottom: 8px; opacity: 0; transform: translateY(10px); }
+        .terminal-line.active { display: block; animation: fadeInUp 0.3s forwards; }
+        .blinking-cursor { display: inline-block; width: 10px; height: 1.2rem; background: #3b82f6; animation: blink 1s infinite; vertical-align: middle;}
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         /* ==================================================
            3. HERO
            ================================================== */
-        header { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; background-color: var(--bg-dark); background-position: center top; background-size: cover; background-repeat: no-repeat; transition: background-image 0.5s ease-in-out; }
-        .header-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(5,5,5,0.7) 0%, rgba(5,5,5,1) 100%); z-index: 1; }
-        header .content-wrapper { position: relative; z-index: 2; width: 100%;}
+        header { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; background-position: center top; background-size: cover; background-repeat: no-repeat; }
+        .header-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(5,5,5,0.8) 0%, rgba(5,5,5,1) 100%); z-index: 1; }
+        header .content-wrapper { position: relative; z-index: 2; width: 90%; max-width: 800px; }
         
-        .hero h1 { font-size: clamp(3rem, 7vw, 6rem); font-weight: 800; letter-spacing: -2px; margin-bottom: 0; line-height: 1; background: linear-gradient(180deg, #fff, #71717a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero h1 { font-size: clamp(2.5rem, 8vw, 6rem); font-weight: 800; letter-spacing: -2px; margin-bottom: 10px; line-height: 1; background: linear-gradient(180deg, #fff, #71717a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .role-container { height: 40px; overflow: hidden; margin-top: 20px; }
-        .role-text { font-size: 1.8rem; color: var(--text-muted); font-weight: 300; display: block; animation: slideRoles 9s infinite; }
-        @keyframes slideRoles { 0%, 25% { transform: translateY(0); } 33%, 58% { transform: translateY(-100%); } 66%, 91% { transform: translateY(-200%); } 100% { transform: translateY(0); } }
+        /* Fixes for Problem 2: Role Container */
+        .role-container { overflow: hidden; margin-top: 15px; position: relative;}
         
-        .tech-stack { display: flex; gap: 15px; margin-top: 40px; flex-wrap: wrap; justify-content: center; }
-        .tech-pill { padding: 8px 20px; border-radius: 30px; font-size: 0.9rem; font-family: var(--font-mono); background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); transition: 0.3s; opacity: 0; transform: translateY(20px); }
-        .tech-pill:hover { background: rgba(255,255,255,0.1); transform: scale(1.05) !important; box-shadow: 0 0 20px rgba(59,130,246,0.3); color: #3b82f6;}
+        /* Desktop styles (sliding animation) */
+        @media (min-width: 769px) {
+            .role-container { height: 40px; }
+            .role-text { font-size: 1.8rem; color: var(--text-muted); font-weight: 300; display: block; animation: slideRoles 9s infinite; opacity: 0; transform: translateY(100%);}
+            @keyframes slideRoles { 0%, 25% { transform: translateY(100%); opacity: 0; } 5%, 20% { transform: translateY(0); opacity: 1; } 33%, 58% { transform: translateY(-100%); opacity: 0; } 38%, 53% { transform: translateY(-100%); } /* Stay hidden during next cycle */ 100% { transform: translateY(-200%); opacity: 0; } }
+            
+            /* Simple fade in/out is often smoother for roles */
+            .role-text { animation: fadeRoles 9s infinite; position: absolute; top:0; left:0; width: 100%;}
+            .role-text:nth-child(2) { animation-delay: 3s; }
+            .role-text:nth-child(3) { animation-delay: 6s; }
+            @keyframes fadeRoles { 0%, 10%, 90%, 100% { opacity: 0; transform: translateY(10px); } 15%, 85% { opacity: 1; transform: translateY(0); } }
+        }
+
+        /* Mobile styles for Problem 2: Stacked, full text, no animation */
+        @media (max-width: 768px) {
+            .role-container { height: auto; overflow: visible; display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+            .role-text { font-size: 1.1rem; color: var(--text-muted); font-weight: 400; display: block; animation: none; position: static; opacity: 1; transform: none; line-height: 1.4; padding: 0 10px; }
+        }
+        
+        .tech-stack { display: flex; gap: 10px; margin-top: 30px; flex-wrap: wrap; justify-content: center; }
+        .tech-pill { padding: 6px 15px; border-radius: 30px; font-size: 0.8rem; font-family: var(--font-mono); background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); transition: 0.3s; opacity: 0; transform: translateY(20px); }
+        .tech-pill:hover { background: rgba(255,255,255,0.1); transform: scale(1.05) !important; box-shadow: 0 0 15px rgba(59,130,246,0.3); color: #3b82f6;}
 
         /* ==================================================
-           4. SECTIONS & ACCORDIONS
+           4. SECTIONS & CARDS
            ================================================== */
-        .section-title { font-size: 2.5rem; margin-bottom: 50px; text-transform: uppercase; letter-spacing: 2px; color: #fff; font-weight: 600;}
-        .about-text { text-align: center; max-width: 900px; margin: auto; font-size: 1.15rem; color: #a1a1aa; line-height: 1.8;}
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .section-title { font-size: clamp(1.8rem, 5vw, 2.5rem); margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px; color: #fff; font-weight: 600;}
+        .about-text { text-align: center; max-width: 800px; margin: auto; font-size: clamp(1rem, 3vw, 1.15rem); color: #a1a1aa; line-height: 1.8;}
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         
-        .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 16px; padding: 25px; backdrop-filter: blur(12px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; display: flex; flex-direction: column; }
-        .glass-card:hover { border-color: rgba(59,130,246,0.4); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        .glass-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .glass-card h3 { font-size: 1.1rem; color: #fff; margin-bottom: 10px; line-height: 1.4;}
-        .glass-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;}
+        .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 20px; backdrop-filter: blur(12px); transition: all 0.3s ease; position: relative; display: flex; flex-direction: column; }
+        .glass-card:hover { border-color: rgba(59,130,246,0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .glass-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .glass-card h3 { font-size: 1rem; color: #fff; margin-bottom: 8px; line-height: 1.4;}
+        .glass-card p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;}
 
         /* Expand Button */
         .details-btn {
             background: transparent; border: 1px solid var(--glass-border); color: var(--glow);
-            padding: 8px 15px; border-radius: 8px; font-size: 0.85rem; font-family: inherit; font-weight: 600;
+            padding: 8px 15px; border-radius: 8px; font-size: 0.8rem; font-family: inherit; font-weight: 600;
             display: inline-flex; align-items: center; justify-content: space-between; width: fit-content;
             transition: 0.3s; margin-top: auto;
         }
         .details-btn:hover { background: rgba(59,130,246,0.1); border-color: var(--glow); }
-        .details-btn .arrow { transition: transform 0.3s; margin-left: 10px; font-size: 0.7rem;}
-        body[dir="rtl"] .details-btn .arrow { margin-left: 0; margin-right: 10px; }
+        .details-btn .arrow { transition: transform 0.3s; margin-left: 8px; font-size: 0.7rem;}
+        body[dir="rtl"] .details-btn .arrow { margin-left: 0; margin-right: 8px; }
         .details-btn.active .arrow { transform: rotate(180deg); }
 
         /* Hidden Content */
         .details-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; opacity: 0; margin-top: 0;}
-        .details-content.open { max-height: 800px; opacity: 1; margin-top: 15px;}
+        .details-content.open { max-height: 1000px; opacity: 1; margin-top: 15px;}
         
         .custom-bullets { list-style: none; margin: 0; padding: 0;}
-        .custom-bullets li { position: relative; margin-bottom: 8px; font-size: 0.9rem; color: #d1d5db; display: flex; align-items: flex-start;}
-        .custom-bullets li::before { content: '▹'; color: var(--glow); font-weight: bold; margin-right: 10px; font-size: 1.2rem; line-height: 1;}
+        .custom-bullets li { position: relative; margin-bottom: 8px; font-size: 0.85rem; color: #d1d5db; display: flex; align-items: flex-start; line-height: 1.5; }
+        .custom-bullets li::before { content: '▹'; color: var(--glow); font-weight: bold; margin-right: 8px; font-size: 1.1rem; line-height: 1;}
+
+        /* Responsive fixes for Problem 2 inside cards */
+        @media (max-width: 768px) {
+            .custom-bullets li { font-size: 0.95rem; line-height: 1.6; margin-bottom: 10px; color: #e5e7eb;}
+            .details-btn { font-size: 0.9rem; padding: 10px 16px; }
+        }
 
         /* Scroll Animations */
-        .reveal-fade { opacity: 0; transition: opacity 1s ease-out; }
+        .reveal-fade { opacity: 0; transition: opacity 0.8s ease-out; }
         .reveal-fade.active { opacity: 1; }
-        .reveal-slide-up { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal-slide-up { opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.5, 0, 0, 1); }
         .reveal-slide-up.active { opacity: 1; transform: translateY(0); }
-        .reveal-scale { opacity: 0; transform: scale(0.9); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
-        .reveal-scale.active { opacity: 1; transform: scale(1); }
 
         /* Timeline Elements */
-        .timeline { position: relative; border-left: 2px solid rgba(255,255,255,0.1); margin-left: 20px; padding-left: 30px; }
-        .timeline-item { margin-bottom: 40px; position: relative; }
-        .timeline-item::before { content: ''; position: absolute; left: -36px; top: 0; width: 10px; height: 10px; background: var(--bg-dark); border: 2px solid var(--glow); border-radius: 50%; box-shadow: 0 0 10px var(--glow); transition: 0.3s; }
-        .timeline-item:hover::before { background: var(--glow); transform: scale(1.5); }
-        .timeline-date { font-family: var(--font-mono); color: var(--glow); font-size: 0.85rem; margin-bottom: 5px; direction: ltr; display: inline-block;}
-        .exp-img { width: 100%; max-width: 400px; height: auto; border-radius: 8px; margin-top: 15px; border: 1px solid var(--glass-border); display: block; opacity: 0.8; transition: 0.3s;}
-        .exp-img:hover { opacity: 1; border-color: var(--glow);}
+        .timeline { position: relative; border-left: 2px solid rgba(255,255,255,0.1); margin-left: 15px; padding-left: 20px; }
+        .timeline-item { margin-bottom: 30px; position: relative; }
+        .timeline-item::before { content: ''; position: absolute; left: -26px; top: 0; width: 8px; height: 8px; background: var(--bg-dark); border: 2px solid var(--glow); border-radius: 50%; transition: 0.3s; }
+        .timeline-item:hover::before { background: var(--glow); transform: scale(1.3); }
+        .timeline-date { font-family: var(--font-mono); color: var(--glow); font-size: 0.8rem; margin-bottom: 5px; direction: ltr; display: inline-block;}
+        .exp-img { width: 100%; max-width: 350px; height: auto; border-radius: 6px; margin-top: 12px; border: 1px solid var(--glass-border); display: block; }
         .click-to-zoom { cursor: zoom-in !important; }
 
         /* Hacker Terminal */
-        .contact-terminal { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 30px; font-family: var(--font-mono); position: relative; max-width: 800px; margin: auto; direction: ltr; text-align: left;}
-        .contact-terminal .header { border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 20px; color: #666; font-size: 0.8rem;}
-        .cmd-line { color: #fff; margin-bottom: 10px;}
-        .cmd-prompt { color: #3b82f6; margin-right: 10px;}
-        .cmd-input { background: transparent; border: none; color: #10b981; font-family: var(--font-mono); font-size: 1rem; outline: none; width: 250px; cursor: text;}
-        .cmd-response { display: none; color: #a1a1aa; margin-top: 20px; padding-left: 20px; border-left: 2px solid #10b981;}
+        .contact-terminal { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 20px; font-family: var(--font-mono); position: relative; max-width: 100%; direction: ltr; text-align: left; overflow: hidden;}
+        .contact-terminal .header { border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 15px; color: #666; font-size: 0.75rem;}
+        .cmd-line { color: #fff; margin-bottom: 8px; font-size: 0.9rem; display: flex; flex-wrap: wrap; }
+        .cmd-prompt { color: #3b82f6; margin-right: 8px;}
+        .cmd-input { background: transparent; border: none; color: #10b981; font-family: var(--font-mono); font-size: 0.9rem; outline: none; flex-grow: 1; width: 100px; min-width: 100px;}
+        .cmd-response { display: none; color: #a1a1aa; margin-top: 15px; padding-left: 15px; border-left: 2px solid #10b981; font-size: 0.85rem;}
         .cmd-response a { color: #fff; text-decoration: none; border-bottom: 1px dashed #3b82f6; transition: 0.3s; cursor: pointer;}
-        .cmd-response a:hover { color: #3b82f6; }
+        
+        @media (max-width: 768px) {
+            .contact-terminal { padding: 15px; }
+            .cmd-line { font-size: 0.8rem; }
+            .cmd-input { font-size: 0.8rem; }
+            .cmd-response { font-size: 0.8rem; }
+        }
 
         /* Modal */
         .modal { display: none; position: fixed; z-index: 9999999; padding-top: 50px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px);}
-        .modal-content { margin: auto; display: block; width: 90%; max-width: 900px; border-radius: 10px; border: 1px solid var(--glass-border); box-shadow: 0 0 30px rgba(59,130,246,0.2); animation: zoom 0.3s ease-in-out; }
+        .modal-content { margin: auto; display: block; width: 90%; max-width: 800px; border-radius: 8px; border: 1px solid var(--glass-border); animation: zoom 0.3s ease-in-out; }
         @keyframes zoom { from {transform:scale(0.8); opacity:0} to {transform:scale(1); opacity:1} }
-        .close-modal { position: absolute; top: 20px; right: 40px; color: #f1f1f1; font-size: 45px; font-weight: bold; transition: 0.3s; cursor: pointer; }
-        .close-modal:hover { color: var(--glow); }
-        #easter-egg { position: fixed; top:0; left:0; width: 100vw; height: 100vh; background: rgba(16, 185, 129, 0.2); z-index: 9999999; display: none; pointer-events: none; mix-blend-mode: overlay;}
-        footer { text-align: center; padding: 40px 0; border-top: 1px solid var(--glass-border); margin-top: 50px; color: var(--text-muted); font-size: 0.9rem;}
-
-        /* ==================================================
-           MOBILE RESPONSIVENESS FIXES
-           ================================================== */
-        @media (max-width: 768px) {
-            .custom-bullets li {
-                font-size: 1.05rem; /* Larger font for readability on mobile */
-                line-height: 1.6;
-                margin-bottom: 12px;
-                color: #e5e7eb; /* Slightly brighter contrast */
-            }
-            .details-btn {
-                font-size: 0.95rem; /* Make button easier to tap */
-                padding: 10px 18px;
-            }
-            .glass-card {
-                padding: 20px 15px; /* Optimize internal space for mobile screens */
-            }
-            .timeline {
-                padding-left: 15px; /* Increase width area for mobile */
-            }
-            body[dir="rtl"] .timeline {
-                padding-left: 0;
-                padding-right: 15px;
-            }
-        }
+        .close-modal { position: absolute; top: 20px; right: 30px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10;}
+        
+        footer { text-align: center; padding: 30px 0; border-top: 1px solid var(--glass-border); margin-top: 40px; color: var(--text-muted); font-size: 0.8rem; width: 90%; margin-left: auto; margin-right: auto;}
     </style>
 </head>
 <body class="locked" dir="ltr">
@@ -206,28 +224,24 @@
     <div class="bg-glow"></div>
     <div class="bg-glow-2"></div>
 
-    <!-- Easter Egg Flash -->
-    <div id="easter-egg"></div>
-
     <!-- 1. STARTUP TERMINAL -->
     <div id="intro-terminal">
         <div class="terminal-line tr" data-en="[1/4] Locating profile: Ammar Alskaf..." data-ar="[1/4] استخراج الملف الشخصي: عمار السكاف...">[1/4] Locating profile: Ammar Alskaf...</div>
-        <div class="terminal-line tr" data-en="[2/4] Decrypting Telecommunications Engineering background..." data-ar="[2/4] فك تشفير البيانات: هندسة الاتصالات والمشتريات التقنية...">[2/4] Decrypting Telecommunications Engineering background...</div>
+        <div class="terminal-line tr" data-en="[2/4] Decrypting Telecommunications Engineering background..." data-ar="[2/4] فك تشفير البيانات: هندسة الاتصالات والمشتريات التقنية...">[Dec 2/4] Decrypting Telecommunications Engineering background...</div>
         <div class="terminal-line tr" data-en="[3/4] Compiling Data Analytics & Automation modules..." data-ar="[3/4] تجميع وحدات المعالجة: تحليل البيانات والأتمتة (Python, VBA)...">[3/4] Compiling Data Analytics & Automation modules...</div>
         <div class="terminal-line tr" data-en="[4/4] Establishing secure connection to the portfolio..." data-ar="[4/4] إنشاء اتصال آمن وموثوق بمعرض الأعمال...">[4/4] Establishing secure connection to the portfolio...</div>
-        <div class="terminal-line tr" data-en="Profile constructed. Welcome to the workspace.<span class='blinking-cursor'></span>" data-ar="تم بناء الملف بنجاح. أهلاً بك في مساحة العمل.<span class='blinking-cursor'></span>" style="color: #fff; font-size: 1.5rem; margin-top: 20px;">Profile constructed. Welcome to the workspace.<span class="blinking-cursor"></span></div>
+        <div class="terminal-line tr" data-en="Profile constructed. Welcome to the workspace.<span class='blinking-cursor'></span>" data-ar="تم بناء الملف بنجاح. أهلاً بك في مساحة العمل.<span class='blinking-cursor'></span>" style="color: #fff; font-size: 1.3rem; margin-top: 15px;">Profile constructed. Welcome to the workspace.<span class="blinking-cursor"></span></div>
     </div>
 
     <!-- 2. HERO SECTION -->
-    <!-- Direct Cloudinary Link for Profile Image -->
     <header id="main-header" style="background-image: url('https://res.cloudinary.com/ogabkfka/image/upload/v1786094216/Ammar_Alskaf_x7ooht.jpg');">
         <div class="header-overlay"></div>
         <div class="content-wrapper">
             <h1 class="hover-target tr" data-en="AMMAR ALSKAF" data-ar="عـمّـار السـكّـاف">AMMAR ALSKAF</h1>
             <div class="role-container">
                 <div class="role-text tr" data-en="Data Analyst" data-ar="محلل بيانات">Data Analyst</div>
-                <div class="role-text tr" data-en="Telecommunications Engineer" data-ar="مهندس اتصالات">Telecommunications Engineer</div>
-                <div class="role-text tr" data-en="Technical Procurement" data-ar="مشتريات تقنية">Technical Procurement</div>
+                <div class="role-text tr" data-en="Telecommunications & Electronics Engineer" data-ar="مهندس اتصالات وإلكترونيات">Telecommunications & Electronics Engineer</div>
+                <div class="role-text tr" data-en="Technical Procurement Specialist" data-ar="أخصائي مشتريات تقنية">Technical Procurement Specialist</div>
             </div>
             <div class="tech-stack" id="hero-stack">
                 <span class="tech-pill hover-target">Python</span>
@@ -306,38 +320,10 @@
             </div>
 
             <div class="timeline-item reveal-slide-up">
-                <div class="timeline-date">Oct 2021 - Aug 2023</div>
-                <div class="glass-card hover-target">
-                    <h3 class="tr" data-en="Private Tutor" data-ar="مدرس خصوصي">Private Tutor</h3>
-                    <p class="tr" data-en="Freelance Education" data-ar="تعليم حر">Freelance Education</p>
-                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div class="details-content">
-                        <ul class="custom-bullets">
-                            <li class="tr" data-en="Translated complex scientific concepts into simple modules." data-ar="تبسيط المفاهيم العلمية المعقدة لتناسب مستويات الطلاب المختلفة.">Translated complex scientific concepts into simple modules.</li>
-                            <li class="tr" data-en="Enhanced time management and adaptability skills." data-ar="تعزيز مهارات إدارة الوقت والتكيف السريع.">Enhanced time management and adaptability skills.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item reveal-slide-up">
                 <div class="timeline-date">Jun 2018 - Nov 2019</div>
                 <div class="glass-card hover-target">
-                    <h3 class="tr" data-en="Data Entry" data-ar="مدخل بيانات">Data Entry</h3>
+                    <h3 class="tr" data-en="Data Entry Agent" data-ar="مدخل بيانات">Data Entry Agent</h3>
                     <p class="tr" data-en="AL Baath Newspaper" data-ar="جريدة البعث">AL Baath Newspaper</p>
-                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div class="details-content">
-                        <ul class="custom-bullets">
-                            <li class="tr" data-en="Processed large datasets with high accuracy and speed." data-ar="معالجة البيانات الضخمة بدقة وسرعة عالية.">Processed large datasets with high accuracy and speed.</li>
-                            <li class="tr" data-en="Maintained data integrity and database organization." data-ar="الحفاظ على سلامة البيانات وتنظيم قواعد الأرشفة.">Maintained data integrity and database organization.</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
 
@@ -584,13 +570,13 @@
         <h2 class="section-title tr" data-en="Network.Connect()" data-ar="الشبكة.اتصال()" style="text-align: center;">Network.Connect()</h2>
         <div class="contact-terminal hover-target" id="terminal-box">
             <div class="header">bash - root@ammar-server:~</div>
-            <div class="cmd-line" style="direction: ltr !important;">
+            <div class="cmd-line">
                 <span class="cmd-prompt">ammar@server:~$</span>
-                <span class="tr" data-en='Type <strong style="color:#fff">contact</strong> and press Enter:' data-ar='اكتب <strong style="color:#fff">تواصل</strong> واضغط Enter:'>Type <strong style="color:#fff">contact</strong> and press Enter:</span>
+                <span class="tr" data-en='Type <strong style="color:#fff">contact</strong> and Enter:' data-ar='اكتب <strong style="color:#fff">تواصل</strong> واضغط Enter:'>Type <strong style="color:#fff">contact</strong> and Enter:</span>
             </div>
-            <div class="cmd-line" style="direction: ltr !important;">
+            <div class="cmd-line">
                 <span class="cmd-prompt">></span>
-                <input type="text" class="cmd-input" id="terminal-input" autocomplete="off" spellcheck="false">
+                <input type="text" class="cmd-input" id="terminal-input" autocomplete="off" spellcheck="false" autoCapitalize="none">
             </div>
             <div class="cmd-response" id="terminal-response">
                 <p class="tr" data-en="[+] Connection established securely." data-ar="[+] تم إنشاء اتصال آمن.">[+] Connection established securely.</p>
@@ -605,7 +591,7 @@
         <p class="tr" data-en="Built by Ammar Alskaf &copy; 2026. All Systems Operational." data-ar="تم التطوير بواسطة عمّار السكّاف &copy; 2026. جميع الأنظمة تعمل بشكل ممتاز.">Built by Ammar Alskaf &copy; 2026. All Systems Operational.</p>
     </footer>
 
-    <!-- 7. THE MODAL (LIGHTBOX) -->
+    <!-- Lightbox Modal -->
     <div id="imageModal" class="modal">
         <span class="close-modal hover-target">&times;</span>
         <img class="modal-content" id="zoomedImg">
@@ -613,14 +599,36 @@
 
     <!-- SCRIPTS -->
     <script>
+        // --- Problem 1 & 2 Fixes ---
+        // Need to explicitly show main content after startup terminal
+        function showMainContent() {
+            // Unhide all direct children of body except terminal and cursor
+            const elementsToShow = document.querySelectorAll('body > header, body > section, body > footer');
+            elementsToShow.forEach(el => el.style.display = 'block');
+            
+            // Re-trigger scroll animations after showing content
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('active'); }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal-fade, .reveal-slide-up, .reveal-scale').forEach(el => observer.observe(el));
+        }
+
         // --- TRANSLATION LOGIC ---
         let currentLang = 'en';
+        const langMap = {
+            en: { placeholder: 'contact', error: 'Command not found. Try "contact"', arBtn: 'AR / العربية' },
+            ar: { placeholder: 'تواصل', error: 'أمر غير معروف. جرب "تواصل"', enBtn: 'EN / English' }
+        };
+
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'ar' : 'en';
             document.body.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
             
             const btn = document.getElementById('lang-btn');
-            btn.innerText = currentLang === 'en' ? 'AR / العربية' : 'EN / English';
+            btn.innerText = currentLang === 'en' ? langMap.arBtn : langMap.enBtn;
+            btn.style.fontFamily = currentLang === 'en' ? var(--font-en) : var(--font-ar);
 
             const elements = document.querySelectorAll('.tr');
             elements.forEach(el => {
@@ -629,15 +637,19 @@
                 }
             });
 
-            // Update terminal placeholder based on language
+            // Update terminal state
             const termInput = document.getElementById('terminal-input');
+            const termResponse = document.getElementById('terminal-response');
             termInput.value = '';
-            termInput.placeholder = currentLang === 'en' ? '' : '';
-            document.getElementById('terminal-response').style.display = 'none';
-            termInput.disabled = false;
+            if (termInput.disabled) {
+                 // Keep visible if already unlocked, but update text
+            } else {
+                termResponse.style.display = 'none';
+                termInput.placeholder = ''; // Clear placeholder
+            }
         }
 
-        // --- EXPANDABLE DETAILS (Accordion) LOGIC ---
+        // --- EXPANDABLE DETAILS ---
         function toggleDetails(btn) {
             btn.classList.toggle('active');
             const content = btn.nextElementSibling;
@@ -650,17 +662,21 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             
-            // CUSTOM CURSOR LOGIC
+            // CUSTOM CURSOR
             const cursor = document.getElementById('custom-cursor');
-            document.addEventListener('mousemove', (e) => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            });
-            const hoverTargets = document.querySelectorAll('.hover-target, a, input, button, .click-to-zoom');
-            hoverTargets.forEach(target => {
-                target.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-                target.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
-            });
+            if (window.innerWidth > 768) {
+                document.addEventListener('mousemove', (e) => {
+                    cursor.style.left = e.clientX + 'px';
+                    cursor.style.top = e.clientY + 'px';
+                });
+                const hoverTargets = document.querySelectorAll('.hover-target, a, input, button, .click-to-zoom, .details-btn');
+                hoverTargets.forEach(target => {
+                    target.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+                    target.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+                });
+            } else {
+                cursor.style.display = 'none';
+            }
 
             // STARTUP TERMINAL SEQUENCE
             const lines = document.querySelectorAll('.terminal-line');
@@ -669,94 +685,74 @@
 
             lines.forEach((line, index) => {
                 setTimeout(() => { line.classList.add('active'); }, delay);
-                delay += (index === lines.length - 2) ? 1500 : 800;
+                delay += (index === lines.length - 2) ? 1500 : 700;
             });
 
             setTimeout(() => {
                 intro.style.opacity = '0';
                 setTimeout(() => {
                     intro.style.visibility = 'hidden';
+                    intro.style.display = 'none';
                     document.body.classList.remove('locked'); 
-                    triggerHeroAnimations();
-                }, 1000);
+                    
+                    // Specific fix for Problem 1
+                    showMainContent();
+                    
+                    // Trigger stagger animations
+                    const pills = document.querySelectorAll('.tech-pill');
+                    pills.forEach((pill, i) => {
+                        setTimeout(() => { pill.style.opacity = '1'; pill.style.transform = 'translateY(0)'; }, i * 150);
+                    });
+                }, 800);
             }, delay + 1500);
-
-            // HERO STAGGER ANIMATIONS
-            function triggerHeroAnimations() {
-                const pills = document.querySelectorAll('.tech-pill');
-                pills.forEach((pill, i) => {
-                    setTimeout(() => {
-                        pill.style.opacity = '1';
-                        pill.style.transform = 'translateY(0)';
-                    }, i * 150);
-                });
-            }
-
-            // SCROLL REVEAL 
-            const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) { entry.target.classList.add('active'); }
-                });
-            }, observerOptions);
-            document.querySelectorAll('.reveal-fade, .reveal-slide-up, .reveal-scale').forEach(el => observer.observe(el));
 
             // TERMINAL CONTACT LOGIC 
             const termInput = document.getElementById('terminal-input');
             const termResponse = document.getElementById('terminal-response');
+            const terminalBox = document.getElementById('terminal-box');
             
-            document.getElementById('terminal-box').addEventListener('click', () => termInput.focus());
+            terminalBox.addEventListener('click', () => termInput.focus());
             
             termInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
-                    const requiredCommand = currentLang === 'en' ? 'contact' : 'تواصل';
-                    if (termInput.value.toLowerCase().trim() === requiredCommand) {
+                    const inputVal = termInput.value.toLowerCase().trim();
+                    const langSet = langMap[currentLang];
+                    
+                    if (inputVal === langSet.placeholder || (currentLang === 'ar' && inputVal === 'contact')) {
                         termResponse.style.display = 'block';
                         termInput.disabled = true;
+                        termInput.value = inputVal; // keep command visible
                     } else {
                         termInput.value = '';
-                        termInput.placeholder = currentLang === 'en' ? 'Command not found. Try "contact"' : 'أمر غير معروف. جرب "تواصل"';
+                        termInput.placeholder = langSet.error;
+                        // Temporary error color
+                        termInput.style.color = '#ef4444';
+                        setTimeout(() => {
+                             termInput.style.color = '#10b981';
+                             termInput.placeholder = '';
+                        }, 2000);
                     }
                 }
             });
 
-            // EASTER EGG
-            let secretCode = ['p', 'y', 't', 'h', 'o', 'n'];
-            let currentKey = 0;
-            document.addEventListener('keydown', (e) => {
-                if (e.key.toLowerCase() === secretCode[currentKey]) {
-                    currentKey++;
-                    if (currentKey === secretCode.length) {
-                        triggerEasterEgg();
-                        currentKey = 0;
-                    }
-                } else { currentKey = 0; }
-            });
-
-            function triggerEasterEgg() {
-                const flash = document.getElementById('easter-egg');
-                flash.style.display = 'block';
-                document.documentElement.style.setProperty('--glow', '#10b981');
-                document.documentElement.style.setProperty('--accent', '#10b981');
-                setTimeout(() => { flash.style.display = 'none'; }, 500);
-                alert(currentLang === 'en' ? "🟢 Developer Mode Unlocked: AI Core Access Granted." : "🟢 تم تفعيل وضع المطور: تم منح صلاحية الوصول لنواة الذكاء الاصطناعي.");
-            }
-
-            // IMAGE MODAL (LIGHTBOX)
+            // IMAGE MODAL
             const modal = document.getElementById("imageModal");
             const modalImg = document.getElementById("zoomedImg");
             const closeBtn = document.getElementsByClassName("close-modal")[0];
 
             document.addEventListener('click', function(e) {
                 if (e.target.classList.contains('click-to-zoom')) {
-                    if (e.target.src && !e.target.src.includes('R0lGODlhAQABAAD')) {
-                        modal.style.display = "block";
+                    if (e.target.src) {
+                        modal.style.display = "flex";
+                        modal.style.justifyContent = "center";
+                        modal.style.alignItems = "center";
                         modalImg.src = e.target.src;
+                        document.body.classList.add('locked');
                     }
                 }
             });
-            closeBtn.onclick = function() { modal.style.display = "none"; }
-            modal.onclick = function(e) { if (e.target !== modalImg) { modal.style.display = "none"; } }
+            closeBtn.onclick = function() { modal.style.display = "none"; document.body.classList.remove('locked'); }
+            modal.onclick = function(e) { if (e.target !== modalImg) { modal.style.display = "none"; document.body.classList.remove('locked'); } }
 
         });
     </script>
