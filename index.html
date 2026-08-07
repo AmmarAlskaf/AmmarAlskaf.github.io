@@ -23,68 +23,32 @@
             --font-mono: 'Fira Code', monospace;
         }
 
-        /* Essential for preventing Black Column */
-        html {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            background-color: var(--bg-dark);
-        }
-
-        body { 
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-dark); color: var(--text-main); 
-            font-family: var(--font-en); 
-            line-height: 1.6;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
+        html { width: 100%; height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: var(--bg-dark); }
+        body { width: 100%; margin: 0; padding: 0; background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-en); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
         * { box-sizing: border-box; cursor: none; }
         
         /* Arabic RTL Styles */
         body[dir="rtl"] { font-family: var(--font-ar); }
         body[dir="rtl"] .timeline { border-left: none; border-right: 2px solid rgba(255,255,255,0.1); margin-left: 0; margin-right: 20px; padding-left: 0; padding-right: 30px; }
         body[dir="rtl"] .timeline-item::before { left: auto; right: -36px; }
-        body[dir="rtl"] #intro-terminal { align-items: flex-end; text-align: right; }
         body[dir="rtl"] .cmd-response { border-left: none; border-right: 2px solid #10b981; padding-left: 0; padding-right: 20px; }
         body[dir="rtl"] .custom-bullets li::before { margin-right: 0; margin-left: 10px; }
+        body[dir="rtl"] #intro-terminal-box { text-align: right; }
 
         body.locked { overflow: hidden !important; height: 100vh !important; }
-
         .main-content-hidden { display: none; }
 
         /* Custom Cursor */
-        #custom-cursor {
-            position: fixed; top: 0; left: 0; width: 20px; height: 20px;
-            background: var(--accent); border-radius: 50%; pointer-events: none; 
-            mix-blend-mode: difference; z-index: 9999999;
-            transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s;
-            box-shadow: 0 0 20px rgba(255,255,255,0.5);
-        }
+        #custom-cursor { position: fixed; top: 0; left: 0; width: 20px; height: 20px; background: var(--accent); border-radius: 50%; pointer-events: none; mix-blend-mode: difference; z-index: 9999999; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s; box-shadow: 0 0 20px rgba(255,255,255,0.5); }
         .hovering { width: 60px !important; height: 60px !important; background: transparent !important; border: 1px solid white; }
-        
-        @media (max-width: 768px) {
-            #custom-cursor { display: none !important; }
-            * { cursor: auto !important; }
-        }
+        @media (max-width: 768px) { #custom-cursor { display: none !important; } * { cursor: auto !important; } }
 
         /* Language Toggle Button */
-        .lang-toggle {
-            position: fixed; top: 20px; right: 20px; z-index: 999999;
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            color: #fff; padding: 10px 18px; border-radius: 30px; font-weight: 600;
-            backdrop-filter: blur(10px); transition: 0.3s; font-family: var(--font-en);
-            font-size: 0.85rem; display: block !important;
-        }
+        .lang-toggle { position: fixed; top: 20px; right: 20px; z-index: 999999; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 10px 18px; border-radius: 30px; font-weight: 600; backdrop-filter: blur(10px); transition: 0.3s; font-family: var(--font-en); font-size: 0.85rem; display: block !important; }
         body[dir="rtl"] .lang-toggle { right: auto; left: 20px; }
         .lang-toggle:hover { background: var(--glow); border-color: var(--glow); transform: scale(1.05); }
 
-        /* Dynamic Backgrounds */
+        /* Background Effects */
         .bg-glow { position: fixed; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, rgba(0,0,0,0) 70%); top: -20%; left: -10%; border-radius: 50%; z-index: -1; animation: float 20s infinite alternate; filter: blur(60px); }
         .bg-glow-2 { position: fixed; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, rgba(0,0,0,0) 70%); bottom: -20%; right: -10%; border-radius: 50%; z-index: -1; animation: float 25s infinite alternate-reverse; filter: blur(60px); }
         @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(10%, 10%); } }
@@ -93,12 +57,26 @@
         .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 60px 0; }
 
         /* ==================================================
-           2. INTRO TERMINAL
+           2. CINEMATIC DOOR INTRO
            ================================================== */
-        #intro-terminal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 10vw; font-family: var(--font-mono); color: #3b82f6; font-size: 1.1rem; transition: opacity 0.5s; }
-        .terminal-line { display: none; margin-bottom: 8px; opacity: 0; transform: translateY(10px); }
+        #intro-wrapper { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 100000; display: flex; justify-content: center; align-items: center; overflow: hidden; background: #000; }
+        .door-panel { position: absolute; top: 0; width: 50vw; height: 100vh; background: #0a0a0a; transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1); z-index: 1; }
+        .door-left { left: 0; border-right: 2px solid var(--glow); box-shadow: 5px 0 40px rgba(59,130,246,0.2); }
+        .door-right { right: 0; border-left: 2px solid var(--glow); box-shadow: -5px 0 40px rgba(59,130,246,0.2); }
+        .door-left::after { content: ''; position:absolute; right: -3px; top: 45%; height: 10%; width: 4px; background: #fff; box-shadow: 0 0 15px #fff; border-radius: 10px; }
+        .door-right::after { content: ''; position:absolute; left: -3px; top: 45%; height: 10%; width: 4px; background: #fff; box-shadow: 0 0 15px #fff; border-radius: 10px; }
+
+        #intro-terminal-box { position: relative; z-index: 2; width: 85vw; max-width: 600px; background: rgba(5,5,5,0.85); backdrop-filter: blur(10px); padding: 30px; border-radius: 12px; border: 1px solid rgba(59,130,246,0.3); box-shadow: 0 0 30px rgba(0,0,0,0.8); color: var(--glow); font-family: var(--font-mono); font-size: 1rem; transition: opacity 0.5s; text-align: left;}
+        
+        .terminal-line { display: none; margin-bottom: 12px; opacity: 0; transform: translateY(10px); }
         .terminal-line.active { display: block; animation: fadeInUp 0.3s forwards; }
-        .blinking-cursor { display: inline-block; width: 10px; height: 1.2rem; background: #3b82f6; animation: blink 1s infinite; vertical-align: middle;}
+        .blinking-cursor { display: inline-block; width: 10px; height: 1.1rem; background: #3b82f6; animation: blink 1s infinite; vertical-align: middle;}
+        
+        /* Door Opening Animations */
+        .door-open .door-left { transform: translateX(-100%); }
+        .door-open .door-right { transform: translateX(100%); }
+        .door-open #intro-terminal-box { opacity: 0; transform: scale(0.9); transition: all 0.5s; }
+
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
@@ -108,31 +86,15 @@
         header { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; background-position: center top; background-size: cover; background-repeat: no-repeat; }
         .header-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(5,5,5,0.8) 0%, rgba(5,5,5,1) 100%); z-index: 1; }
         header .content-wrapper { position: relative; z-index: 2; width: 90%; max-width: 800px; }
-        
         .hero h1 { font-size: clamp(2.2rem, 8vw, 6rem); font-weight: 800; letter-spacing: -2px; margin-bottom: 10px; line-height: 1.1; background: linear-gradient(180deg, #fff, #71717a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
         .role-container { overflow: hidden; margin-top: 15px; position: relative; }
-        
         @media (min-width: 769px) {
             .role-container { height: 40px; }
-            .role-text { 
-                font-size: 1.8rem; color: var(--text-muted); font-weight: 300; 
-                display: block; position: absolute; top:0; left:0; width: 100%; opacity: 0;
-                animation: fadeRoles 9s infinite; 
-            }
-            .role-text:nth-child(1) { animation-delay: 0s; }
-            .role-text:nth-child(2) { animation-delay: 3s; }
-            .role-text:nth-child(3) { animation-delay: 6s; }
-            
-            @keyframes fadeRoles { 
-                0% { opacity: 0; transform: translateY(15px); } 
-                5% { opacity: 1; transform: translateY(0); } 
-                28% { opacity: 1; transform: translateY(0); } 
-                33% { opacity: 0; transform: translateY(-15px); } 
-                100% { opacity: 0; transform: translateY(-15px); } 
-            }
+            .role-text { font-size: 1.8rem; color: var(--text-muted); font-weight: 300; display: block; position: absolute; top:0; left:0; width: 100%; opacity: 0; animation: fadeRoles 9s infinite; }
+            .role-text:nth-child(1) { animation-delay: 0s; } .role-text:nth-child(2) { animation-delay: 3s; } .role-text:nth-child(3) { animation-delay: 6s; }
+            @keyframes fadeRoles { 0% { opacity: 0; transform: translateY(15px); } 5% { opacity: 1; transform: translateY(0); } 28% { opacity: 1; transform: translateY(0); } 33% { opacity: 0; transform: translateY(-15px); } 100% { opacity: 0; transform: translateY(-15px); } }
         }
-
         @media (max-width: 768px) {
             .role-container { height: auto; overflow: visible; display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
             .role-text { font-size: 1.05rem; color: var(--text-muted); font-weight: 400; display: block; animation: none; position: static; opacity: 1; transform: none; line-height: 1.4; padding: 0 10px; }
@@ -143,33 +105,28 @@
         .tech-pill:hover { background: rgba(255,255,255,0.1); transform: scale(1.05) !important; box-shadow: 0 0 15px rgba(59,130,246,0.3); color: #3b82f6;}
 
         /* ==================================================
-           4. SECTIONS & CARDS
+           4. SECTIONS, TIMELINE & CARDS
            ================================================== */
         .section-title { font-size: clamp(1.8rem, 5vw, 2.5rem); margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px; color: #fff; font-weight: 600;}
         .about-text { text-align: center; max-width: 800px; margin: auto; font-size: clamp(1rem, 3vw, 1.15rem); color: #a1a1aa; line-height: 1.8;}
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         
-        .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 20px; backdrop-filter: blur(12px); transition: all 0.3s ease; position: relative; display: flex; flex-direction: column; }
+        .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 25px; backdrop-filter: blur(12px); transition: all 0.3s ease; position: relative; display: flex; flex-direction: column; }
         .glass-card:hover { border-color: rgba(59,130,246,0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .glass-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .glass-card h3 { font-size: 1rem; color: #fff; margin-bottom: 8px; line-height: 1.4;}
-        .glass-card p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;}
+        
+        .cert-img { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .glass-card h3 { font-size: 1.1rem; color: #fff; margin-bottom: 8px; line-height: 1.4;}
+        .glass-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;}
 
         /* Expand Button */
-        .details-btn {
-            background: transparent; border: 1px solid var(--glass-border); color: var(--glow);
-            padding: 8px 15px; border-radius: 8px; font-size: 0.8rem; font-family: inherit; font-weight: 600;
-            display: inline-flex; align-items: center; justify-content: space-between; width: fit-content;
-            transition: 0.3s; margin-top: auto;
-        }
+        .details-btn { background: transparent; border: 1px solid var(--glass-border); color: var(--glow); padding: 8px 15px; border-radius: 8px; font-size: 0.8rem; font-family: inherit; font-weight: 600; display: inline-flex; align-items: center; justify-content: space-between; width: fit-content; transition: 0.3s; margin-top: auto; }
         .details-btn:hover { background: rgba(59,130,246,0.1); border-color: var(--glow); }
         .details-btn .arrow { transition: transform 0.3s; margin-left: 8px; font-size: 0.7rem;}
         body[dir="rtl"] .details-btn .arrow { margin-left: 0; margin-right: 8px; }
         .details-btn.active .arrow { transform: rotate(180deg); }
 
-        /* Hidden Content */
-        .details-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; opacity: 0; margin-top: 0;}
-        .details-content.open { max-height: 1200px; opacity: 1; margin-top: 15px;}
+        .details-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; opacity: 0; margin-top: 0;}
+        .details-content.open { max-height: 1500px; opacity: 1; margin-top: 15px;}
         
         .custom-bullets { list-style: none; margin: 0; padding: 0;}
         .custom-bullets li { position: relative; margin-bottom: 8px; font-size: 0.85rem; color: #d1d5db; display: flex; align-items: flex-start; line-height: 1.5; }
@@ -178,24 +135,42 @@
         @media (max-width: 768px) {
             .custom-bullets li { font-size: 0.95rem; line-height: 1.6; margin-bottom: 10px; color: #e5e7eb;}
             .details-btn { font-size: 0.9rem; padding: 10px 16px; }
+            .glass-card { padding: 20px 15px; }
         }
 
-        /* Scroll Animations */
-        .reveal-fade { opacity: 0; transition: opacity 0.8s ease-out; }
-        .reveal-fade.active { opacity: 1; }
-        .reveal-slide-up { opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.5, 0, 0, 1); }
-        .reveal-slide-up.active { opacity: 1; transform: translateY(0); }
-
-        /* Timeline Elements */
+        /* Timeline */
         .timeline { position: relative; border-left: 2px solid rgba(255,255,255,0.1); margin-left: 15px; padding-left: 20px; }
         .timeline-item { margin-bottom: 30px; position: relative; }
         .timeline-item::before { content: ''; position: absolute; left: -26px; top: 0; width: 8px; height: 8px; background: var(--bg-dark); border: 2px solid var(--glow); border-radius: 50%; transition: 0.3s; }
         .timeline-item:hover::before { background: var(--glow); transform: scale(1.3); }
         .timeline-date { font-family: var(--font-mono); color: var(--glow); font-size: 0.8rem; margin-bottom: 5px; direction: ltr; display: inline-block;}
         .exp-img { width: 100%; max-width: 350px; height: auto; border-radius: 6px; margin-top: 12px; border: 1px solid var(--glass-border); display: block; }
+
+        /* ==================================================
+           5. PROJECTS GALLERY STYLES
+           ================================================== */
+        .project-card { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 20px; }
+        @media (min-width: 992px) { .project-card { flex-direction: row; align-items: flex-start; } .project-info { flex: 1; } .project-visuals { flex: 1; } }
+        
+        .privacy-note { font-size: 0.8rem; color: #f59e0b; background: rgba(245, 158, 11, 0.05); border-left: 2px solid #f59e0b; padding: 10px; margin-bottom: 15px; border-radius: 4px;}
+        body[dir="rtl"] .privacy-note { border-left: none; border-right: 2px solid #f59e0b; }
+        
+        .role-highlight { color: #10b981; font-weight: 600; font-family: var(--font-mono); font-size: 0.85rem; margin-bottom: 15px; display: block;}
+        
+        .project-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-top: 15px; }
+        .project-gallery img { width: 100%; height: 90px; object-fit: cover; border-radius: 6px; border: 1px solid var(--glass-border); transition: 0.3s; cursor: zoom-in; }
+        .project-gallery img:hover { border-color: var(--glow); transform: scale(1.05); }
+
+        /* Scroll Animations */
+        .reveal-fade { opacity: 0; transition: opacity 0.8s ease-out; }
+        .reveal-fade.active { opacity: 1; }
+        .reveal-slide-up { opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal-slide-up.active { opacity: 1; transform: translateY(0); }
         .click-to-zoom { cursor: zoom-in !important; }
 
-        /* Hacker Terminal */
+        /* ==================================================
+           6. TERMINAL CONTACT
+           ================================================== */
         .contact-terminal { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 20px; font-family: var(--font-mono); position: relative; max-width: 100%; direction: ltr; text-align: left; overflow: hidden;}
         .contact-terminal .header { border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 15px; color: #666; font-size: 0.75rem;}
         .cmd-line { color: #fff; margin-bottom: 8px; font-size: 0.9rem; display: flex; flex-wrap: wrap; align-items: center; }
@@ -204,18 +179,13 @@
         .cmd-response { display: none; color: #a1a1aa; margin-top: 15px; padding-left: 15px; border-left: 2px solid #10b981; font-size: 0.85rem;}
         .cmd-response a { color: #fff; text-decoration: none; border-bottom: 1px dashed #3b82f6; transition: 0.3s; cursor: pointer;}
         
-        @media (max-width: 768px) {
-            .contact-terminal { padding: 15px; }
-            .cmd-line { font-size: 0.8rem; }
-            .cmd-input { font-size: 0.8rem; flex-basis: 100%; margin-top: 5px;}
-            .cmd-response { font-size: 0.8rem; }
-        }
+        @media (max-width: 768px) { .contact-terminal { padding: 15px; } .cmd-line, .cmd-input, .cmd-response { font-size: 0.8rem; } .cmd-input { flex-basis: 100%; margin-top: 5px;} }
 
         /* Modal */
-        .modal { display: none; position: fixed; z-index: 9999999; padding-top: 50px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px);}
-        .modal-content { margin: auto; display: block; width: 90%; max-width: 800px; border-radius: 8px; border: 1px solid var(--glass-border); animation: zoom 0.3s ease-in-out; }
+        .modal { display: none; position: fixed; z-index: 9999999; padding-top: 20px; padding-bottom: 20px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px);}
+        .modal-content { margin: auto; display: block; width: 95%; max-width: 1000px; border-radius: 8px; border: 1px solid var(--glass-border); animation: zoom 0.3s ease-in-out; object-fit: contain; max-height: 90vh;}
         @keyframes zoom { from {transform:scale(0.8); opacity:0} to {transform:scale(1); opacity:1} }
-        .close-modal { position: absolute; top: 20px; right: 30px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10;}
+        .close-modal { position: fixed; top: 20px; right: 30px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10;}
         
         footer { text-align: center; padding: 30px 0; border-top: 1px solid var(--glass-border); margin-top: 40px; color: var(--text-muted); font-size: 0.8rem; width: 90%; margin-left: auto; margin-right: auto;}
     </style>
@@ -233,16 +203,21 @@
     <div class="bg-glow"></div>
     <div class="bg-glow-2"></div>
 
-    <!-- 1. STARTUP TERMINAL -->
-    <div id="intro-terminal">
-        <div class="terminal-line tr" data-en="[1/4] Locating profile: Ammar Alskaf..." data-ar="[1/4] استخراج الملف الشخصي: عمار السكاف...">[1/4] Locating profile: Ammar Alskaf...</div>
-        <div class="terminal-line tr" data-en="[2/4] Decrypting Engineering background..." data-ar="[2/4] فك تشفير البيانات: خلفية هندسية والمشتريات التقنية...">[2/4] Decrypting Engineering background...</div>
-        <div class="terminal-line tr" data-en="[3/4] Compiling Data Analytics modules..." data-ar="[3/4] تجميع وحدات المعالجة: تحليل البيانات والأتمتة (Python, VBA)...">[3/4] Compiling Data Analytics modules...</div>
-        <div class="terminal-line tr" data-en="[4/4] Establishing secure connection..." data-ar="[4/4] إنشاء اتصال آمن ومعرض الأعمال...">[4/4] Establishing secure connection...</div>
-        <div class="terminal-line tr" data-en="Welcome to the workspace.<span class='blinking-cursor'></span>" data-ar="أهلاً بك في مساحة العمل.<span class='blinking-cursor'></span>" style="color: #fff; font-size: 1.3rem; margin-top: 15px;">Welcome.<span class="blinking-cursor"></span></div>
+    <!-- 1. CINEMATIC DOOR INTRO -->
+    <div id="intro-wrapper">
+        <div class="door-panel door-left"></div>
+        <div class="door-panel door-right"></div>
+        
+        <div id="intro-terminal-box">
+            <div class="terminal-line tr" data-en="[System] Initializing connection to Ammar Alskaf's secure server..." data-ar="[النظام] تهيئة الاتصال الآمن بسيرفر المهندس عمار السكاف...">[System] Initializing connection to Ammar Alskaf's secure server...</div>
+            <div class="terminal-line tr" data-en="[Data] Fetching engineering logs & data pipelines..." data-ar="[البيانات] استخراج سجلات الهندسة ومسارات البيانات...">[Data] Fetching engineering logs & data pipelines...</div>
+            <div class="terminal-line tr" data-en="[AI] Loading predictive models & interactive dashboards..." data-ar="[الذكاء الاصطناعي] تحميل النماذج التحليلية ولوحات التحكم التفاعلية...">[AI] Loading predictive models & interactive dashboards...</div>
+            <div class="terminal-line tr" data-en="[Auth] Identity verified. Accessing professional portfolio..." data-ar="[التحقق] تم تأكيد الهوية. الدخول إلى معرض الأعمال الاحترافي...">[Auth] Identity verified. Accessing professional portfolio...</div>
+            <div class="terminal-line tr" data-en="[Success] Welcome, Engineer Ammar.<span class='blinking-cursor'></span>" data-ar="[نجاح] أهلاً بك، المهندس عمار.<span class='blinking-cursor'></span>" style="color: #fff; font-size: 1.3rem; margin-top: 15px;">[Success] Welcome, Engineer Ammar.<span class="blinking-cursor"></span></div>
+        </div>
     </div>
 
-    <!-- MAIN CONTENT - Wrapper -->
+    <!-- MAIN CONTENT -->
     <div id="total-content" class="main-content-hidden">
         
         <!-- 2. HERO SECTION -->
@@ -274,20 +249,32 @@
             </p>
         </section>
 
-        <!-- 4. EDUCATION & EXPERIENCE -->
+        <!-- 4. EDUCATION (Separated) -->
         <section class="container reveal-fade">
+            <h2 class="section-title tr" data-en="System.Education()" data-ar="النظام.التعليم()">System.Education()</h2>
+            <div class="timeline">
+                <div class="timeline-item reveal-slide-up">
+                    <div class="timeline-date">Jan 2017 - Dec 2022</div>
+                    <div class="glass-card hover-target">
+                        <h3 class="tr" data-en="Bachelor's Degree in Electronics & Comm. Engineering" data-ar="بكالوريوس في هندسة الإلكترونيات والاتصالات">Bachelor's Degree in Electronics & Comm. Engineering</h3>
+                        <p class="tr" data-en="Damascus University, Syria" data-ar="جامعة دمشق، سوريا" style="margin-bottom:0;">Damascus University, Syria</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. EXPERIENCE LOG -->
+        <section class="container reveal-fade" style="padding-top:20px;">
             <h2 class="section-title tr" data-en="Experience.Log()" data-ar="سجل_الخبرات.عرض()">Experience.Log()</h2>
             <div class="timeline">
                 
-                <!-- NEW EXPERIENCE: Sabbagh & Co -->
                 <div class="timeline-item reveal-slide-up">
                     <div class="timeline-date">Jul 2026 - Present</div>
                     <div class="glass-card hover-target">
                         <h3 class="tr" data-en="Data Analyst" data-ar="محلل بيانات">Data Analyst</h3>
                         <p class="tr" data-en="Sabbagh & Co, Syria" data-ar="شركة الصباغ، سوريا">Sabbagh & Co, Syria</p>
                         <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                            <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
-                            <span class="arrow">▼</span>
+                            <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
                         </button>
                         <div class="details-content">
                             <ul class="custom-bullets">
@@ -300,23 +287,13 @@
                     </div>
                 </div>
 
-                <!-- PREVIOUS EXPERIENCES -->
-                <div class="timeline-item reveal-slide-up">
-                    <div class="timeline-date">Jan 2017 - Dec 2022</div>
-                    <div class="glass-card hover-target">
-                        <h3 class="tr" data-en="Bachelor's Degree in Electronics & Comm. Engineering" data-ar="بكالوريوس في هندسة الإلكترونيات والاتصالات">Bachelor's Degree in Electronics & Comm. Engineering</h3>
-                        <p class="tr" data-en="Damascus University, Syria" data-ar="جامعة دمشق، سوريا">Damascus University, Syria</p>
-                    </div>
-                </div>
-
                 <div class="timeline-item reveal-slide-up">
                     <div class="timeline-date">May 2022 - May 2023</div>
                     <div class="glass-card hover-target">
                         <h3 class="tr" data-en="Technical Purchasing Buyer" data-ar="مسؤول مشتريات تقنية">Technical Purchasing Buyer</h3>
                         <p class="tr" data-en="Syriatel Mobile Telecom, Syria" data-ar="سيريتل للاتصالات، سوريا">Syriatel Mobile Telecom, Syria</p>
                         <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                            <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
-                            <span class="arrow">▼</span>
+                            <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
                         </button>
                         <div class="details-content">
                             <ul class="custom-bullets">
@@ -337,8 +314,7 @@
                         <h3 class="tr" data-en="Contact Centre Agent" data-ar="موظف مركز اتصالات">Contact Centre Agent</h3>
                         <p class="tr" data-en="Syriatel Mobile Telecom, Syria" data-ar="سيريتل للاتصالات، سوريا">Syriatel Mobile Telecom, Syria</p>
                         <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                            <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
-                            <span class="arrow">▼</span>
+                            <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
                         </button>
                         <div class="details-content">
                             <ul class="custom-bullets">
@@ -359,8 +335,7 @@
                         <h3 class="tr" data-en="Private Tutor" data-ar="مدرس خصوصي">Private Tutor</h3>
                         <p class="tr" data-en="Freelance Education, Syria" data-ar="تعليم حر، سوريا">Freelance Education, Syria</p>
                         <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                            <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
-                            <span class="arrow">▼</span>
+                            <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
                         </button>
                         <div class="details-content">
                             <ul class="custom-bullets">
@@ -382,11 +357,163 @@
             </div>
         </section>
 
-        <!-- 5. CERTIFICATIONS DASHBOARD -->
+        <!-- 6. PORTFOLIO & PROJECTS (NEW) -->
+        <section class="container reveal-scale">
+            <h2 class="section-title tr" data-en="Projects.Deploy()" data-ar="المشاريع.إطلاق()" style="text-align: center;">Projects.Deploy()</h2>
+            <div class="grid">
+                
+                <!-- Project 1 -->
+                <div class="glass-card project-card hover-target">
+                    <div class="project-info">
+                        <h3 class="tr" data-en="Real-Time Luxury Inventory & Sales Target Tracker" data-ar="متتبع المخزون اللحظي وأهداف المبيعات الفاخرة">Real-Time Luxury Inventory & Sales Target Tracker</h3>
+                        <span class="role-highlight tr" data-en="Role: Lead Developer & Business Analyst" data-ar="الدور: مطور رئيسي ومحلل أعمال">Role: Lead Developer & Business Analyst</span>
+                        
+                        <div class="privacy-note tr" data-en="🔒 Privacy Note: Actual data is replaced with synthesized dummy data (Alskaf Luxury Fashion) to uphold NDAs. Algorithms and UI remain 100% authentic." data-ar="🔒 ملاحظة الخصوصية: تم استبدال البيانات الحقيقية ببيانات وهمية (Alskaf Luxury Fashion) التزاماً باتفاقيات السرية. الأكواد والواجهات أصلية 100%.">
+                            🔒 Privacy Note: Actual data is replaced with synthesized dummy data (Alskaf Luxury Fashion) to uphold NDAs. Algorithms and UI remain 100% authentic.
+                        </div>
+                        
+                        <p class="tr" data-en="A high-performance interactive web application built to monitor daily inventory movements, track sales against targets, and proactively flag stock deficits for supply chain management." data-ar="تطبيق ويب تفاعلي عالي الأداء لمراقبة حركات المخزون اليومية، تتبع المبيعات مقابل الأهداف، والتنبيه الاستباقي لنقص المخزون لدعم إدارة سلسلة التوريد.">
+                            A high-performance interactive web application built to monitor daily inventory movements, track sales against targets, and proactively flag stock deficits for supply chain management.
+                        </p>
+
+                        <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                            <span class="btn-text tr" data-en="View Technical Details" data-ar="عرض التفاصيل التقنية">View Technical Details</span><span class="arrow">▼</span>
+                        </button>
+                        <div class="details-content">
+                            <h4 style="color:#fff; margin-bottom:10px; font-size:0.95rem;" class="tr" data-en="Key Features:" data-ar="الميزات الرئيسية:">Key Features:</h4>
+                            <ul class="custom-bullets">
+                                <li class="tr" data-en="Dynamic Target Engine: Real-time algorithm calculating coverage percentage and stock deficits." data-ar="محرك الأهداف الديناميكي: خوارزمية لحظية لحساب نسبة التغطية وعجز المخزون.">Dynamic Target Engine: Real-time algorithm calculating coverage percentage and stock deficits.</li>
+                                <li class="tr" data-en="Burn Rate Tracking: Automates daily draw extraction by comparing real-time vs previous-day records." data-ar="تتبع مسحوبات السوق: أتمتة استخراج المسحوبات اليومية بمقارنة البيانات اللحظية مع اليوم السابق.">Burn Rate Tracking: Automates daily draw extraction by comparing real-time vs previous-day records.</li>
+                                <li class="tr" data-en="Risk UI: Color-coded health-bar system to spot bottlenecks instantly." data-ar="واجهة تقييم المخاطر: نظام شريط صحة ملون لاكتشاف المشاكل في ثوانٍ.">Risk UI: Color-coded health-bar system to spot bottlenecks instantly.</li>
+                                <li class="tr" data-en="Automated Reports: Openpyxl integration to generate memory-based .xlsx files on the fly." data-ar="تقارير مؤتمتة: دمج Openpyxl لإنشاء ملفات إكسل احترافية جاهزة للتحميل فوراً.">Automated Reports: Openpyxl integration to generate memory-based .xlsx files on the fly.</li>
+                            </ul>
+                            <h4 style="color:#fff; margin:15px 0 10px; font-size:0.95rem;" class="tr" data-en="Tech Stack:" data-ar="التقنيات المستخدمة:">Tech Stack:</h4>
+                            <ul class="custom-bullets">
+                                <li class="tr" data-en="Backend: Python (Flask)" data-ar="الخلفية (Backend): بايثون (Flask)">Backend: Python (Flask)</li>
+                                <li class="tr" data-en="Data Processing: Pandas, Openpyxl" data-ar="معالجة البيانات: Pandas, Openpyxl">Data Processing: Pandas, Openpyxl</li>
+                                <li class="tr" data-en="Frontend: HTML5, CSS3, Vanilla JS (Dark Mode UI)" data-ar="الواجهة الأمامية: HTML5, CSS3, JS">Frontend: HTML5, CSS3, Vanilla JS (Dark Mode UI)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="project-visuals">
+                        <div class="project-gallery">
+                            <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786133792/1786132094368_pfzjcf.png" loading="lazy" class="click-to-zoom" alt="Project Screenshot">
+                            <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786133794/1786132094376_ryxz8v.png" loading="lazy" class="click-to-zoom" alt="Project Screenshot">
+                            <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786133805/1786132094385_wh9ic3.png" loading="lazy" class="click-to-zoom" alt="Project Screenshot">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="glass-card project-card hover-target">
+                    <div class="project-info">
+                        <h3 class="tr" data-en="Advanced Sales & Commercial Analytics Dashboard" data-ar="لوحة تحكم متقدمة للمبيعات والتحليلات التجارية">Advanced Sales & Commercial Analytics Dashboard</h3>
+                        <span class="role-highlight tr" data-en="Role: End-to-End Developer & Data Analyst" data-ar="الدور: مطور ومحلل بيانات شامل">Role: End-to-End Developer & Data Analyst</span>
+                        
+                        <div class="privacy-note tr" data-en="🔒 Privacy Note: Client data fully anonymized. Underlying analytical algorithms and Dash architecture are authentic." data-ar="🔒 ملاحظة الخصوصية: تم إخفاء هويات البيانات بالكامل. الخوارزميات وهيكلية النظام أصلية وتعمل بكفاءة.">
+                            🔒 Privacy Note: Client data fully anonymized. Underlying analytical algorithms and Dash architecture are authentic.
+                        </div>
+                        
+                        <p class="tr" data-en="An interactive commercial engine for C-level executives bridging the gap between raw data and actionable strategies to maximize revenue and minimize churn." data-ar="محرك تجاري تفاعلي للمدراء التنفيذيين يربط بين البيانات الخام والاستراتيجيات التجارية لتعظيم الإيرادات وتقليل خسارة العملاء.">
+                            An interactive commercial engine for C-level executives bridging the gap between raw data and actionable strategies to maximize revenue and minimize churn.
+                        </p>
+
+                        <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                            <span class="btn-text tr" data-en="View Technical Details" data-ar="عرض التفاصيل التقنية">View Technical Details</span><span class="arrow">▼</span>
+                        </button>
+                        <div class="details-content">
+                            <h4 style="color:#fff; margin-bottom:10px; font-size:0.95rem;" class="tr" data-en="Key Features:" data-ar="الميزات الرئيسية:">Key Features:</h4>
+                            <ul class="custom-bullets">
+                                <li class="tr" data-en="Smart Cross-Selling: Dual-condition algorithm identifying missing basket items to suggest smart bundles." data-ar="البيع المتقاطع الذكي: خوارزمية تحدد النواقص في سلة العميل وتقترح باقات ذكية تلقائياً.">Smart Cross-Selling: Dual-condition algorithm identifying missing basket items to suggest smart bundles.</li>
+                                <li class="tr" data-en="Dynamic Pareto (80/20): Automatically filters SKUs driving 80% of revenue." data-ar="تحليل باريتو الديناميكي: تصفية وتسليط الضوء على المنتجات التي تدر 80% من الأرباح.">Dynamic Pareto (80/20): Automatically filters SKUs driving 80% of revenue.</li>
+                                <li class="tr" data-en="Churn Risk Analysis: Flags high-risk clients relying on single products." data-ar="تحليل مخاطر التسرب: اكتشاف وتنبيه عن العملاء المعرضين للمخاطر العالية.">Churn Risk Analysis: Flags high-risk clients relying on single products.</li>
+                                <li class="tr" data-en="Geo Mapping: Visual density boards evaluating volumetric sales across regions." data-ar="الخرائط الجغرافية: لوحات مرئية تقيم المبيعات عبر المناطق وقنوات التوزيع.">Geo Mapping: Visual density boards evaluating volumetric sales across regions.</li>
+                            </ul>
+                            <h4 style="color:#fff; margin:15px 0 10px; font-size:0.95rem;" class="tr" data-en="Tech Stack:" data-ar="التقنيات المستخدمة:">Tech Stack:</h4>
+                            <ul class="custom-bullets">
+                                <li class="tr" data-en="Logic & ETL: Python, Pandas, NumPy" data-ar="المنطق والبيانات: Python, Pandas, NumPy">Logic & ETL: Python, Pandas, NumPy</li>
+                                <li class="tr" data-en="Web Framework: Dash & Dash Bootstrap Components" data-ar="إطار الويب: Dash & Dash Bootstrap">Web Framework: Dash & Dash Bootstrap Components</li>
+                                <li class="tr" data-en="Visuals & Export: Plotly, Openpyxl, io" data-ar="التصور والتصدير: Plotly, Openpyxl">Visuals & Export: Plotly, Openpyxl, io</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="project-visuals">
+                        <div class="project-gallery">
+                            <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786133901/1786131005882_hlecse.png" loading="lazy" class="click-to-zoom" alt="Dashboard View">
+                            <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786133904/1786131005893_tfh6wy.png" loading="lazy" class="click-to-zoom" alt="Dashboard View">
+                            <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786133899/1786131005861_lwgt3n.png" loading="lazy" class="click-to-zoom" alt="Dashboard View">
+                            <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786133914/1786131005918_bxnrel.png" loading="lazy" class="click-to-zoom" alt="Dashboard View">
+                            <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786133908/1786131005907_oza6nx.png" loading="lazy" class="click-to-zoom" alt="Dashboard View">
+                            <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786133901/1786131005872_wpnwzh.png" loading="lazy" class="click-to-zoom" alt="Dashboard View">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="glass-card project-card hover-target">
+                    <div class="project-info">
+                        <h3 class="tr" data-en="Luxury E-Commerce Web Platform" data-ar="منصة تجارة إلكترونية فاخرة (واجهة متجر متكاملة)">Luxury E-Commerce Web Platform</h3>
+                        <span class="role-highlight tr" data-en="Role: Full-Stack Engineer" data-ar="الدور: مطور ويب شامل (Full-Stack)">Role: Full-Stack Engineer</span>
+                        
+                        <div class="privacy-note tr" data-en="🔒 Privacy Note: UI and brand details synthesized to protect employer privacy. Backend architecture and API logic are true operational code." data-ar="🔒 ملاحظة الخصوصية: تم توهيم تفاصيل العلامة التجارية. الكود البرمجي الخلفي وتصميم الواجهة يمثلان الهيكل الفعلي.">
+                            🔒 Privacy Note: UI and brand details synthesized to protect employer privacy. Backend architecture and API logic are true operational code.
+                        </div>
+                        
+                        <p class="tr" data-en="A premium, high-performance storefront bridging luxury UI with a robust Python backend for handling catalogs, session-based carts, and seamless shopping mechanics." data-ar="واجهة متجر عالية الأداء تجمع بين تصميم فاخر وخلفية برمجية صلبة بلغة بايثون للتعامل مع المنتجات وسلة التسوق المتقدمة.">
+                            A premium, high-performance storefront bridging luxury UI with a robust Python backend for handling catalogs, session-based carts, and seamless shopping mechanics.
+                        </p>
+
+                        <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                            <span class="btn-text tr" data-en="View Technical Details" data-ar="عرض التفاصيل التقنية">View Technical Details</span><span class="arrow">▼</span>
+                        </button>
+                        <div class="details-content">
+                            <h4 style="color:#fff; margin-bottom:10px; font-size:0.95rem;" class="tr" data-en="Key Features:" data-ar="الميزات الرئيسية:">Key Features:</h4>
+                            <ul class="custom-bullets">
+                                <li class="tr" data-en="Premium UI: Bespoke Dark Mode & Gold theme utilizing responsive CSS Grid/Flexbox." data-ar="واجهة مستخدم فاخرة: تصميم مخصص (وضع داكن وذهبي) متجاوب بالكامل مع كافة الشاشات.">Premium UI: Bespoke Dark Mode & Gold theme utilizing responsive CSS Grid/Flexbox.</li>
+                                <li class="tr" data-en="Stateful Cart: Asynchronous AJAX/Fetch cart updates without page reloads." data-ar="سلة تسوق ذكية: تحديثات غير متزامنة (AJAX) للسلة بدون إعادة تحميل الصفحة.">Stateful Cart: Asynchronous AJAX/Fetch cart updates without page reloads.</li>
+                                <li class="tr" data-en="Dynamic Rendering: Scalable backend injecting product data seamlessly into templates." data-ar="تصيير ديناميكي: محرك خلفي يضخ بيانات المنتجات ديناميكياً داخل قوالب الواجهة.">Dynamic Rendering: Scalable backend injecting product data seamlessly into templates.</li>
+                                <li class="tr" data-en="RESTful APIs: Secure internal endpoints processing client-side JSON payloads." data-ar="واجهات برمجة RESTful: مسارات API داخلية آمنة لمعالجة بيانات المستخدم.">RESTful APIs: Secure internal endpoints processing client-side JSON payloads.</li>
+                            </ul>
+                            <h4 style="color:#fff; margin:15px 0 10px; font-size:0.95rem;" class="tr" data-en="Tech Stack:" data-ar="التقنيات المستخدمة:">Tech Stack:</h4>
+                            <ul class="custom-bullets">
+                                <li class="tr" data-en="Backend: Python (Flask), MVC Architecture" data-ar="الخلفية: بايثون (Flask)، بنية MVC">Backend: Python (Flask), MVC Architecture</li>
+                                <li class="tr" data-en="Frontend: HTML5, CSS3, Vanilla JS, Jinja2" data-ar="الواجهة الأمامية: HTML5, CSS3, JS, Jinja2">Frontend: HTML5, CSS3, Vanilla JS, Jinja2</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="project-visuals">
+                        <div class="project-gallery">
+                            <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786134035/1786132720960_lmtiw9.png" loading="lazy" class="click-to-zoom" alt="E-Commerce Screenshot">
+                            <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786134036/1786132720969_fr1rbt.png" loading="lazy" class="click-to-zoom" alt="E-Commerce Screenshot">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 7. CERTIFICATIONS DASHBOARD -->
         <section class="container reveal-scale">
             <h2 class="section-title tr" data-en="Modules.Certifications()" data-ar="الوحدات.الشهادات()" style="text-align: center;">Modules.Certifications()</h2>
             <div class="grid">
                 
+                <!-- NEW CERTIFICATE: Data Analyst -->
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786133279/Data_analyst_qurs6a.png" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Data Analyst Specialization" data-ar="تخصص محلل البيانات">Data Analyst Specialization</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Leveraged data to drive informed business decisions and strategic planning." data-ar="الاستفادة من البيانات لدعم قرارات العمل المتميزة والتخطيط الاستراتيجي.">Leveraged data to drive informed business decisions and strategic planning.</li>
+                        <li class="tr" data-en="Applied analytical thinking to identify trends, patterns, and opportunities." data-ar="تطبيق التفكير التحليلي لاكتشاف الاتجاهات والأنماط وفرص النمو.">Applied analytical thinking to identify trends, patterns, and opportunities.</li>
+                        <li class="tr" data-en="Understood the end-to-end data analysis process from collection to visualization." data-ar="فهم كامل لدورة حياة تحليل البيانات من الجمع وحتى العرض المرئي.">Understood the end-to-end data analysis process from collection to visualization.</li>
+                        <li class="tr" data-en="Built a foundation in data ethics, problem-solving, and decision-making." data-ar="بناء أساس متين في أخلاقيات البيانات، حل المشكلات، واتخاذ القرار.">Built a foundation in data ethics, problem-solving, and decision-making.</li>
+                        <li class="tr" data-en="Delivered actionable insights through clear data interpretation and communication." data-ar="تقديم رؤى قابلة للتنفيذ عبر التواصل الواضح وتفسير البيانات الدقيق.">Delivered actionable insights through clear data interpretation and communication.</li>
+                    </ul></div>
+                </div>
+
+                <!-- Previous Certs -->
                 <div class="glass-card hover-target">
                     <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094231/Everyday_Excel_atf1pe.png" loading="lazy" class="click-to-zoom" alt="Certificate">
                     <h3 class="tr" data-en="Everyday Excel" data-ar="احتراف الإكسل اليومي">Everyday Excel</h3>
@@ -617,7 +744,7 @@
             </div>
         </section>
 
-        <!-- 6. HACKER CONTACT TERMINAL -->
+        <!-- 8. HACKER CONTACT TERMINAL -->
         <section class="container reveal-slide-up">
             <h2 class="section-title tr" data-en="Network.Connect()" data-ar="الشبكة.اتصال()" style="text-align: center;">Network.Connect()</h2>
             <div class="contact-terminal hover-target" id="terminal-box">
@@ -653,7 +780,7 @@
 
     <!-- SCRIPTS -->
     <script>
-        // --- 1. Emergency Content Show Function ---
+        // --- 1. Door Animation & Emergency Content Show Function ---
         function forceShowContent() {
             const totalContent = document.getElementById('total-content');
             if (totalContent) {
@@ -729,13 +856,14 @@
                 cursor.style.display = 'none';
             }
 
-            // --- 2. TERMINAL SEQUENCE ---
+            // --- 2. CINEMATIC TERMINAL & DOOR SEQUENCE ---
             const lines = document.querySelectorAll('.terminal-line');
-            const intro = document.getElementById('intro-terminal');
+            const introWrapper = document.getElementById('intro-wrapper');
+            const introTerminalBox = document.getElementById('intro-terminal-box');
             
             const fallbackTimeout = setTimeout(() => {
-                if (intro && intro.style.visibility !== 'hidden') {
-                    intro.style.display = 'none';
+                if (introWrapper && introWrapper.style.display !== 'none') {
+                    introWrapper.style.display = 'none';
                     forceShowContent();
                 }
             }, 10000); 
@@ -744,31 +872,28 @@
                 let delay = 300; 
                 
                 lines.forEach((line, index) => {
-                    setTimeout(() => { 
-                        line.classList.add('active'); 
-                    }, delay);
-                    
-                    if (index === lines.length - 2) delay += 1500; 
-                    else if (index < 2) delay += 700;
-                    else delay += 500;
+                    setTimeout(() => { line.classList.add('active'); }, delay);
+                    if (index === lines.length - 2) delay += 1200; 
+                    else delay += 600;
                 });
 
                 setTimeout(() => {
                     clearTimeout(fallbackTimeout); 
-                    
-                    if (intro) {
-                        intro.style.opacity = '0';
+                    if (introWrapper) {
+                        // 1. Open doors and fade text
+                        introWrapper.classList.add('door-open');
+                        
+                        // 2. Wait for door slide animation (1.5s) to finish, then hide wrapper and show site
                         setTimeout(() => {
-                            intro.style.visibility = 'hidden';
-                            intro.style.display = 'none';
-                            
+                            introWrapper.style.display = 'none';
                             forceShowContent();
                             
+                            // Trigger Hero Stagger
                             const pills = document.querySelectorAll('.tech-pill');
                             pills.forEach((pill, i) => {
                                 setTimeout(() => { pill.style.opacity = '1'; pill.style.transform = 'translateY(0)'; }, i * 150);
                             });
-                        }, 500); 
+                        }, 1300); // Trigger just before door finishes completely for smoothness
                     } else {
                         forceShowContent();
                     }
@@ -822,11 +947,12 @@
             });
 
             function triggerEasterEgg() {
-                const flash = document.getElementById('easter-egg');
-                flash.style.display = 'block';
+                const flash = document.createElement('div');
+                flash.style.cssText = "position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(16, 185, 129, 0.2); z-index:9999999; pointer-events:none; mix-blend-mode:overlay;";
+                document.body.appendChild(flash);
                 document.documentElement.style.setProperty('--glow', '#10b981');
                 document.documentElement.style.setProperty('--accent', '#10b981');
-                setTimeout(() => { flash.style.display = 'none'; }, 500);
+                setTimeout(() => { flash.remove(); }, 500);
                 alert(currentLang === 'en' ? "🟢 Developer Mode Unlocked: AI Core Access Granted." : "🟢 تم تفعيل وضع المطور: تم منح صلاحية الوصول لنواة الذكاء الاصطناعي.");
             }
 
