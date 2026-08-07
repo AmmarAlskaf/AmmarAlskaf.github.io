@@ -23,22 +23,28 @@
             --font-mono: 'Fira Code', monospace;
         }
 
-        /* Critical fix for the "black column" issue: strict viewport control */
-        html, body {
-            max-width: 100%;
+        /* Essential for preventing Problem 3: Black Column */
+        html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
             overflow-x: hidden;
-            width: 100vw;
             background-color: var(--bg-dark);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
-        
         body { 
+            width: 100%;
+            margin: 0;
+            padding: 0;
             background-color: var(--bg-dark); color: var(--text-main); 
             font-family: var(--font-en); 
-            line-height: 1.6; scroll-behavior: smooth;
+            line-height: 1.6;
+            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
+
+        * { box-sizing: border-box; cursor: none; }
         
         /* Arabic RTL Styles */
         body[dir="rtl"] { font-family: var(--font-ar); }
@@ -48,12 +54,12 @@
         body[dir="rtl"] .cmd-response { border-left: none; border-right: 2px solid #10b981; padding-left: 0; padding-right: 20px; }
         body[dir="rtl"] .custom-bullets li::before { margin-right: 0; margin-left: 10px; }
 
-        body.locked { overflow: hidden; height: 100vh; }
+        body.locked { overflow: hidden !important; height: 100vh !important; }
 
-        /* Hide main content initially to solve Problem 1 */
-        header, section, footer { display: none; }
+        /* Problem 1 Fix: Content is hidden initially via JS, not just CSS */
+        .main-content-hidden { display: none; }
 
-        /* Custom Glowing Cursor - Hidden on mobile to prevent layout shifts */
+        /* Custom Cursor - Hidden on mobile */
         #custom-cursor {
             position: fixed; top: 0; left: 0; width: 20px; height: 20px;
             background: var(--accent); border-radius: 50%; pointer-events: none; 
@@ -68,13 +74,13 @@
             * { cursor: auto !important; }
         }
 
-        /* Language Toggle Button - Redesigned to fix Problem 3 */
+        /* Language Toggle Button - Problem 3 Fix */
         .lang-toggle {
             position: fixed; top: 20px; right: 20px; z-index: 999999;
             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
             color: #fff; padding: 10px 18px; border-radius: 30px; font-weight: 600;
             backdrop-filter: blur(10px); transition: 0.3s; font-family: var(--font-en);
-            font-size: 0.85rem;
+            font-size: 0.85rem; display: block !important;
         }
         body[dir="rtl"] .lang-toggle { right: auto; left: 20px; }
         .lang-toggle:hover { background: var(--glow); border-color: var(--glow); transform: scale(1.05); }
@@ -90,7 +96,7 @@
         /* ==================================================
            2. INTRO TERMINAL
            ================================================== */
-        #intro-terminal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 10vw; font-family: var(--font-mono); color: #3b82f6; font-size: 1.1rem; transition: opacity 0.8s, visibility 0.8s; }
+        #intro-terminal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 10vw; font-family: var(--font-mono); color: #3b82f6; font-size: 1.1rem; transition: opacity 0.5s; }
         .terminal-line { display: none; margin-bottom: 8px; opacity: 0; transform: translateY(10px); }
         .terminal-line.active { display: block; animation: fadeInUp 0.3s forwards; }
         .blinking-cursor { display: inline-block; width: 10px; height: 1.2rem; background: #3b82f6; animation: blink 1s infinite; vertical-align: middle;}
@@ -104,19 +110,15 @@
         .header-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(5,5,5,0.8) 0%, rgba(5,5,5,1) 100%); z-index: 1; }
         header .content-wrapper { position: relative; z-index: 2; width: 90%; max-width: 800px; }
         
-        .hero h1 { font-size: clamp(2.5rem, 8vw, 6rem); font-weight: 800; letter-spacing: -2px; margin-bottom: 10px; line-height: 1; background: linear-gradient(180deg, #fff, #71717a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero h1 { font-size: clamp(2.2rem, 8vw, 6rem); font-weight: 800; letter-spacing: -2px; margin-bottom: 10px; line-height: 1.1; background: linear-gradient(180deg, #fff, #71717a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        /* Fixes for Problem 2: Role Container */
+        /* Problem 2 Fix: Role Container */
         .role-container { overflow: hidden; margin-top: 15px; position: relative;}
         
         /* Desktop styles (sliding animation) */
         @media (min-width: 769px) {
             .role-container { height: 40px; }
-            .role-text { font-size: 1.8rem; color: var(--text-muted); font-weight: 300; display: block; animation: slideRoles 9s infinite; opacity: 0; transform: translateY(100%);}
-            @keyframes slideRoles { 0%, 25% { transform: translateY(100%); opacity: 0; } 5%, 20% { transform: translateY(0); opacity: 1; } 33%, 58% { transform: translateY(-100%); opacity: 0; } 38%, 53% { transform: translateY(-100%); } /* Stay hidden during next cycle */ 100% { transform: translateY(-200%); opacity: 0; } }
-            
-            /* Simple fade in/out is often smoother for roles */
-            .role-text { animation: fadeRoles 9s infinite; position: absolute; top:0; left:0; width: 100%;}
+            .role-text { font-size: 1.8rem; color: var(--text-muted); font-weight: 300; display: block; animation: fadeRoles 9s infinite; position: absolute; top:0; left:0; width: 100%; opacity: 0;}
             .role-text:nth-child(2) { animation-delay: 3s; }
             .role-text:nth-child(3) { animation-delay: 6s; }
             @keyframes fadeRoles { 0%, 10%, 90%, 100% { opacity: 0; transform: translateY(10px); } 15%, 85% { opacity: 1; transform: translateY(0); } }
@@ -125,7 +127,7 @@
         /* Mobile styles for Problem 2: Stacked, full text, no animation */
         @media (max-width: 768px) {
             .role-container { height: auto; overflow: visible; display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
-            .role-text { font-size: 1.1rem; color: var(--text-muted); font-weight: 400; display: block; animation: none; position: static; opacity: 1; transform: none; line-height: 1.4; padding: 0 10px; }
+            .role-text { font-size: 1.05rem; color: var(--text-muted); font-weight: 400; display: block; animation: none; position: static; opacity: 1; transform: none; line-height: 1.4; padding: 0 10px; }
         }
         
         .tech-stack { display: flex; gap: 10px; margin-top: 30px; flex-wrap: wrap; justify-content: center; }
@@ -159,13 +161,13 @@
 
         /* Hidden Content */
         .details-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; opacity: 0; margin-top: 0;}
-        .details-content.open { max-height: 1000px; opacity: 1; margin-top: 15px;}
+        .details-content.open { max-height: 1200px; opacity: 1; margin-top: 15px;}
         
         .custom-bullets { list-style: none; margin: 0; padding: 0;}
         .custom-bullets li { position: relative; margin-bottom: 8px; font-size: 0.85rem; color: #d1d5db; display: flex; align-items: flex-start; line-height: 1.5; }
         .custom-bullets li::before { content: '▹'; color: var(--glow); font-weight: bold; margin-right: 8px; font-size: 1.1rem; line-height: 1;}
 
-        /* Responsive fixes for Problem 2 inside cards */
+        /* Responsive fixes inside cards */
         @media (max-width: 768px) {
             .custom-bullets li { font-size: 0.95rem; line-height: 1.6; margin-bottom: 10px; color: #e5e7eb;}
             .details-btn { font-size: 0.9rem; padding: 10px 16px; }
@@ -189,16 +191,16 @@
         /* Hacker Terminal */
         .contact-terminal { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 20px; font-family: var(--font-mono); position: relative; max-width: 100%; direction: ltr; text-align: left; overflow: hidden;}
         .contact-terminal .header { border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 15px; color: #666; font-size: 0.75rem;}
-        .cmd-line { color: #fff; margin-bottom: 8px; font-size: 0.9rem; display: flex; flex-wrap: wrap; }
+        .cmd-line { color: #fff; margin-bottom: 8px; font-size: 0.9rem; display: flex; flex-wrap: wrap; align-items: center; }
         .cmd-prompt { color: #3b82f6; margin-right: 8px;}
-        .cmd-input { background: transparent; border: none; color: #10b981; font-family: var(--font-mono); font-size: 0.9rem; outline: none; flex-grow: 1; width: 100px; min-width: 100px;}
+        .cmd-input { background: transparent; border: none; color: #10b981; font-family: var(--font-mono); font-size: 0.9rem; outline: none; flex-grow: 1; width: 50px; }
         .cmd-response { display: none; color: #a1a1aa; margin-top: 15px; padding-left: 15px; border-left: 2px solid #10b981; font-size: 0.85rem;}
         .cmd-response a { color: #fff; text-decoration: none; border-bottom: 1px dashed #3b82f6; transition: 0.3s; cursor: pointer;}
         
         @media (max-width: 768px) {
             .contact-terminal { padding: 15px; }
             .cmd-line { font-size: 0.8rem; }
-            .cmd-input { font-size: 0.8rem; }
+            .cmd-input { font-size: 0.8rem; flex-basis: 100%; margin-top: 5px;}
             .cmd-response { font-size: 0.8rem; }
         }
 
@@ -227,369 +229,374 @@
     <!-- 1. STARTUP TERMINAL -->
     <div id="intro-terminal">
         <div class="terminal-line tr" data-en="[1/4] Locating profile: Ammar Alskaf..." data-ar="[1/4] استخراج الملف الشخصي: عمار السكاف...">[1/4] Locating profile: Ammar Alskaf...</div>
-        <div class="terminal-line tr" data-en="[2/4] Decrypting Telecommunications Engineering background..." data-ar="[2/4] فك تشفير البيانات: هندسة الاتصالات والمشتريات التقنية...">[Dec 2/4] Decrypting Telecommunications Engineering background...</div>
-        <div class="terminal-line tr" data-en="[3/4] Compiling Data Analytics & Automation modules..." data-ar="[3/4] تجميع وحدات المعالجة: تحليل البيانات والأتمتة (Python, VBA)...">[3/4] Compiling Data Analytics & Automation modules...</div>
-        <div class="terminal-line tr" data-en="[4/4] Establishing secure connection to the portfolio..." data-ar="[4/4] إنشاء اتصال آمن وموثوق بمعرض الأعمال...">[4/4] Establishing secure connection to the portfolio...</div>
-        <div class="terminal-line tr" data-en="Profile constructed. Welcome to the workspace.<span class='blinking-cursor'></span>" data-ar="تم بناء الملف بنجاح. أهلاً بك في مساحة العمل.<span class='blinking-cursor'></span>" style="color: #fff; font-size: 1.3rem; margin-top: 15px;">Profile constructed. Welcome to the workspace.<span class="blinking-cursor"></span></div>
+        <div class="terminal-line tr" data-en="[2/4] Decrypting Engineering background..." data-ar="[2/4] فك تشفير البيانات: خلفية هندسية والمشتريات التقنية...">[2/4] Decrypting Engineering background...</div>
+        <div class="terminal-line tr" data-en="[3/4] Compiling Data Analytics modules..." data-ar="[3/4] تجميع وحدات المعالجة: تحليل البيانات والأتمتة (Python, VBA)...">[3/4] Compiling Data Analytics modules...</div>
+        <div class="terminal-line tr" data-en="[4/4] Establishing secure connection..." data-ar="[4/4] إنشاء اتصال آمن ومعرض الأعمال...">[4/4] Establishing secure connection...</div>
+        <div class="terminal-line tr" data-en="Welcome to the workspace.<span class='blinking-cursor'></span>" data-ar="أهلاً بك في مساحة العمل.<span class='blinking-cursor'></span>" style="color: #fff; font-size: 1.3rem; margin-top: 15px;">Welcome.<span class="blinking-cursor"></span></div>
     </div>
 
-    <!-- 2. HERO SECTION -->
-    <header id="main-header" style="background-image: url('https://res.cloudinary.com/ogabkfka/image/upload/v1786094216/Ammar_Alskaf_x7ooht.jpg');">
-        <div class="header-overlay"></div>
-        <div class="content-wrapper">
-            <h1 class="hover-target tr" data-en="AMMAR ALSKAF" data-ar="عـمّـار السـكّـاف">AMMAR ALSKAF</h1>
-            <div class="role-container">
-                <div class="role-text tr" data-en="Data Analyst" data-ar="محلل بيانات">Data Analyst</div>
-                <div class="role-text tr" data-en="Telecommunications & Electronics Engineer" data-ar="مهندس اتصالات وإلكترونيات">Telecommunications & Electronics Engineer</div>
-                <div class="role-text tr" data-en="Technical Procurement Specialist" data-ar="أخصائي مشتريات تقنية">Technical Procurement Specialist</div>
-            </div>
-            <div class="tech-stack" id="hero-stack">
-                <span class="tech-pill hover-target">Python</span>
-                <span class="tech-pill hover-target">Advanced Excel & VBA</span>
-                <span class="tech-pill hover-target tr" data-en="Data Analysis" data-ar="تحليل البيانات">Data Analysis</span>
-                <span class="tech-pill hover-target tr" data-en="Automation" data-ar="أتمتة الأعمال">Automation</span>
-                <span class="tech-pill hover-target tr" data-en="Strategic Leadership" data-ar="قيادة استراتيجية">Strategic Leadership</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- 3. ABOUT ME -->
-    <section class="container reveal-slide-up">
-        <h2 class="section-title tr" data-en="System.About()" data-ar="النظام.عن_نفسي()" style="text-align: center;">System.About()</h2>
-        <p class="about-text tr" data-en="I am a dedicated Telecommunications Engineer with expertise in microwave communications, technical procurement, and data analysis. I leverage Python, VBA, and advanced Excel to automate workflows, analyze large datasets, and build insightful reports and dashboards that support strategic decision-making. Thanks to my extensive professional experience and specialized training, I excel in strategic leadership, project management, process optimization, and problem-solving. My strong interpersonal skills enable me to collaborate effectively with cross-functional teams and stakeholders, ensuring successful project delivery, operational excellence, and data-driven business growth." 
-           data-ar="أنا مهندس اتصالات متخصص، أمتلك خبرة متعمقة في اتصالات المايكرويف، المشتريات التقنية، وتحليل البيانات. أعتمد على Python و VBA و Excel المتقدم لأتمتة سير العمل، تحليل البيانات الضخمة، وبناء لوحات تحكم تدعم اتخاذ القرارات الاستراتيجية. بفضل خبرتي المهنية وتدريبي المتخصص، أتميز في القيادة الاستراتيجية، إدارة المشاريع، تحسين العمليات، وحل المشكلات. مهاراتي العالية في التواصل تتيح لي التعاون الفعال مع فرق العمل لضمان نجاح المشاريع والنمو المبني على البيانات.">
-            I am a dedicated Telecommunications Engineer with expertise in microwave communications, technical procurement, and data analysis. I leverage Python, VBA, and advanced Excel to automate workflows, analyze large datasets, and build insightful reports and dashboards that support strategic decision-making. Thanks to my extensive professional experience and specialized training, I excel in strategic leadership, project management, process optimization, and problem-solving. My strong interpersonal skills enable me to collaborate effectively with cross-functional teams and stakeholders, ensuring successful project delivery, operational excellence, and data-driven business growth.
-        </p>
-    </section>
-
-    <!-- 4. EDUCATION & EXPERIENCE -->
-    <section class="container reveal-fade">
-        <h2 class="section-title tr" data-en="Experience.Log()" data-ar="سجل_الخبرات.عرض()">Experience.Log()</h2>
-        <div class="timeline">
-            
-            <div class="timeline-item reveal-slide-up">
-                <div class="timeline-date">Jan 2017 - Dec 2022</div>
-                <div class="glass-card hover-target">
-                    <h3 class="tr" data-en="Bachelor's Degree in Electronics & Comm. Engineering" data-ar="بكالوريوس في هندسة الإلكترونيات والاتصالات">Bachelor's Degree in Electronics & Comm. Engineering</h3>
-                    <p class="tr" data-en="Damascus University, Syria" data-ar="جامعة دمشق، سوريا">Damascus University, Syria</p>
+    <!-- MAIN CONTENT - Wrapper for Problem 1 Fix -->
+    <div id="total-content" class="main-content-hidden">
+        
+        <!-- 2. HERO SECTION -->
+        <header id="main-header" style="background-image: url('https://res.cloudinary.com/ogabkfka/image/upload/v1786094216/Ammar_Alskaf_x7ooht.jpg');">
+            <div class="header-overlay"></div>
+            <div class="content-wrapper">
+                <h1 class="hover-target tr" data-en="AMMAR ALSKAF" data-ar="عـمّـار السـكّـاف">AMMAR ALSKAF</h1>
+                <div class="role-container">
+                    <div class="role-text tr" data-en="Data Analyst" data-ar="محلل بيانات">Data Analyst</div>
+                    <div class="role-text tr" data-en="Telecommunications & Electronics Engineer" data-ar="مهندس اتصالات وإلكترونيات">Telecommunications & Electronics Engineer</div>
+                    <div class="role-text tr" data-en="Technical Procurement Specialist" data-ar="أخصائي مشتريات تقنية">Technical Procurement Specialist</div>
+                </div>
+                <div class="tech-stack" id="hero-stack">
+                    <span class="tech-pill hover-target">Python</span>
+                    <span class="tech-pill hover-target">Advanced Excel & VBA</span>
+                    <span class="tech-pill hover-target tr" data-en="Data Analysis" data-ar="تحليل البيانات">Data Analysis</span>
+                    <span class="tech-pill hover-target tr" data-en="Automation" data-ar="أتمتة الأعمال">Automation</span>
+                    <span class="tech-pill hover-target tr" data-en="Strategic Leadership" data-ar="قيادة استراتيجية">Strategic Leadership</span>
                 </div>
             </div>
+        </header>
 
-            <div class="timeline-item reveal-slide-up">
-                <div class="timeline-date">May 2022 - May 2023</div>
-                <div class="glass-card hover-target">
-                    <h3 class="tr" data-en="Technical Purchasing Buyer" data-ar="مسؤول مشتريات تقنية">Technical Purchasing Buyer</h3>
-                    <p class="tr" data-en="Syriatel Mobile Telecom" data-ar="سيريتل للاتصالات">Syriatel Mobile Telecom</p>
-                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div class="details-content">
-                        <ul class="custom-bullets">
-                            <li class="tr" data-en="Managed procurement of technical equipment and network components." data-ar="إدارة مشتريات المعدات التقنية ومكونات الشبكة.">Managed procurement of technical equipment and network components.</li>
-                            <li class="tr" data-en="Negotiated with suppliers to achieve cost-effective purchasing." data-ar="التفاوض مع الموردين لتحقيق عمليات شراء فعالة من حيث التكلفة.">Negotiated with suppliers to achieve cost-effective purchasing.</li>
-                            <li class="tr" data-en="Evaluated quotations based on quality, cost, and delivery." data-ar="تقييم عروض الأسعار بناءً على الجودة والتكلفة والتسليم.">Evaluated quotations based on quality, cost, and delivery.</li>
-                            <li class="tr" data-en="Coordinated purchasing activities across multiple departments." data-ar="تنسيق أنشطة الشراء عبر أقسام متعددة.">Coordinated purchasing activities across multiple departments.</li>
-                            <li class="tr" data-en="Optimized inventory availability while reducing procurement delays." data-ar="تحسين توفر المخزون مع تقليل تأخيرات التوريد.">Optimized inventory availability while reducing procurement delays.</li>
-                        </ul>
+        <!-- 3. ABOUT ME -->
+        <section class="container reveal-slide-up">
+            <h2 class="section-title tr" data-en="System.About()" data-ar="النظام.عن_نفسي()" style="text-align: center;">System.About()</h2>
+            <p class="about-text tr" data-en="I am a dedicated Telecommunications Engineer with expertise in microwave communications, technical procurement, and data analysis. I leverage Python, VBA, and advanced Excel to automate workflows, analyze large datasets, and build insightful reports and dashboards that support strategic decision-making. Thanks to my extensive professional experience and specialized training, I excel in strategic leadership, project management, process optimization, and problem-solving. My strong interpersonal skills enable me to collaborate effectively with cross-functional teams and stakeholders, ensuring successful project delivery, operational excellence, and data-driven business growth." 
+               data-ar="أنا مهندس اتصالات متخصص، أمتلك خبرة متعمقة في اتصالات المايكرويف، المشتريات التقنية، وتحليل البيانات. أعتمد على Python و VBA و Excel المتقدم لأتمتة سير العمل، تحليل البيانات الضخمة، وبناء لوحات تحكم تدعم اتخاذ القرارات الاستراتيجية. بفضل خبرتي المهنية وتدريبي المتخصص، أتميز في القيادة الاستراتيجية، إدارة المشاريع، تحسين العمليات، وحل المشكلات. مهاراتي العالية في التواصل تتيح لي التعاون الفعال مع فرق العمل لضمان نجاح المشاريع والنمو المبني على البيانات.">
+                I am a dedicated Telecommunications Engineer with expertise in microwave communications, technical procurement, and data analysis. I leverage Python, VBA, and advanced Excel to automate workflows, analyze large datasets, and build insightful reports and dashboards that support strategic decision-making. Thanks to my extensive professional experience and specialized training, I excel in strategic leadership, project management, process optimization, and problem-solving. My strong interpersonal skills enable me to collaborate effectively with cross-functional teams and stakeholders, ensuring successful project delivery, operational excellence, and data-driven business growth.
+            </p>
+        </section>
+
+        <!-- 4. EDUCATION & EXPERIENCE -->
+        <section class="container reveal-fade">
+            <h2 class="section-title tr" data-en="Experience.Log()" data-ar="سجل_الخبرات.عرض()">Experience.Log()</h2>
+            <div class="timeline">
+                
+                <div class="timeline-item reveal-slide-up">
+                    <div class="timeline-date">Jan 2017 - Dec 2022</div>
+                    <div class="glass-card hover-target">
+                        <h3 class="tr" data-en="Bachelor's Degree in Electronics & Comm. Engineering" data-ar="بكالوريوس في هندسة الإلكترونيات والاتصالات">Bachelor's Degree in Electronics & Comm. Engineering</h3>
+                        <p class="tr" data-en="Damascus University, Syria" data-ar="جامعة دمشق، سوريا">Damascus University, Syria</p>
                     </div>
-                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094299/Technical_purchasing_buyer_-Syriatel_vcl1ej.jpg" loading="lazy" class="exp-img click-to-zoom" alt="Technical Purchasing Buyer">
                 </div>
-            </div>
 
-            <div class="timeline-item reveal-slide-up">
-                <div class="timeline-date">Jan 2020 - May 2022</div>
-                <div class="glass-card hover-target">
-                    <h3 class="tr" data-en="Contact Centre Agent" data-ar="موظف مركز اتصالات">Contact Centre Agent</h3>
-                    <p class="tr" data-en="Syriatel Mobile Telecom" data-ar="سيريتل للاتصالات">Syriatel Mobile Telecom</p>
-                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div class="details-content">
-                        <ul class="custom-bullets">
-                            <li class="tr" data-en="Delivered exceptional customer support with high satisfaction standards." data-ar="تقديم دعم استثنائي للعملاء بأعلى معايير الرضا.">Delivered exceptional customer support with high satisfaction standards.</li>
-                            <li class="tr" data-en="Resolved technical and service-related issues efficiently." data-ar="حل المشكلات التقنية وتلك المتعلقة بالخدمة بكفاءة عالية.">Resolved technical and service-related issues efficiently.</li>
-                            <li class="tr" data-en="Handled high-volume customer interactions with professionalism." data-ar="التعامل مع حجم كبير من تفاعلات العملاء باحترافية.">Handled high-volume customer interactions with professionalism.</li>
-                            <li class="tr" data-en="Improved communication through active listening and problem-solving." data-ar="تحسين التواصل من خلال الاستماع الفعال وحل المشكلات.">Improved communication through active listening and problem-solving.</li>
-                            <li class="tr" data-en="Maintained accurate records while meeting strict performance KPIs." data-ar="الحفاظ على سجلات دقيقة مع تلبية مؤشرات الأداء الرئيسية الصارمة.">Maintained accurate records while meeting strict performance KPIs.</li>
-                        </ul>
+                <div class="timeline-item reveal-slide-up">
+                    <div class="timeline-date">May 2022 - May 2023</div>
+                    <div class="glass-card hover-target">
+                        <h3 class="tr" data-en="Technical Purchasing Buyer" data-ar="مسؤول مشتريات تقنية">Technical Purchasing Buyer</h3>
+                        <p class="tr" data-en="Syriatel Mobile Telecom" data-ar="سيريتل للاتصالات">Syriatel Mobile Telecom</p>
+                        <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                            <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
+                            <span class="arrow">▼</span>
+                        </button>
+                        <div class="details-content">
+                            <ul class="custom-bullets">
+                                <li class="tr" data-en="Managed procurement of technical equipment and network components." data-ar="إدارة مشتريات المعدات التقنية ومكونات الشبكة.">Managed procurement of technical equipment and network components.</li>
+                                <li class="tr" data-en="Negotiated with suppliers to achieve cost-effective purchasing." data-ar="التفاوض مع الموردين لتحقيق عمليات شراء فعالة من حيث التكلفة.">Negotiated with suppliers to achieve cost-effective purchasing.</li>
+                                <li class="tr" data-en="Evaluated quotations based on quality, cost, and delivery." data-ar="تقييم عروض الأسعار بناءً على الجودة والتكلفة والتسليم.">Evaluated quotations based on quality, cost, and delivery.</li>
+                                <li class="tr" data-en="Coordinated purchasing activities across multiple departments." data-ar="تنسيق أنشطة الشراء عبر أقسن متعددة.">Coordinated purchasing activities across multiple departments.</li>
+                                <li class="tr" data-en="Optimized inventory availability while reducing procurement delays." data-ar="تحسين توفر المخزون مع تقليل تأخيرات التوريد.">Optimized inventory availability while reducing procurement delays.</li>
+                            </ul>
+                        </div>
+                        <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094299/Technical_purchasing_buyer_-Syriatel_vcl1ej.jpg" loading="lazy" class="exp-img click-to-zoom" alt="Technical Purchasing Buyer">
                     </div>
-                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094281/Contact_Centre_-_Syriatel_erihqg.jpg" loading="lazy" class="exp-img click-to-zoom" alt="Contact Centre">
                 </div>
-            </div>
 
-            <div class="timeline-item reveal-slide-up">
-                <div class="timeline-date">Jun 2018 - Nov 2019</div>
+                <div class="timeline-item reveal-slide-up">
+                    <div class="timeline-date">Jan 2020 - May 2022</div>
+                    <div class="glass-card hover-target">
+                        <h3 class="tr" data-en="Contact Centre Agent" data-ar="موظف مركز اتصالات">Contact Centre Agent</h3>
+                        <p class="tr" data-en="Syriatel Mobile Telecom" data-ar="سيريتل للاتصالات">Syriatel Mobile Telecom</p>
+                        <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                            <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
+                            <span class="arrow">▼</span>
+                        </button>
+                        <div class="details-content">
+                            <ul class="custom-bullets">
+                                <li class="tr" data-en="Delivered exceptional customer support with high satisfaction standards." data-ar="تقديم دعم استثنائي للعملاء بأعلى معايير الرضا.">Delivered exceptional customer support with high satisfaction standards.</li>
+                                <li class="tr" data-en="Resolved technical and service-related issues efficiently." data-ar="حل المشكلات التقنية وتلك المتعلقة بالخدمة بكفاءة عالية.">Resolved technical and service-related issues efficiently.</li>
+                                <li class="tr" data-en="Handled high-volume customer interactions with professionalism." data-ar="التعامل مع حجم كبير من تفاعلات العملاء باحترافية.">Handled high-volume customer interactions with professionalism.</li>
+                                <li class="tr" data-en="Improved communication through active listening and problem-solving." data-ar="تحسين التواصل من خلال الاستماع الفعال وحل المشكلات.">Improved communication through active listening and problem-solving.</li>
+                                <li class="tr" data-en="Maintained accurate records while meeting strict performance KPIs." data-ar="الحفاظ على سجلات دقيقة مع تلبية مؤشرات الأداء الرئيسية الصارمة.">Maintained accurate records while meeting strict performance KPIs.</li>
+                            </ul>
+                        </div>
+                        <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094281/Contact_Centre_-_Syriatel_erihqg.jpg" loading="lazy" class="exp-img click-to-zoom" alt="Contact Centre">
+                    </div>
+                </div>
+
+                <div class="timeline-item reveal-slide-up">
+                    <div class="timeline-date">Jun 2018 - Nov 2019</div>
+                    <div class="glass-card hover-target">
+                        <h3 class="tr" data-en="Data Entry Agent" data-ar="مدخل بيانات">Data Entry Agent</h3>
+                        <p class="tr" data-en="AL Baath Newspaper" data-ar="جريدة البعث">AL Baath Newspaper</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 5. CERTIFICATIONS DASHBOARD -->
+        <section class="container reveal-scale">
+            <h2 class="section-title tr" data-en="Modules.Certifications()" data-ar="الوحدات.الشهادات()" style="text-align: center;">Modules.Certifications()</h2>
+            <div class="grid">
+                
                 <div class="glass-card hover-target">
-                    <h3 class="tr" data-en="Data Entry Agent" data-ar="مدخل بيانات">Data Entry Agent</h3>
-                    <p class="tr" data-en="AL Baath Newspaper" data-ar="جريدة البعث">AL Baath Newspaper</p>
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094231/Everyday_Excel_atf1pe.png" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Everyday Excel" data-ar="احتراف الإكسل اليومي">Everyday Excel</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Advanced formulas and functions." data-ar="دوال ومعادلات متقدمة.">Advanced formulas and functions.</li>
+                        <li class="tr" data-en="Dynamic dashboards and reporting." data-ar="لوحات تحكم وتقارير ديناميكية.">Dynamic dashboards and reporting.</li>
+                        <li class="tr" data-en="Pivot Tables and Pivot Charts." data-ar="الجداول والمخططات المحورية.">Pivot Tables and Pivot Charts.</li>
+                        <li class="tr" data-en="Data cleaning and transformation." data-ar="تنظيف البيانات وتحويلها.">Data cleaning and transformation.</li>
+                        <li class="tr" data-en="Professional spreadsheet automation." data-ar="أتمتة الجداول بشكل احترافي.">Professional spreadsheet automation.</li>
+                    </ul></div>
+                </div>
+
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094244/GenAI_for_Executives_Business_Leaders_ewxsfd.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="GenAI for Executives" data-ar="الذكاء الاصطناعي التوليدي للمدراء">GenAI for Executives</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="AI-driven business strategy." data-ar="استراتيجية الأعمال المدعومة بالذكاء الاصطناعي.">AI-driven business strategy.</li>
+                        <li class="tr" data-en="Generative AI applications." data-ar="تطبيقات الذكاء الاصطناعي التوليدي.">Generative AI applications.</li>
+                        <li class="tr" data-en="Workflow automation with AI." data-ar="أتمتة سير العمل باستخدام الذكاء الاصطناعي.">Workflow automation with AI.</li>
+                        <li class="tr" data-en="AI-powered decision making." data-ar="اتخاذ القرارات المدعومة بالذكاء الاصطناعي.">AI-powered decision making.</li>
+                        <li class="tr" data-en="Responsible AI implementation." data-ar="التنفيذ المسؤول للذكاء الاصطناعي.">Responsible AI implementation.</li>
+                    </ul></div>
+                </div>
+
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094236/Initiating_and_Planning_Projects_wvrtg2.png" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Planning Projects" data-ar="تخطيط وتأسيس المشاريع">Planning Projects</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Project scope definition." data-ar="تحديد نطاق المشروع.">Project scope definition.</li>
+                        <li class="tr" data-en="Stakeholder identification." data-ar="تحديد أصحاب المصلحة.">Stakeholder identification.</li>
+                        <li class="tr" data-en="Project scheduling." data-ar="جدولة المشروع.">Project scheduling.</li>
+                        <li class="tr" data-en="Resource planning." data-ar="تخطيط الموارد.">Resource planning.</li>
+                        <li class="tr" data-en="Risk-aware project initiation." data-ar="بدء المشاريع بوعي بالمخاطر.">Risk-aware project initiation.</li>
+                    </ul></div>
+                </div>
+
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094233/Leading_Teams_Developing_as_a_Leader_qy71ds.png" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Leading Teams" data-ar="قيادة وتطوير فرق العمل">Leading Teams</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Leadership and decision-making." data-ar="القيادة واتخاذ القرارات.">Leadership and decision-making.</li>
+                        <li class="tr" data-en="Team motivation techniques." data-ar="تقنيات تحفيز الفريق.">Team motivation techniques.</li>
+                        <li class="tr" data-en="Performance coaching." data-ar="التدريب على الأداء.">Performance coaching.</li>
+                        <li class="tr" data-en="Conflict resolution." data-ar="حل النزاعات.">Conflict resolution.</li>
+                        <li class="tr" data-en="Building high-performing teams." data-ar="بناء فرق عالية الأداء.">Building high-performing teams.</li>
+                    </ul></div>
+                </div>
+
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094239/Managing_Project_Risks_and_Changes_zdbf1s.png" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Managing Risks" data-ar="إدارة المخاطر والتغيير">Managing Risks</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Risk identification." data-ar="تحديد المخاطر.">Risk identification.</li>
+                        <li class="tr" data-en="Change management processes." data-ar="عمليات إدارة التغيير.">Change management processes.</li>
+                        <li class="tr" data-en="Mitigation planning." data-ar="التخطيط للتخفيف من المخاطر.">Mitigation planning.</li>
+                        <li class="tr" data-en="Impact assessment." data-ar="تقييم الأثر.">Impact assessment.</li>
+                        <li class="tr" data-en="Business continuity strategies." data-ar="استراتيجيات استمرارية الأعمال.">Business continuity strategies.</li>
+                    </ul></div>
+                </div>
+                
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094244/performance_Management_Awareness_u1jdkg.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Performance Management" data-ar="الوعي بإدارة الأداء">Performance Management</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Performance measurement." data-ar="قياس الأداء.">Performance measurement.</li>
+                        <li class="tr" data-en="KPI development." data-ar="تطوير مؤشرات الأداء الرئيسية (KPIs).">KPI development.</li>
+                        <li class="tr" data-en="Employee performance evaluation." data-ar="تقييم أداء الموظفين.">Employee performance evaluation.</li>
+                        <li class="tr" data-en="Continuous improvement." data-ar="التحسين المستمر.">Continuous improvement.</li>
+                        <li class="tr" data-en="Goal alignment and tracking." data-ar="مواءمة الأهداف وتتبعها.">Goal alignment and tracking.</li>
+                    </ul></div>
+                </div>
+
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094317/solving_business_problems_ujodoj.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Solving Business Problems" data-ar="حل المشكلات التجارية">Solving Business Problems</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Root cause analysis." data-ar="تحليل الأسباب الجذرية.">Root cause analysis.</li>
+                        <li class="tr" data-en="Critical thinking." data-ar="التفكير النقدي.">Critical thinking.</li>
+                        <li class="tr" data-en="Data-driven decision making." data-ar="اتخاذ القرارات بناءً على البيانات.">Data-driven decision making.</li>
+                        <li class="tr" data-en="Process optimization." data-ar="تحسين العمليات.">Process optimization.</li>
+                        <li class="tr" data-en="Innovative problem-solving techniques." data-ar="تقنيات مبتكرة لحل المشكلات.">Innovative problem-solving techniques.</li>
+                    </ul></div>
+                </div>
+
+                <!-- Civil Defense -->
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094278/Ambulance_-_Evacuation_Course_ar6mn4.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Ambulance & Evacuation" data-ar="الإسعاف والإخلاء">Ambulance & Evacuation</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Emergency response procedures." data-ar="إجراءات الاستجابة للطوارئ.">Emergency response procedures.</li>
+                        <li class="tr" data-en="Safe evacuation planning and execution." data-ar="تخطيط وتنفيذ الإخلاء الآمن.">Safe evacuation planning and execution.</li>
+                        <li class="tr" data-en="Basic life support awareness." data-ar="الوعي بدعم الحياة الأساسي.">Basic life support awareness.</li>
+                        <li class="tr" data-en="Risk assessment during emergencies." data-ar="تقييم المخاطر أثناء الطوارئ.">Risk assessment during emergencies.</li>
+                        <li class="tr" data-en="Crisis communication and coordination." data-ar="التواصل والتنسيق أثناء الأزمات.">Crisis communication and coordination.</li>
+                    </ul></div>
+                </div>
+
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094291/Firefighting_Course_q67m99.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Firefighting Course" data-ar="دورة الإطفاء">Firefighting Course</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Fire prevention and hazard identification." data-ar="الوقاية من الحرائق وتحديد المخاطر.">Fire prevention and hazard identification.</li>
+                        <li class="tr" data-en="Safe operation of firefighting equipment." data-ar="التشغيل الآمن لمعدات مكافحة الحرائق.">Safe operation of firefighting equipment.</li>
+                        <li class="tr" data-en="Emergency response techniques." data-ar="تقنيات الاستجابة للطوارئ.">Emergency response techniques.</li>
+                        <li class="tr" data-en="Workplace fire safety procedures." data-ar="إجراءات السلامة من الحرائق في مكان العمل.">Workplace fire safety procedures.</li>
+                        <li class="tr" data-en="Evacuation leadership during incidents." data-ar="قيادة الإخلاء أثناء الحوادث.">Evacuation leadership during incidents.</li>
+                    </ul></div>
+                </div>
+
+                <!-- Procurement Series -->
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094224/Procurement_Sourcing_Introduction_-_1_jqwdlz.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Procurement Introduction" data-ar="مقدمة في المشتريات والتوريد">Procurement Introduction</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Procurement fundamentals." data-ar="أساسيات المشتريات.">Procurement fundamentals.</li>
+                        <li class="tr" data-en="Purchasing lifecycle." data-ar="دورة حياة الشراء.">Purchasing lifecycle.</li>
+                        <li class="tr" data-en="Supplier sourcing principles." data-ar="مبادئ توريد الموردين.">Supplier sourcing principles.</li>
+                        <li class="tr" data-en="Procurement compliance." data-ar="الامتثال في المشتريات.">Procurement compliance.</li>
+                        <li class="tr" data-en="Supply chain overview." data-ar="لمحة عامة عن سلسلة التوريد.">Supply chain overview.</li>
+                    </ul></div>
+                </div>
+                
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094239/Procurement_Basics_-_2_flulhm.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Procurement Basics" data-ar="أساسيات المشتريات">Procurement Basics</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Purchase requisition process." data-ar="عملية طلب الشراء.">Purchase requisition process.</li>
+                        <li class="tr" data-en="Vendor selection." data-ar="اختيار الموردين.">Vendor selection.</li>
+                        <li class="tr" data-en="Cost analysis." data-ar="تحليل التكاليف.">Cost analysis.</li>
+                        <li class="tr" data-en="Procurement documentation." data-ar="وثائق المشتريات.">Procurement documentation.</li>
+                        <li class="tr" data-en="Purchasing best practices." data-ar="أفضل ممارسات الشراء.">Purchasing best practices.</li>
+                    </ul></div>
+                </div>
+
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094282/Strategic_Sourcing_-_3_nluzxf.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Strategic Sourcing" data-ar="التوريد الاستراتيجي">Strategic Sourcing</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Category management." data-ar="إدارة الفئات.">Category management.</li>
+                        <li class="tr" data-en="Long-term sourcing strategies." data-ar="استراتيجيات التوريد طويلة الأجل.">Long-term sourcing strategies.</li>
+                        <li class="tr" data-en="Cost optimization." data-ar="تحسين التكلفة.">Cost optimization.</li>
+                        <li class="tr" data-en="Supplier evaluation." data-ar="تقييم الموردين.">Supplier evaluation.</li>
+                        <li class="tr" data-en="Value-driven procurement." data-ar="المشتريات القائمة على القيمة.">Value-driven procurement.</li>
+                    </ul></div>
+                </div>
+
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094301/Supplier_Management_-_4_ksjbsr.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Supplier Management" data-ar="إدارة الموردين">Supplier Management</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Supplier relationship management." data-ar="إدارة علاقات الموردين.">Supplier relationship management.</li>
+                        <li class="tr" data-en="Performance evaluation." data-ar="تقييم الأداء.">Performance evaluation.</li>
+                        <li class="tr" data-en="Contract compliance." data-ar="الامتثال للعقود.">Contract compliance.</li>
+                        <li class="tr" data-en="Vendor development." data-ar="تطوير الموردين.">Vendor development.</li>
+                        <li class="tr" data-en="Partnership optimization." data-ar="تحسين الشراكات.">Partnership optimization.</li>
+                    </ul></div>
+                </div>
+
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094318/Supply_Market_Analysis_-_5_pfvmvs.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Supply Market Analysis" data-ar="تحليل سوق التوريد">Supply Market Analysis</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Market trend analysis." data-ar="تحليل اتجاهات السوق.">Market trend analysis.</li>
+                        <li class="tr" data-en="Supplier benchmarking." data-ar="مقارنة أداء الموردين.">Supplier benchmarking.</li>
+                        <li class="tr" data-en="Cost forecasting." data-ar="التنبؤ بالتكاليف.">Cost forecasting.</li>
+                        <li class="tr" data-en="Competitive analysis." data-ar="التحليل التنافسي.">Competitive analysis.</li>
+                        <li class="tr" data-en="Risk assessment in supply markets." data-ar="تقييم المخاطر في أسواق التوريد.">Risk assessment in supply markets.</li>
+                    </ul></div>
+                </div>
+
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094254/Procurement_Negotiation_-_6_yxkaj1.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Procurement Negotiation" data-ar="مفاوضات المشتريات">Procurement Negotiation</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Negotiation planning." data-ar="التخطيط للتفاوض.">Negotiation planning.</li>
+                        <li class="tr" data-en="Cost reduction strategies." data-ar="استراتيجيات خفض التكاليف.">Cost reduction strategies.</li>
+                        <li class="tr" data-en="Win-win negotiation techniques." data-ar="تقنيات التفاوض المربح للجانبين (Win-Win).">Win-win negotiation techniques.</li>
+                        <li class="tr" data-en="Contract negotiation." data-ar="التفاوض على العقود.">Contract negotiation.</li>
+                        <li class="tr" data-en="Supplier relationship enhancement." data-ar="تعزيز علاقات الموردين.">Supplier relationship enhancement.</li>
+                    </ul></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 6. HACKER CONTACT TERMINAL -->
+        <section class="container reveal-slide-up">
+            <h2 class="section-title tr" data-en="Network.Connect()" data-ar="الشبكة.اتصال()" style="text-align: center;">Network.Connect()</h2>
+            <div class="contact-terminal hover-target" id="terminal-box">
+                <div class="header">bash - root@ammar-server:~</div>
+                <div class="cmd-line">
+                    <span class="cmd-prompt">ammar@server:~$</span>
+                    <span class="tr" data-en='Type <strong style="color:#fff">contact</strong> and Enter:' data-ar='اكتب <strong style="color:#fff">تواصل</strong> واضغط Enter:'>Type <strong style="color:#fff">contact</strong> and Enter:</span>
+                </div>
+                <div class="cmd-line">
+                    <span class="cmd-prompt">></span>
+                    <input type="text" class="cmd-input" id="terminal-input" autocomplete="off" spellcheck="false" autoCapitalize="none">
+                </div>
+                <div class="cmd-response" id="terminal-response">
+                    <p class="tr" data-en="[+] Connection established securely." data-ar="[+] تم إنشاء اتصال آمن.">[+] Connection established securely.</p>
+                    <p><span class="tr" data-en="[>] Email:" data-ar="[>] البريد الإلكتروني:">[>] Email:</span> <a href="mailto:ammaralskaf56@gmail.com" class="hover-target">ammaralskaf56@gmail.com</a></p>
+                    <p><span class="tr" data-en="[>] Phone:" data-ar="[>] رقم الهاتف:">[>] Phone:</span> <a href="tel:+963937807398" class="hover-target">(+963) 937807398</a></p>
+                    <p><span class="tr" data-en="[>] LinkedIn:" data-ar="[>] حساب لينكد إن:">[>] LinkedIn:</span> <a href="https://www.linkedin.com/in/ammar-alskaf-188a5b251" target="_blank" class="hover-target tr" data-en="View Profile Dashboard" data-ar="عرض لوحة تحكم الحساب">View Profile Dashboard</a></p>
                 </div>
             </div>
+        </section>
 
-        </div>
-    </section>
+        <footer>
+            <p class="tr" data-en="Built by Ammar Alskaf &copy; 2026. All Systems Operational." data-ar="تم التطوير بواسطة عمّار السكّاف &copy; 2026. جميع الأنظمة تعمل بشكل ممتاز.">Built by Ammar Alskaf &copy; 2026. All Systems Operational.</p>
+        </footer>
 
-    <!-- 5. CERTIFICATIONS DASHBOARD -->
-    <section class="container reveal-scale">
-        <h2 class="section-title tr" data-en="Modules.Certifications()" data-ar="الوحدات.الشهادات()" style="text-align: center;">Modules.Certifications()</h2>
-        <div class="grid">
-            
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094231/Everyday_Excel_atf1pe.png" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="Everyday Excel" data-ar="احتراف الإكسل اليومي">Everyday Excel</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="Advanced formulas and functions." data-ar="دوال ومعادلات متقدمة.">Advanced formulas and functions.</li>
-                    <li class="tr" data-en="Dynamic dashboards and reporting." data-ar="لوحات تحكم وتقارير ديناميكية.">Dynamic dashboards and reporting.</li>
-                    <li class="tr" data-en="Pivot Tables and Pivot Charts." data-ar="الجداول والمخططات المحورية.">Pivot Tables and Pivot Charts.</li>
-                    <li class="tr" data-en="Data cleaning and transformation." data-ar="تنظيف البيانات وتحويلها.">Data cleaning and transformation.</li>
-                    <li class="tr" data-en="Professional spreadsheet automation." data-ar="أتمتة الجداول بشكل احترافي.">Professional spreadsheet automation.</li>
-                </ul></div>
-            </div>
-
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094244/GenAI_for_Executives_Business_Leaders_ewxsfd.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="GenAI for Executives" data-ar="الذكاء الاصطناعي التوليدي للمدراء">GenAI for Executives</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="AI-driven business strategy." data-ar="استراتيجية الأعمال المدعومة بالذكاء الاصطناعي.">AI-driven business strategy.</li>
-                    <li class="tr" data-en="Generative AI applications." data-ar="تطبيقات الذكاء الاصطناعي التوليدي.">Generative AI applications.</li>
-                    <li class="tr" data-en="Workflow automation with AI." data-ar="أتمتة سير العمل باستخدام الذكاء الاصطناعي.">Workflow automation with AI.</li>
-                    <li class="tr" data-en="AI-powered decision making." data-ar="اتخاذ القرارات المدعومة بالذكاء الاصطناعي.">AI-powered decision making.</li>
-                    <li class="tr" data-en="Responsible AI implementation." data-ar="التنفيذ المسؤول للذكاء الاصطناعي.">Responsible AI implementation.</li>
-                </ul></div>
-            </div>
-
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094236/Initiating_and_Planning_Projects_wvrtg2.png" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="Planning Projects" data-ar="تخطيط وتأسيس المشاريع">Planning Projects</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="Project scope definition." data-ar="تحديد نطاق المشروع.">Project scope definition.</li>
-                    <li class="tr" data-en="Stakeholder identification." data-ar="تحديد أصحاب المصلحة.">Stakeholder identification.</li>
-                    <li class="tr" data-en="Project scheduling." data-ar="جدولة المشروع.">Project scheduling.</li>
-                    <li class="tr" data-en="Resource planning." data-ar="تخطيط الموارد.">Resource planning.</li>
-                    <li class="tr" data-en="Risk-aware project initiation." data-ar="بدء المشاريع بوعي بالمخاطر.">Risk-aware project initiation.</li>
-                </ul></div>
-            </div>
-
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094233/Leading_Teams_Developing_as_a_Leader_qy71ds.png" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="Leading Teams" data-ar="قيادة وتطوير فرق العمل">Leading Teams</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="Leadership and decision-making." data-ar="القيادة واتخاذ القرارات.">Leadership and decision-making.</li>
-                    <li class="tr" data-en="Team motivation techniques." data-ar="تقنيات تحفيز الفريق.">Team motivation techniques.</li>
-                    <li class="tr" data-en="Performance coaching." data-ar="التدريب على الأداء.">Performance coaching.</li>
-                    <li class="tr" data-en="Conflict resolution." data-ar="حل النزاعات.">Conflict resolution.</li>
-                    <li class="tr" data-en="Building high-performing teams." data-ar="بناء فرق عالية الأداء.">Building high-performing teams.</li>
-                </ul></div>
-            </div>
-
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094239/Managing_Project_Risks_and_Changes_zdbf1s.png" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="Managing Risks" data-ar="إدارة المخاطر والتغيير">Managing Risks</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="Risk identification." data-ar="تحديد المخاطر.">Risk identification.</li>
-                    <li class="tr" data-en="Change management processes." data-ar="عمليات إدارة التغيير.">Change management processes.</li>
-                    <li class="tr" data-en="Mitigation planning." data-ar="التخطيط للتخفيف من المخاطر.">Mitigation planning.</li>
-                    <li class="tr" data-en="Impact assessment." data-ar="تقييم الأثر.">Impact assessment.</li>
-                    <li class="tr" data-en="Business continuity strategies." data-ar="استراتيجيات استمرارية الأعمال.">Business continuity strategies.</li>
-                </ul></div>
-            </div>
-            
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094244/performance_Management_Awareness_u1jdkg.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="Performance Management" data-ar="الوعي بإدارة الأداء">Performance Management</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="Performance measurement." data-ar="قياس الأداء.">Performance measurement.</li>
-                    <li class="tr" data-en="KPI development." data-ar="تطوير مؤشرات الأداء الرئيسية (KPIs).">KPI development.</li>
-                    <li class="tr" data-en="Employee performance evaluation." data-ar="تقييم أداء الموظفين.">Employee performance evaluation.</li>
-                    <li class="tr" data-en="Continuous improvement." data-ar="التحسين المستمر.">Continuous improvement.</li>
-                    <li class="tr" data-en="Goal alignment and tracking." data-ar="مواءمة الأهداف وتتبعها.">Goal alignment and tracking.</li>
-                </ul></div>
-            </div>
-
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094317/solving_business_problems_ujodoj.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="Solving Business Problems" data-ar="حل المشكلات التجارية">Solving Business Problems</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="Root cause analysis." data-ar="تحليل الأسباب الجذرية.">Root cause analysis.</li>
-                    <li class="tr" data-en="Critical thinking." data-ar="التفكير النقدي.">Critical thinking.</li>
-                    <li class="tr" data-en="Data-driven decision making." data-ar="اتخاذ القرارات بناءً على البيانات.">Data-driven decision making.</li>
-                    <li class="tr" data-en="Process optimization." data-ar="تحسين العمليات.">Process optimization.</li>
-                    <li class="tr" data-en="Innovative problem-solving techniques." data-ar="تقنيات مبتكرة لحل المشكلات.">Innovative problem-solving techniques.</li>
-                </ul></div>
-            </div>
-
-            <!-- Civil Defense -->
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094278/Ambulance_-_Evacuation_Course_ar6mn4.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="Ambulance & Evacuation" data-ar="الإسعاف والإخلاء">Ambulance & Evacuation</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="Emergency response procedures." data-ar="إجراءات الاستجابة للطوارئ.">Emergency response procedures.</li>
-                    <li class="tr" data-en="Safe evacuation planning and execution." data-ar="تخطيط وتنفيذ الإخلاء الآمن.">Safe evacuation planning and execution.</li>
-                    <li class="tr" data-en="Basic life support awareness." data-ar="الوعي بدعم الحياة الأساسي.">Basic life support awareness.</li>
-                    <li class="tr" data-en="Risk assessment during emergencies." data-ar="تقييم المخاطر أثناء الطوارئ.">Risk assessment during emergencies.</li>
-                    <li class="tr" data-en="Crisis communication and coordination." data-ar="التواصل والتنسيق أثناء الأزمات.">Crisis communication and coordination.</li>
-                </ul></div>
-            </div>
-
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094291/Firefighting_Course_q67m99.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="Firefighting Course" data-ar="دورة الإطفاء">Firefighting Course</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="Fire prevention and hazard identification." data-ar="الوقاية من الحرائق وتحديد المخاطر.">Fire prevention and hazard identification.</li>
-                    <li class="tr" data-en="Safe operation of firefighting equipment." data-ar="التشغيل الآمن لمعدات مكافحة الحرائق.">Safe operation of firefighting equipment.</li>
-                    <li class="tr" data-en="Emergency response techniques." data-ar="تقنيات الاستجابة للطوارئ.">Emergency response techniques.</li>
-                    <li class="tr" data-en="Workplace fire safety procedures." data-ar="إجراءات السلامة من الحرائق في مكان العمل.">Workplace fire safety procedures.</li>
-                    <li class="tr" data-en="Evacuation leadership during incidents." data-ar="قيادة الإخلاء أثناء الحوادث.">Evacuation leadership during incidents.</li>
-                </ul></div>
-            </div>
-
-            <!-- Procurement Series -->
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094224/Procurement_Sourcing_Introduction_-_1_jqwdlz.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="Procurement Introduction" data-ar="مقدمة في المشتريات والتوريد">Procurement Introduction</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="Procurement fundamentals." data-ar="أساسيات المشتريات.">Procurement fundamentals.</li>
-                    <li class="tr" data-en="Purchasing lifecycle." data-ar="دورة حياة الشراء.">Purchasing lifecycle.</li>
-                    <li class="tr" data-en="Supplier sourcing principles." data-ar="مبادئ توريد الموردين.">Supplier sourcing principles.</li>
-                    <li class="tr" data-en="Procurement compliance." data-ar="الامتثال في المشتريات.">Procurement compliance.</li>
-                    <li class="tr" data-en="Supply chain overview." data-ar="لمحة عامة عن سلسلة التوريد.">Supply chain overview.</li>
-                </ul></div>
-            </div>
-            
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094239/Procurement_Basics_-_2_flulhm.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="Procurement Basics" data-ar="أساسيات المشتريات">Procurement Basics</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="Purchase requisition process." data-ar="عملية طلب الشراء.">Purchase requisition process.</li>
-                    <li class="tr" data-en="Vendor selection." data-ar="اختيار الموردين.">Vendor selection.</li>
-                    <li class="tr" data-en="Cost analysis." data-ar="تحليل التكاليف.">Cost analysis.</li>
-                    <li class="tr" data-en="Procurement documentation." data-ar="وثائق المشتريات.">Procurement documentation.</li>
-                    <li class="tr" data-en="Purchasing best practices." data-ar="أفضل ممارسات الشراء.">Purchasing best practices.</li>
-                </ul></div>
-            </div>
-
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094282/Strategic_Sourcing_-_3_nluzxf.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="Strategic Sourcing" data-ar="التوريد الاستراتيجي">Strategic Sourcing</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="Category management." data-ar="إدارة الفئات.">Category management.</li>
-                    <li class="tr" data-en="Long-term sourcing strategies." data-ar="استراتيجيات التوريد طويلة الأجل.">Long-term sourcing strategies.</li>
-                    <li class="tr" data-en="Cost optimization." data-ar="تحسين التكلفة.">Cost optimization.</li>
-                    <li class="tr" data-en="Supplier evaluation." data-ar="تقييم الموردين.">Supplier evaluation.</li>
-                    <li class="tr" data-en="Value-driven procurement." data-ar="المشتريات القائمة على القيمة.">Value-driven procurement.</li>
-                </ul></div>
-            </div>
-
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094301/Supplier_Management_-_4_ksjbsr.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="Supplier Management" data-ar="إدارة الموردين">Supplier Management</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="Supplier relationship management." data-ar="إدارة علاقات الموردين.">Supplier relationship management.</li>
-                    <li class="tr" data-en="Performance evaluation." data-ar="تقييم الأداء.">Performance evaluation.</li>
-                    <li class="tr" data-en="Contract compliance." data-ar="الامتثال للعقود.">Contract compliance.</li>
-                    <li class="tr" data-en="Vendor development." data-ar="تطوير الموردين.">Vendor development.</li>
-                    <li class="tr" data-en="Partnership optimization." data-ar="تحسين الشراكات.">Partnership optimization.</li>
-                </ul></div>
-            </div>
-
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094318/Supply_Market_Analysis_-_5_pfvmvs.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="Supply Market Analysis" data-ar="تحليل سوق التوريد">Supply Market Analysis</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="Market trend analysis." data-ar="تحليل اتجاهات السوق.">Market trend analysis.</li>
-                    <li class="tr" data-en="Supplier benchmarking." data-ar="مقارنة أداء الموردين.">Supplier benchmarking.</li>
-                    <li class="tr" data-en="Cost forecasting." data-ar="التنبؤ بالتكاليف.">Cost forecasting.</li>
-                    <li class="tr" data-en="Competitive analysis." data-ar="التحليل التنافسي.">Competitive analysis.</li>
-                    <li class="tr" data-en="Risk assessment in supply markets." data-ar="تقييم المخاطر في أسواق التوريد.">Risk assessment in supply markets.</li>
-                </ul></div>
-            </div>
-
-            <div class="glass-card hover-target">
-                <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094254/Procurement_Negotiation_-_6_yxkaj1.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
-                <h3 class="tr" data-en="Procurement Negotiation" data-ar="مفاوضات المشتريات">Procurement Negotiation</h3>
-                <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                    <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
-                </button>
-                <div class="details-content"><ul class="custom-bullets">
-                    <li class="tr" data-en="Negotiation planning." data-ar="التخطيط للتفاوض.">Negotiation planning.</li>
-                    <li class="tr" data-en="Cost reduction strategies." data-ar="استراتيجيات خفض التكاليف.">Cost reduction strategies.</li>
-                    <li class="tr" data-en="Win-win negotiation techniques." data-ar="تقنيات التفاوض المربح للجانبين (Win-Win).">Win-win negotiation techniques.</li>
-                    <li class="tr" data-en="Contract negotiation." data-ar="التفاوض على العقود.">Contract negotiation.</li>
-                    <li class="tr" data-en="Supplier relationship enhancement." data-ar="تعزيز علاقات الموردين.">Supplier relationship enhancement.</li>
-                </ul></div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- 6. HACKER CONTACT TERMINAL -->
-    <section class="container reveal-slide-up">
-        <h2 class="section-title tr" data-en="Network.Connect()" data-ar="الشبكة.اتصال()" style="text-align: center;">Network.Connect()</h2>
-        <div class="contact-terminal hover-target" id="terminal-box">
-            <div class="header">bash - root@ammar-server:~</div>
-            <div class="cmd-line">
-                <span class="cmd-prompt">ammar@server:~$</span>
-                <span class="tr" data-en='Type <strong style="color:#fff">contact</strong> and Enter:' data-ar='اكتب <strong style="color:#fff">تواصل</strong> واضغط Enter:'>Type <strong style="color:#fff">contact</strong> and Enter:</span>
-            </div>
-            <div class="cmd-line">
-                <span class="cmd-prompt">></span>
-                <input type="text" class="cmd-input" id="terminal-input" autocomplete="off" spellcheck="false" autoCapitalize="none">
-            </div>
-            <div class="cmd-response" id="terminal-response">
-                <p class="tr" data-en="[+] Connection established securely." data-ar="[+] تم إنشاء اتصال آمن.">[+] Connection established securely.</p>
-                <p><span class="tr" data-en="[>] Email:" data-ar="[>] البريد الإلكتروني:">[>] Email:</span> <a href="mailto:ammaralskaf56@gmail.com" class="hover-target">ammaralskaf56@gmail.com</a></p>
-                <p><span class="tr" data-en="[>] Phone:" data-ar="[>] رقم الهاتف:">[>] Phone:</span> <a href="tel:+963937807398" class="hover-target">(+963) 937807398</a></p>
-                <p><span class="tr" data-en="[>] LinkedIn:" data-ar="[>] حساب لينكد إن:">[>] LinkedIn:</span> <a href="https://www.linkedin.com/in/ammar-alskaf-188a5b251" target="_blank" class="hover-target tr" data-en="View Profile Dashboard" data-ar="عرض لوحة تحكم الحساب">View Profile Dashboard</a></p>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <p class="tr" data-en="Built by Ammar Alskaf &copy; 2026. All Systems Operational." data-ar="تم التطوير بواسطة عمّار السكّاف &copy; 2026. جميع الأنظمة تعمل بشكل ممتاز.">Built by Ammar Alskaf &copy; 2026. All Systems Operational.</p>
-    </footer>
+    </div> <!-- END TOTAL CONTENT -->
 
     <!-- Lightbox Modal -->
     <div id="imageModal" class="modal">
@@ -599,12 +606,14 @@
 
     <!-- SCRIPTS -->
     <script>
-        // --- Problem 1 & 2 Fixes ---
-        // Need to explicitly show main content after startup terminal
-        function showMainContent() {
-            // Unhide all direct children of body except terminal and cursor
-            const elementsToShow = document.querySelectorAll('body > header, body > section, body > footer');
-            elementsToShow.forEach(el => el.style.display = 'block');
+        // --- 1. Emergency Content Show Function (MANDATORY) ---
+        function forceShowContent() {
+            const totalContent = document.getElementById('total-content');
+            if (totalContent) {
+                totalContent.classList.remove('main-content-hidden');
+                totalContent.style.display = 'block'; // Guarantee display
+            }
+            document.body.classList.remove('locked');
             
             // Re-trigger scroll animations after showing content
             const observer = new IntersectionObserver((entries) => {
@@ -618,8 +627,8 @@
         // --- TRANSLATION LOGIC ---
         let currentLang = 'en';
         const langMap = {
-            en: { placeholder: 'contact', error: 'Command not found. Try "contact"', arBtn: 'AR / العربية' },
-            ar: { placeholder: 'تواصل', error: 'أمر غير معروف. جرب "تواصل"', enBtn: 'EN / English' }
+            en: { placeholder: 'contact', error: 'Try "contact"', arBtn: 'AR' },
+            ar: { placeholder: 'تواصل', error: 'جرب "تواصل"', enBtn: 'EN' }
         };
 
         function toggleLanguage() {
@@ -628,7 +637,6 @@
             
             const btn = document.getElementById('lang-btn');
             btn.innerText = currentLang === 'en' ? langMap.arBtn : langMap.enBtn;
-            btn.style.fontFamily = currentLang === 'en' ? var(--font-en) : var(--font-ar);
 
             const elements = document.querySelectorAll('.tr');
             elements.forEach(el => {
@@ -637,15 +645,13 @@
                 }
             });
 
-            // Update terminal state
+            // Update terminal placeholder
             const termInput = document.getElementById('terminal-input');
             const termResponse = document.getElementById('terminal-response');
             termInput.value = '';
-            if (termInput.disabled) {
-                 // Keep visible if already unlocked, but update text
-            } else {
+            if (!termInput.disabled) {
                 termResponse.style.display = 'none';
-                termInput.placeholder = ''; // Clear placeholder
+                termInput.placeholder = '';
             }
         }
 
@@ -678,71 +684,102 @@
                 cursor.style.display = 'none';
             }
 
-            // STARTUP TERMINAL SEQUENCE
+            // --- 2. TERMINAL SEQUENCE (Robust Fix) ---
             const lines = document.querySelectorAll('.terminal-line');
             const intro = document.getElementById('intro-terminal');
-            let delay = 500;
-
-            lines.forEach((line, index) => {
-                setTimeout(() => { line.classList.add('active'); }, delay);
-                delay += (index === lines.length - 2) ? 1500 : 700;
-            });
-
-            setTimeout(() => {
-                intro.style.opacity = '0';
-                setTimeout(() => {
-                    intro.style.visibility = 'hidden';
+            
+            // Safety: Force show content after a definitive timeout just in case
+            const fallbackTimeout = setTimeout(() => {
+                if (intro && intro.style.visibility !== 'hidden') {
                     intro.style.display = 'none';
-                    document.body.classList.remove('locked'); 
+                    forceShowContent();
+                    console.log("Fallback triggered");
+                }
+            }, 10000); // 10 seconds absolute limit
+
+            if (lines.length > 0) {
+                let delay = 300; // Start delay
+                
+                // 1. Staggered show lines
+                lines.forEach((line, index) => {
+                    setTimeout(() => { 
+                        line.classList.add('active'); 
+                    }, delay);
                     
-                    // Specific fix for Problem 1
-                    showMainContent();
+                    // Increase delay for next line (personalized)
+                    if (index === lines.length - 2) delay += 1500; // longer for final welcome
+                    else if (index < 2) delay += 700;
+                    else delay += 500;
+                });
+
+                // 2. Hide terminal and show content (personalization logic)
+                setTimeout(() => {
+                    clearTimeout(fallbackTimeout); // Cancel fallback, we are good
                     
-                    // Trigger stagger animations
-                    const pills = document.querySelectorAll('.tech-pill');
-                    pills.forEach((pill, i) => {
-                        setTimeout(() => { pill.style.opacity = '1'; pill.style.transform = 'translateY(0)'; }, i * 150);
-                    });
-                }, 800);
-            }, delay + 1500);
+                    if (intro) {
+                        intro.style.opacity = '0';
+                        setTimeout(() => {
+                            intro.style.visibility = 'hidden';
+                            intro.style.display = 'none';
+                            
+                            // Essential: Show content
+                            forceShowContent();
+                            
+                            // 3. Hero stagger animations
+                            const pills = document.querySelectorAll('.tech-pill');
+                            pills.forEach((pill, i) => {
+                                setTimeout(() => { pill.style.opacity = '1'; pill.style.transform = 'translateY(0)'; }, i * 150);
+                            });
+                        }, 500); // sync with opacity transition
+                    } else {
+                        // Edge case: intro element missing
+                        forceShowContent();
+                    }
+                }, delay + 1000); // final message duration
+            } else {
+                // Safety: no lines found, show content immediately
+                clearTimeout(fallbackTimeout);
+                forceShowContent();
+            }
 
             // TERMINAL CONTACT LOGIC 
             const termInput = document.getElementById('terminal-input');
             const termResponse = document.getElementById('terminal-response');
             const terminalBox = document.getElementById('terminal-box');
             
-            terminalBox.addEventListener('click', () => termInput.focus());
+            if(terminalBox) terminalBox.addEventListener('click', () => termInput.focus());
             
-            termInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    const inputVal = termInput.value.toLowerCase().trim();
-                    const langSet = langMap[currentLang];
-                    
-                    if (inputVal === langSet.placeholder || (currentLang === 'ar' && inputVal === 'contact')) {
-                        termResponse.style.display = 'block';
-                        termInput.disabled = true;
-                        termInput.value = inputVal; // keep command visible
-                    } else {
-                        termInput.value = '';
-                        termInput.placeholder = langSet.error;
-                        // Temporary error color
-                        termInput.style.color = '#ef4444';
-                        setTimeout(() => {
-                             termInput.style.color = '#10b981';
-                             termInput.placeholder = '';
-                        }, 2000);
+            if(termInput) {
+                termInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        const inputVal = termInput.value.toLowerCase().trim();
+                        const langSet = langMap[currentLang];
+                        
+                        if (inputVal === langSet.placeholder || (currentLang === 'ar' && inputVal === 'contact')) {
+                            termResponse.style.display = 'block';
+                            termInput.disabled = true;
+                            termInput.value = inputVal;
+                        } else {
+                            termInput.value = '';
+                            termInput.placeholder = langSet.error;
+                            termInput.style.color = '#ef4444';
+                            setTimeout(() => {
+                                 termInput.style.color = '#10b981';
+                                 termInput.placeholder = '';
+                            }, 2000);
+                        }
                     }
-                }
-            });
+                });
+            }
 
             // IMAGE MODAL
             const modal = document.getElementById("imageModal");
             const modalImg = document.getElementById("zoomedImg");
-            const closeBtn = document.getElementsByClassName("close-modal")[0];
+            const closeBtn = document.querySelector(".close-modal");
 
             document.addEventListener('click', function(e) {
                 if (e.target.classList.contains('click-to-zoom')) {
-                    if (e.target.src) {
+                    if (e.target.src && modal && modalImg) {
                         modal.style.display = "flex";
                         modal.style.justifyContent = "center";
                         modal.style.alignItems = "center";
@@ -751,8 +788,16 @@
                     }
                 }
             });
-            closeBtn.onclick = function() { modal.style.display = "none"; document.body.classList.remove('locked'); }
-            modal.onclick = function(e) { if (e.target !== modalImg) { modal.style.display = "none"; document.body.classList.remove('locked'); } }
+            
+            if(closeBtn) closeBtn.onclick = function() { modal.style.display = "none"; document.body.classList.remove('locked'); }
+            if(modal) {
+                modal.onclick = function(e) { 
+                    if (e.target !== modalImg && e.target !== closeBtn) { 
+                        modal.style.display = "none"; 
+                        document.body.classList.remove('locked'); 
+                    } 
+                }
+            }
 
         });
     </script>
