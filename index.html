@@ -33,7 +33,8 @@
         body[dir="rtl"] .timeline-item::before { left: auto; right: -36px; }
         body[dir="rtl"] .cmd-response { border-left: none; border-right: 2px solid #10b981; padding-left: 0; padding-right: 20px; }
         body[dir="rtl"] .custom-bullets li::before { margin-right: 0; margin-left: 10px; }
-        body[dir="rtl"] #intro-terminal-box { text-align: right; }
+        body[dir="rtl"] #intro-dashboard { text-align: right; }
+        body[dir="rtl"] .dash-header { flex-direction: row-reverse; }
 
         body.locked { overflow: hidden !important; height: 100vh !important; }
         .main-content-hidden { display: none; }
@@ -57,7 +58,7 @@
         .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 60px 0; }
 
         /* ==================================================
-           2. CINEMATIC DOOR INTRO
+           2. DATA DASHBOARD INTRO (NEW)
            ================================================== */
         #intro-wrapper { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 100000; display: flex; justify-content: center; align-items: center; overflow: hidden; background: #000; }
         .door-panel { position: absolute; top: 0; width: 50vw; height: 100vh; background: #0a0a0a; transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1); z-index: 1; }
@@ -66,19 +67,44 @@
         .door-left::after { content: ''; position:absolute; right: -3px; top: 45%; height: 10%; width: 4px; background: #fff; box-shadow: 0 0 15px #fff; border-radius: 10px; }
         .door-right::after { content: ''; position:absolute; left: -3px; top: 45%; height: 10%; width: 4px; background: #fff; box-shadow: 0 0 15px #fff; border-radius: 10px; }
 
-        #intro-terminal-box { position: relative; z-index: 2; width: 85vw; max-width: 600px; background: rgba(5,5,5,0.85); backdrop-filter: blur(10px); padding: 30px; border-radius: 12px; border: 1px solid rgba(59,130,246,0.3); box-shadow: 0 0 30px rgba(0,0,0,0.8); color: var(--glow); font-family: var(--font-mono); font-size: 1rem; transition: opacity 0.5s; text-align: left;}
-        
-        .terminal-line { display: none; margin-bottom: 12px; opacity: 0; transform: translateY(10px); }
-        .terminal-line.active { display: block; animation: fadeInUp 0.3s forwards; }
-        .blinking-cursor { display: inline-block; width: 10px; height: 1.1rem; background: #3b82f6; animation: blink 1s infinite; vertical-align: middle;}
-        
+        /* Data Dashboard UI */
+        #intro-dashboard { position: relative; z-index: 2; width: 90vw; max-width: 650px; background: rgba(10, 15, 30, 0.85); backdrop-filter: blur(20px); padding: 30px; border-radius: 16px; border: 1px solid rgba(59,130,246,0.3); box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(59,130,246,0.1); color: var(--text-main); font-family: var(--font-en); transition: opacity 0.5s, transform 0.5s; text-align: left; }
+        .dash-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 15px; margin-bottom: 25px; font-family: var(--font-mono); }
+        .dash-title { color: #fff; font-weight: 600; font-size: 1.1rem; }
+        .dash-status { color: #10b981; animation: pulseStatus 1.5s infinite; font-weight: 600; font-size: 0.9rem; padding: 4px 12px; background: rgba(16,185,129,0.1); border-radius: 20px; border: 1px solid rgba(16,185,129,0.3); }
+        @keyframes pulseStatus { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* KPIs */
+        .kpi-row { display: flex; justify-content: space-between; margin-bottom: 25px; gap: 15px; }
+        .kpi-box { flex: 1; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 15px 10px; border-radius: 10px; text-align: center; }
+        .kpi-val { display: block; font-size: 2.2rem; font-weight: 800; color: #3b82f6; line-height: 1; margin-bottom: 5px; font-family: var(--font-mono); text-shadow: 0 0 15px rgba(59,130,246,0.5); }
+        .kpi-label { font-size: 0.75rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;}
+
+        /* Animated Bar Chart */
+        .chart-box { height: 80px; display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; margin-bottom: 25px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .bar { flex: 1; background: linear-gradient(to top, #3b82f6, #60a5fa); border-radius: 4px 4px 0 0; width: 100%; animation: growBar 1.5s ease-out forwards; height: 0; box-shadow: 0 0 10px rgba(59,130,246,0.3); }
+        @keyframes growBar { from { height: 0; } to { height: var(--h); } }
+
+        /* Logs */
+        .dash-logs { font-family: var(--font-mono); font-size: 0.85rem; color: #a1a1aa; }
+        .log-line { display: none; margin-bottom: 8px; }
+        .log-line.active { display: block; animation: fadeInUp 0.3s forwards; }
+        .log-success { color: #fff; font-weight: 600; font-size: 1.2rem; margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;}
+
+        @media (max-width: 768px) {
+            #intro-dashboard { padding: 20px; }
+            .kpi-val { font-size: 1.5rem; }
+            .kpi-label { font-size: 0.6rem; }
+            .chart-box { height: 60px; }
+            .dash-title { font-size: 0.9rem; }
+        }
+
         /* Door Opening Animations */
         .door-open .door-left { transform: translateX(-100%); }
         .door-open .door-right { transform: translateX(100%); }
-        .door-open #intro-terminal-box { opacity: 0; transform: scale(0.9); transition: all 0.5s; }
+        .door-open #intro-dashboard { opacity: 0; transform: scale(0.9); transition: all 0.5s; }
 
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         /* ==================================================
            3. HERO
@@ -175,7 +201,7 @@
         .contact-terminal .header { border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 8px; margin-bottom: 15px; color: #666; font-size: 0.75rem;}
         .cmd-line { color: #fff; margin-bottom: 8px; font-size: 0.9rem; display: flex; flex-wrap: wrap; align-items: center; }
         .cmd-prompt { color: #3b82f6; margin-right: 8px;}
-        .cmd-input { background: transparent; border: none; color: #10b981; font-family: var(--font-mono); font-size: 0.9rem; outline: none; flex-grow: 1; width: 50px; }
+        .cmd-input { background: transparent; border: none; color: #10b981; font-family: var(--font-mono); font-size: 0.9rem; outline: none; flex-grow: 1; width: 100px; min-width: 100px;}
         .cmd-response { display: none; color: #a1a1aa; margin-top: 15px; padding-left: 15px; border-left: 2px solid #10b981; font-size: 0.85rem;}
         .cmd-response a { color: #fff; text-decoration: none; border-bottom: 1px dashed #3b82f6; transition: 0.3s; cursor: pointer;}
         
@@ -203,17 +229,48 @@
     <div class="bg-glow"></div>
     <div class="bg-glow-2"></div>
 
-    <!-- 1. CINEMATIC DOOR INTRO -->
+    <!-- 1. NEW DATA DASHBOARD INTRO & CINEMATIC DOORS -->
     <div id="intro-wrapper">
         <div class="door-panel door-left"></div>
         <div class="door-panel door-right"></div>
         
-        <div id="intro-terminal-box">
-            <div class="terminal-line tr" data-en="[System] Initializing connection to Ammar Alskaf's secure server..." data-ar="[النظام] تهيئة الاتصال الآمن بسيرفر المهندس عمار السكاف...">[System] Initializing connection to Ammar Alskaf's secure server...</div>
-            <div class="terminal-line tr" data-en="[Data] Fetching engineering logs & data pipelines..." data-ar="[البيانات] استخراج سجلات الهندسة ومسارات البيانات...">[Data] Fetching engineering logs & data pipelines...</div>
-            <div class="terminal-line tr" data-en="[AI] Loading predictive models & interactive dashboards..." data-ar="[الذكاء الاصطناعي] تحميل النماذج التحليلية ولوحات التحكم التفاعلية...">[AI] Loading predictive models & interactive dashboards...</div>
-            <div class="terminal-line tr" data-en="[Auth] Identity verified. Accessing professional portfolio..." data-ar="[التحقق] تم تأكيد الهوية. الدخول إلى معرض الأعمال الاحترافي...">[Auth] Identity verified. Accessing professional portfolio...</div>
-            <div class="terminal-line tr" data-en="[Success] Welcome, Engineer Ammar.<span class='blinking-cursor'></span>" data-ar="[نجاح] أهلاً بك، المهندس عمار.<span class='blinking-cursor'></span>" style="color: #fff; font-size: 1.3rem; margin-top: 15px;">[Success] Welcome, Engineer Ammar.<span class="blinking-cursor"></span></div>
+        <div id="intro-dashboard">
+            <div class="dash-header">
+                <span class="dash-title tr" data-en="Ammar.DataEngine v2.0" data-ar="محرك بيانات.عمار الإصدار 2.0">Ammar.DataEngine v2.0</span>
+                <span class="dash-status tr" data-en="LIVE" data-ar="نشط">LIVE</span>
+            </div>
+            
+            <div class="kpi-row">
+                <div class="kpi-box">
+                    <span class="kpi-val" id="kpi-cert">0</span>
+                    <span class="kpi-label tr" data-en="Certifications" data-ar="شهادات احترافية">Certifications</span>
+                </div>
+                <div class="kpi-box">
+                    <span class="kpi-val" id="kpi-exp">0</span>
+                    <span class="kpi-label tr" data-en="Years Exp." data-ar="سنوات الخبرة">Years Exp.</span>
+                </div>
+                <div class="kpi-box">
+                    <span class="kpi-val" id="kpi-dash">0</span>
+                    <span class="kpi-label tr" data-en="Dashboards" data-ar="لوحات تحكم">Dashboards</span>
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <div class="bar" style="--h: 30%"></div>
+                <div class="bar" style="--h: 50%" style="animation-delay: 0.2s;"></div>
+                <div class="bar" style="--h: 40%" style="animation-delay: 0.4s;"></div>
+                <div class="bar" style="--h: 80%" style="animation-delay: 0.6s;"></div>
+                <div class="bar" style="--h: 100%" style="animation-delay: 0.8s;"></div>
+                <div class="bar" style="--h: 60%" style="animation-delay: 1s;"></div>
+                <div class="bar" style="--h: 90%" style="animation-delay: 1.2s;"></div>
+            </div>
+
+            <div class="dash-logs">
+                <div class="log-line tr" data-en="> Syncing Engineer Ammar's Data Pipelines..." data-ar="> مزامنة مسارات بيانات المهندس عمار...">> Syncing Engineer Ammar's Data Pipelines...</div>
+                <div class="log-line tr" data-en="> Aggregating Sales & Marketing Analytics..." data-ar="> تجميع تحليلات المبيعات والتسويق...">> Aggregating Sales & Marketing Analytics...</div>
+                <div class="log-line tr" data-en="> Loading Custom Web Applications & Python Scripts..." data-ar="> تحميل تطبيقات الويب المخصصة وسكريبتات بايثون...">> Loading Custom Web Applications & Python Scripts...</div>
+                <div class="log-line log-success tr" data-en="[✓] Analysis Complete. Welcome to the workspace." data-ar="[✓] اكتمل التحليل. أهلاً بك في مساحة العمل.">[✓] Analysis Complete. Welcome to the workspace.</div>
+            </div>
         </div>
     </div>
 
@@ -269,7 +326,7 @@
             <div class="timeline">
                 
                 <div class="timeline-item reveal-slide-up">
-                    <div class="timeline-date">Jul 2026 - Present</div>
+                    <div class="timeline-date">Jul 2025 - Present</div>
                     <div class="glass-card hover-target">
                         <h3 class="tr" data-en="Data Analyst" data-ar="محلل بيانات">Data Analyst</h3>
                         <p class="tr" data-en="Sabbagh & Co, Syria" data-ar="شركة الصباغ، سوريا">Sabbagh & Co, Syria</p>
@@ -335,7 +392,8 @@
                         <h3 class="tr" data-en="Private Tutor" data-ar="مدرس خصوصي">Private Tutor</h3>
                         <p class="tr" data-en="Freelance Education, Syria" data-ar="تعليم حر، سوريا">Freelance Education, Syria</p>
                         <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
-                            <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                            <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span>
+                            <span class="arrow">▼</span>
                         </button>
                         <div class="details-content">
                             <ul class="custom-bullets">
@@ -357,7 +415,7 @@
             </div>
         </section>
 
-        <!-- 6. PORTFOLIO & PROJECTS (NEW) -->
+        <!-- 6. PORTFOLIO & PROJECTS -->
         <section class="container reveal-scale">
             <h2 class="section-title tr" data-en="Projects.Deploy()" data-ar="المشاريع.إطلاق()" style="text-align: center;">Projects.Deploy()</h2>
             <div class="grid">
@@ -368,8 +426,8 @@
                         <h3 class="tr" data-en="Real-Time Luxury Inventory & Sales Target Tracker" data-ar="متتبع المخزون اللحظي وأهداف المبيعات الفاخرة">Real-Time Luxury Inventory & Sales Target Tracker</h3>
                         <span class="role-highlight tr" data-en="Role: Lead Developer & Business Analyst" data-ar="الدور: مطور رئيسي ومحلل أعمال">Role: Lead Developer & Business Analyst</span>
                         
-                        <div class="privacy-note tr" data-en="🔒 Privacy Note: Actual data is replaced with synthesized dummy data (Alskaf Luxury Fashion) to uphold NDAs. Algorithms and UI remain 100% authentic." data-ar="🔒 ملاحظة الخصوصية: تم استبدال البيانات الحقيقية ببيانات وهمية (Alskaf Luxury Fashion) التزاماً باتفاقيات السرية. الأكواد والواجهات أصلية 100%.">
-                            🔒 Privacy Note: Actual data is replaced with synthesized dummy data (Alskaf Luxury Fashion) to uphold NDAs. Algorithms and UI remain 100% authentic.
+                        <div class="privacy-note tr" data-en="🔒 Privacy Note: Actual data is replaced with synthesized dummy data (Alskaf Luxury Fashion) to uphold NDAs. Algorithms and UI remain authentic." data-ar="🔒 ملاحظة الخصوصية: تم استبدال البيانات الحقيقية ببيانات وهمية (Alskaf Luxury Fashion) التزاماً باتفاقيات السرية. الأكواد والواجهات أصلية.">
+                            🔒 Privacy Note: Actual data is replaced with synthesized dummy data (Alskaf Luxury Fashion) to uphold NDAs. Algorithms and UI remain authentic.
                         </div>
                         
                         <p class="tr" data-en="A high-performance interactive web application built to monitor daily inventory movements, track sales against targets, and proactively flag stock deficits for supply chain management." data-ar="تطبيق ويب تفاعلي عالي الأداء لمراقبة حركات المخزون اليومية، تتبع المبيعات مقابل الأهداف، والتنبيه الاستباقي لنقص المخزون لدعم إدارة سلسلة التوريد.">
@@ -513,7 +571,6 @@
                     </ul></div>
                 </div>
 
-                <!-- Previous Certs -->
                 <div class="glass-card hover-target">
                     <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094231/Everyday_Excel_atf1pe.png" loading="lazy" class="click-to-zoom" alt="Certificate">
                     <h3 class="tr" data-en="Everyday Excel" data-ar="احتراف الإكسل اليومي">Everyday Excel</h3>
@@ -616,6 +673,37 @@
                         <li class="tr" data-en="Data-driven decision making." data-ar="اتخاذ القرارات بناءً على البيانات.">Data-driven decision making.</li>
                         <li class="tr" data-en="Process optimization." data-ar="تحسين العمليات.">Process optimization.</li>
                         <li class="tr" data-en="Innovative problem-solving techniques." data-ar="تقنيات مبتكرة لحل المشكلات.">Innovative problem-solving techniques.</li>
+                    </ul></div>
+                </div>
+
+                <!-- Civil Defense -->
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094278/Ambulance_-_Evacuation_Course_ar6mn4.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Ambulance & Evacuation" data-ar="الإسعاف والإخلاء">Ambulance & Evacuation</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Emergency response procedures." data-ar="إجراءات الاستجابة للطوارئ.">Emergency response procedures.</li>
+                        <li class="tr" data-en="Safe evacuation planning and execution." data-ar="تخطيط وتنفيذ الإخلاء الآمن.">Safe evacuation planning and execution.</li>
+                        <li class="tr" data-en="Basic life support awareness." data-ar="الوعي بدعم الحياة الأساسي.">Basic life support awareness.</li>
+                        <li class="tr" data-en="Risk assessment during emergencies." data-ar="تقييم المخاطر أثناء الطوارئ.">Risk assessment during emergencies.</li>
+                        <li class="tr" data-en="Crisis communication and coordination." data-ar="التواصل والتنسيق أثناء الأزمات.">Crisis communication and coordination.</li>
+                    </ul></div>
+                </div>
+
+                <div class="glass-card hover-target">
+                    <img src="https://res.cloudinary.com/ogabkfka/image/upload/v1786094291/Firefighting_Course_q67m99.jpg" loading="lazy" class="click-to-zoom" alt="Certificate">
+                    <h3 class="tr" data-en="Firefighting Course" data-ar="دورة الإطفاء">Firefighting Course</h3>
+                    <button class="details-btn hover-target tr-btn" onclick="toggleDetails(this)">
+                        <span class="btn-text tr" data-en="View Insights" data-ar="عرض التفاصيل">View Insights</span><span class="arrow">▼</span>
+                    </button>
+                    <div class="details-content"><ul class="custom-bullets">
+                        <li class="tr" data-en="Fire prevention and hazard identification." data-ar="الوقاية من الحرائق وتحديد المخاطر.">Fire prevention and hazard identification.</li>
+                        <li class="tr" data-en="Safe operation of firefighting equipment." data-ar="التشغيل الآمن لمعدات مكافحة الحرائق.">Safe operation of firefighting equipment.</li>
+                        <li class="tr" data-en="Emergency response techniques." data-ar="تقنيات الاستجابة للطوارئ.">Emergency response techniques.</li>
+                        <li class="tr" data-en="Workplace fire safety procedures." data-ar="إجراءات السلامة من الحرائق في مكان العمل.">Workplace fire safety procedures.</li>
+                        <li class="tr" data-en="Evacuation leadership during incidents." data-ar="قيادة الإخلاء أثناء الحوادث.">Evacuation leadership during incidents.</li>
                     </ul></div>
                 </div>
 
@@ -749,7 +837,7 @@
 
     <!-- SCRIPTS -->
     <script>
-        // --- 1. Door Animation & Emergency Content Show Function ---
+        // --- 1. Content Show Function ---
         function forceShowContent() {
             const totalContent = document.getElementById('total-content');
             if (totalContent) {
@@ -825,10 +913,43 @@
                 cursor.style.display = 'none';
             }
 
-            // --- 2. CINEMATIC TERMINAL & DOOR SEQUENCE ---
-            const lines = document.querySelectorAll('.terminal-line');
+            // --- 2. DATA DASHBOARD INTRO ANIMATION ---
             const introWrapper = document.getElementById('intro-wrapper');
-            const introTerminalBox = document.getElementById('intro-terminal-box');
+            const kpiCerts = document.getElementById('kpi-cert');
+            const kpiExp = document.getElementById('kpi-exp');
+            const kpiDash = document.getElementById('kpi-dash');
+            
+            // Animate Numbers
+            function animateValue(obj, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    obj.innerHTML = Math.floor(progress * (end - start) + start) + "+";
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+            
+            // Wait 500ms then start counters
+            setTimeout(() => {
+                animateValue(kpiCerts, 0, 15, 1500);
+                animateValue(kpiExp, 0, 6, 1500);
+                animateValue(kpiDash, 0, 30, 2000);
+            }, 500);
+
+            // Animate Logs
+            const lines = document.querySelectorAll('.log-line');
+            let delay = 1000;
+            lines.forEach((line, index) => {
+                setTimeout(() => { line.classList.add('active'); }, delay);
+                delay += (index === lines.length - 2) ? 1200 : 800;
+            });
+
+            // Door Opening Sequence
+            const totalIntroTime = delay + 800;
             
             const fallbackTimeout = setTimeout(() => {
                 if (introWrapper && introWrapper.style.display !== 'none') {
@@ -837,40 +958,23 @@
                 }
             }, 10000); 
 
-            if (lines.length > 0) {
-                let delay = 300; 
-                
-                lines.forEach((line, index) => {
-                    setTimeout(() => { line.classList.add('active'); }, delay);
-                    if (index === lines.length - 2) delay += 1200; 
-                    else delay += 600;
-                });
-
-                setTimeout(() => {
-                    clearTimeout(fallbackTimeout); 
-                    if (introWrapper) {
-                        // 1. Open doors and fade text
-                        introWrapper.classList.add('door-open');
-                        
-                        // 2. Wait for door slide animation (1.5s) to finish, then hide wrapper and show site
-                        setTimeout(() => {
-                            introWrapper.style.display = 'none';
-                            forceShowContent();
-                            
-                            // Trigger Hero Stagger
-                            const pills = document.querySelectorAll('.tech-pill');
-                            pills.forEach((pill, i) => {
-                                setTimeout(() => { pill.style.opacity = '1'; pill.style.transform = 'translateY(0)'; }, i * 150);
-                            });
-                        }, 1300); // Trigger just before door finishes completely for smoothness
-                    } else {
+            setTimeout(() => {
+                clearTimeout(fallbackTimeout); 
+                if (introWrapper) {
+                    introWrapper.classList.add('door-open');
+                    setTimeout(() => {
+                        introWrapper.style.display = 'none';
                         forceShowContent();
-                    }
-                }, delay + 1000); 
-            } else {
-                clearTimeout(fallbackTimeout);
-                forceShowContent();
-            }
+                        
+                        const pills = document.querySelectorAll('.tech-pill');
+                        pills.forEach((pill, i) => {
+                            setTimeout(() => { pill.style.opacity = '1'; pill.style.transform = 'translateY(0)'; }, i * 150);
+                        });
+                    }, 1300); 
+                } else {
+                    forceShowContent();
+                }
+            }, totalIntroTime); 
 
             // TERMINAL CONTACT LOGIC 
             const termInput = document.getElementById('terminal-input');
