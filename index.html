@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Removed user-scalable=no to allow natural pinch-zooming on mobile images -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ammar Alskaf | Tech Portfolio</title>
     <!-- English and Arabic Premium Fonts -->
@@ -36,7 +35,6 @@
         body[dir="rtl"] #intro-dashboard { text-align: right; }
         body[dir="rtl"] .dash-header { flex-direction: row-reverse; }
 
-        /* Scroll bug fix: Only hide overflow, don't force 100vh height */
         body.locked { overflow: hidden !important; }
         .main-content-hidden { display: none; }
 
@@ -74,18 +72,15 @@
         .dash-status { color: #10b981; animation: pulseStatus 1.5s infinite; font-weight: 600; font-size: 0.9rem; padding: 4px 12px; background: rgba(16,185,129,0.1); border-radius: 20px; border: 1px solid rgba(16,185,129,0.3); }
         @keyframes pulseStatus { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        /* KPIs */
         .kpi-row { display: flex; justify-content: space-between; margin-bottom: 25px; gap: 15px; }
         .kpi-box { flex: 1; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 20px 10px; border-radius: 10px; text-align: center; }
         .kpi-val { display: block; font-size: 2.5rem; font-weight: 800; color: #3b82f6; line-height: 1; margin-bottom: 5px; font-family: var(--font-mono); text-shadow: 0 0 15px rgba(59,130,246,0.5); }
         .kpi-label { font-size: 0.8rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;}
 
-        /* Animated Bar Chart */
         .chart-box { height: 90px; display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; margin-bottom: 30px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .bar { flex: 1; background: linear-gradient(to top, #3b82f6, #60a5fa); border-radius: 4px 4px 0 0; width: 100%; animation: growBar 2s ease-out forwards; height: 0; box-shadow: 0 0 10px rgba(59,130,246,0.3); }
         @keyframes growBar { from { height: 0; } to { height: var(--h); } }
 
-        /* Logs */
         .dash-logs { font-family: var(--font-mono); font-size: 0.9rem; color: #a1a1aa; }
         .log-line { display: none; margin-bottom: 10px; }
         .log-line.active { display: block; animation: fadeInUp 0.4s forwards; }
@@ -108,7 +103,10 @@
            3. HERO
            ================================================== */
         header { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; background-position: center top; background-size: cover; background-repeat: no-repeat; }
-        .header-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(5,5,5,0.8) 0%, rgba(5,5,5,1) 100%); z-index: 1; }
+        
+        /* UPDATED OVERLAY: Much brighter at the top so your face is clear, fading to black at the bottom */
+        .header-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(5,5,5,0.3) 0%, rgba(5,5,5,0.95) 100%); z-index: 1; }
+        
         header .content-wrapper { position: relative; z-index: 2; width: 90%; max-width: 800px; }
         .hero h1 { font-size: clamp(2.2rem, 8vw, 6rem); font-weight: 800; letter-spacing: -2px; margin-bottom: 10px; line-height: 1.1; background: linear-gradient(180deg, #fff, #71717a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
@@ -193,11 +191,11 @@
         .click-to-zoom { cursor: zoom-in !important; }
 
         /* ==================================================
-           6. NEW CONTACT DASHBOARD
+           6. NEW CONTACT DASHBOARD (CLEAN & CLEAR)
            ================================================== */
         .contact-dashboard { padding: 40px; border-radius: 16px; background: rgba(10, 15, 30, 0.4); border: 1px solid rgba(59,130,246,0.2); }
-        .contact-btn { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); color: #fff; padding: 12px 25px; border-radius: 8px; font-weight: 600; transition: 0.3s; text-decoration: none; display: inline-block; }
-        .contact-btn:hover { background: var(--glow); box-shadow: 0 0 20px rgba(59,130,246,0.4); transform: translateY(-3px); color: #fff; }
+        .contact-btn { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); color: #fff; padding: 12px 25px; border-radius: 8px; font-weight: 600; transition: 0.3s; text-decoration: none; display: inline-block; font-size: 0.95rem; }
+        .contact-btn:hover { background: var(--glow) !important; box-shadow: 0 0 20px rgba(59,130,246,0.4) !important; transform: translateY(-3px); color: #fff; border-color: var(--glow) !important;}
 
         /* Modal */
         .modal { display: none; position: fixed; z-index: 9999999; padding-top: 20px; padding-bottom: 20px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px);}
@@ -223,7 +221,7 @@
     <div class="bg-glow"></div>
     <div class="bg-glow-2"></div>
 
-    <!-- 1. NEW DATA DASHBOARD INTRO & CINEMATIC DOORS -->
+    <!-- 1. NEW DATA DASHBOARD INTRO -->
     <div id="intro-wrapper">
         <div class="door-panel door-left"></div>
         <div class="door-panel door-right"></div>
@@ -807,23 +805,23 @@
 
         <!-- 8. DATA-DRIVEN CONTACT HUB -->
         <section class="container reveal-slide-up">
-            <h2 class="section-title tr" data-en="Data Source & Connectivity" data-ar="مصدر البيانات والاتصال" style="text-align: center;">Data Source & Connectivity</h2>
+            <h2 class="section-title tr" data-en="Get In Touch" data-ar="تواصل معي" style="text-align: center;">Get In Touch</h2>
             <div class="glass-card contact-dashboard hover-target" style="max-width: 800px; margin: 0 auto; text-align: center; padding: 40px 20px;">
                 <div class="dash-header" style="justify-content: center; margin-bottom: 25px; border-bottom: none;">
-                    <span class="dash-status tr" data-en="API ENDPOINTS ACTIVE" data-ar="نقاط الاتصال نشطة">API ENDPOINTS ACTIVE</span>
+                    <span class="dash-status tr" data-en="AVAILABLE FOR OPPORTUNITIES" data-ar="متاح لفرص العمل">AVAILABLE FOR OPPORTUNITIES</span>
                 </div>
-                <p class="tr" data-en="Ready to integrate data-driven strategies into your operations? Establish a direct connection below." data-ar="هل أنت مستعد لدمج استراتيجيات مبنية على البيانات في عملياتك؟ قم بإنشاء اتصال مباشر الآن." style="margin-bottom: 35px; color: var(--text-muted); font-size: 1.1rem;">
-                    Ready to integrate data-driven strategies into your operations? Establish a direct connection below.
+                <p class="tr" data-en="Let's collaborate on your next data-driven project. Reach out via the channels below." data-ar="دعنا نتعاون في مشروعك القادم المبني على البيانات. تواصل معي عبر القنوات أدناه:" style="margin-bottom: 35px; color: var(--text-muted); font-size: 1.1rem;">
+                    Let's collaborate on your next data-driven project. Reach out via the channels below.
                 </p>
                 <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
                     <a href="mailto:ammaralskaf56@gmail.com" class="contact-btn hover-target" style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); color: #fff; padding: 15px 30px; border-radius: 8px; font-weight: 600; text-decoration: none; transition: 0.3s;">
-                        <span class="tr" data-en="Email Gateway" data-ar="بوابة البريد الإلكتروني">Email Gateway</span>
+                        <span class="tr" data-en="Send Email" data-ar="إرسال إيميل">Send Email</span>
                     </a>
                     <a href="tel:+963937807398" class="contact-btn hover-target" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: #fff; padding: 15px 30px; border-radius: 8px; font-weight: 600; text-decoration: none; transition: 0.3s;">
-                        <span class="tr" data-en="Voice Protocol" data-ar="البروتوكول الصوتي">Voice Protocol</span>
+                        <span class="tr" data-en="Call / WhatsApp" data-ar="اتصال / واتساب">Call / WhatsApp</span>
                     </a>
                     <a href="https://www.linkedin.com/in/ammar-alskaf-188a5b251" target="_blank" class="contact-btn hover-target" style="background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.3); color: #fff; padding: 15px 30px; border-radius: 8px; font-weight: 600; text-decoration: none; transition: 0.3s;">
-                        <span class="tr" data-en="LinkedIn Network" data-ar="شبكة لينكد إن">LinkedIn Network</span>
+                        <span class="tr" data-en="Visit LinkedIn" data-ar="زيارة لينكد إن">Visit LinkedIn</span>
                     </a>
                 </div>
             </div>
@@ -846,10 +844,10 @@
     <script>
         // Hover effects for the new contact buttons
         document.head.insertAdjacentHTML("beforeend", `<style>
-            .contact-btn:hover { background: var(--glow) !important; box-shadow: 0 0 20px rgba(59,130,246,0.4) !important; transform: translateY(-3px); }
+            .contact-btn:hover { background: var(--glow) !important; box-shadow: 0 0 20px rgba(59,130,246,0.4) !important; transform: translateY(-3px); color: #fff !important; border-color: var(--glow) !important;}
         </style>`);
 
-        // --- 1. Content Show Function ---
+        // --- 1. Content Show Function (Bug Fix: No scroll reset) ---
         function forceShowContent() {
             const totalContent = document.getElementById('total-content');
             if (totalContent) {
@@ -981,20 +979,27 @@
                 } else { currentKey = 0; }
             });
 
-            // IMAGE MODAL & ZOOM LOGIC
+            // IMAGE MODAL & ZOOM LOGIC (Fixing Scroll Reset Bug)
             const modal = document.getElementById("imageModal");
             const modalImg = document.getElementById("zoomedImg");
             const closeBtn = document.querySelector(".close-modal");
             let imgScale = 1;
+            let savedScrollY = 0; // To fix jump bug
 
             document.addEventListener('click', function(e) {
                 if (e.target.classList.contains('click-to-zoom')) {
                     if (e.target.src && modal && modalImg) {
+                        savedScrollY = window.scrollY; // Save current scroll position
                         modal.style.display = "flex";
                         modal.style.justifyContent = "center";
                         modal.style.alignItems = "center";
                         modalImg.src = e.target.src;
-                        document.body.classList.add('locked');
+                        
+                        // Prevent background scrolling without jumping to top
+                        document.body.style.position = 'fixed';
+                        document.body.style.top = `-${savedScrollY}px`;
+                        document.body.style.width = '100%';
+                        
                         imgScale = 1; // Reset scale
                         modalImg.style.transform = `scale(1)`;
                     }
@@ -1013,7 +1018,13 @@
 
             function closeModal() {
                 if(modal) modal.style.display = "none"; 
-                document.body.classList.remove('locked'); 
+                
+                // Restore background scrolling and position
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                window.scrollTo(0, savedScrollY);
+                
                 imgScale = 1; 
                 if(modalImg) modalImg.style.transform = `scale(1)`;
             }
